@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useScholarship } from "../context/ScholarshipContext";
-import { FieldCategory, MediumOfInstruction } from "../types/scholarship";
+import { FundingType, MediumOfInstruction } from "../types/scholarship";
 import {
   User,
   GraduationCap,
@@ -13,6 +13,8 @@ import {
   RotateCcw,
   CheckCircle2,
   Filter,
+  Landmark,
+  UserCheck,
 } from "lucide-react";
 
 const FIELD_OPTIONS: { value: string; label: string }[] = [
@@ -102,7 +104,66 @@ export const ProfileSidebar: React.FC = () => {
             </div>
           </div>
 
-          {/* 2. Major / Field */}
+          {/* 2. Funding Model / Track */}
+          <div>
+            <label className="mb-1.5 flex items-center justify-between font-medium text-zinc-700">
+              <span className="flex items-center gap-1.5">
+                <Landmark className="h-3.5 w-3.5 text-zinc-500" />
+                Funding Model Track
+              </span>
+            </label>
+            <select
+              value={profile.fundingTypePreference || "All"}
+              onChange={(e) =>
+                updateProfileField(
+                  "fundingTypePreference",
+                  e.target.value as "All" | FundingType
+                )
+              }
+              className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs font-medium text-zinc-800 shadow-2xs focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            >
+              <option value="All">All Funding Tracks ({stats.total})</option>
+              <option value="Gov / Multi-Uni">
+                🏛️ Govt &amp; Umbrella (CSC, Erasmus, DAAD)
+              </option>
+              <option value="University Direct">
+                🎓 University Fellowships (KAUST, Gates, ETH)
+              </option>
+              <option value="Supervisor / RA-TA">
+                🔬 Supervisor RA / TA (Canada, USA, Aus)
+              </option>
+            </select>
+          </div>
+
+          {/* 3. Supervisor Requirement Preference */}
+          <div>
+            <label className="mb-1.5 flex items-center justify-between font-medium text-zinc-700">
+              <span className="flex items-center gap-1.5">
+                <UserCheck className="h-3.5 w-3.5 text-zinc-500" />
+                Supervisor Contact Track
+              </span>
+            </label>
+            <select
+              value={profile.supervisorPreference || "All"}
+              onChange={(e) =>
+                updateProfileField(
+                  "supervisorPreference",
+                  e.target.value as any
+                )
+              }
+              className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs font-medium text-zinc-800 shadow-2xs focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            >
+              <option value="All">Any (Central or Supervisor-backed)</option>
+              <option value="No Supervisor Needed">
+                ✅ Direct Apply (No Professor Contact Needed)
+              </option>
+              <option value="Supervisor Allowed">
+                🤝 Professor Contact / Lab Match Allowed
+              </option>
+            </select>
+          </div>
+
+          {/* 4. Major / Field */}
           <div>
             <label className="mb-1.5 flex items-center justify-between font-medium text-zinc-700">
               <span className="flex items-center gap-1.5">
@@ -123,7 +184,7 @@ export const ProfileSidebar: React.FC = () => {
             </select>
           </div>
 
-          {/* 3. My CGPA */}
+          {/* 5. My CGPA */}
           <div className="rounded-xl border border-zinc-100 bg-zinc-50/60 p-3">
             <div className="flex items-center justify-between">
               <label className="font-medium text-zinc-700">My CGPA (4.00 Scale)</label>
@@ -150,7 +211,7 @@ export const ProfileSidebar: React.FC = () => {
             </div>
           </div>
 
-          {/* 4. My IELTS Score */}
+          {/* 6. My IELTS Score */}
           <div className="rounded-xl border border-zinc-100 bg-zinc-50/60 p-3">
             <div className="flex items-center justify-between">
               <label className="font-medium text-zinc-700">My IELTS Band Score</label>
@@ -177,7 +238,7 @@ export const ProfileSidebar: React.FC = () => {
             </div>
           </div>
 
-          {/* 5. Medium of Instruction */}
+          {/* 7. Medium of Instruction */}
           <div>
             <label className="mb-1.5 flex items-center justify-between font-medium text-zinc-700">
               <span className="flex items-center gap-1.5">
@@ -203,7 +264,7 @@ export const ProfileSidebar: React.FC = () => {
             </div>
           </div>
 
-          {/* 6. Minimum Desired Net Savings */}
+          {/* 8. Minimum Desired Net Savings */}
           <div className="rounded-xl border border-zinc-100 bg-zinc-50/60 p-3">
             <div className="flex items-center justify-between">
               <label className="font-medium text-zinc-700 flex items-center gap-1">
@@ -236,7 +297,7 @@ export const ProfileSidebar: React.FC = () => {
             </div>
           </div>
 
-          {/* 7. 100% Eligible Toggle */}
+          {/* 9. 100% Eligible Toggle */}
           <div className="pt-2">
             <label className="flex cursor-pointer items-center justify-between rounded-xl border border-emerald-200/80 bg-emerald-50/60 p-3 transition hover:bg-emerald-50">
               <div className="pr-2">

@@ -7,6 +7,7 @@ import {
   calculateDaysRemaining,
   calculateNetSavings,
   checkEligibility,
+  getSavingsRange,
 } from "../utils/scholarshipUtils";
 import {
   Building2,
@@ -17,9 +18,11 @@ import {
   Trash2,
   CheckCircle2,
   AlertTriangle,
-  Sparkles,
-  DollarSign,
   TrendingUp,
+  Landmark,
+  Microscope,
+  GraduationCap,
+  Users,
 } from "lucide-react";
 
 interface ScholarshipCardProps {
@@ -39,7 +42,7 @@ export const ScholarshipCard: React.FC<ScholarshipCardProps> = ({
   } = useScholarship();
 
   const eligibility = checkEligibility(scholarship, profile);
-  const netSavings = calculateNetSavings(scholarship);
+  const { minSavings, maxSavings, isMultiUni } = getSavingsRange(scholarship);
   const { days, isClosingSoon, isExpired, formattedDate } =
     calculateDaysRemaining(scholarship.deadline);
 
@@ -96,22 +99,74 @@ export const ScholarshipCard: React.FC<ScholarshipCardProps> = ({
     );
   };
 
+  // Funding Track Pill
+  const renderFundingBadge = () => {
+    if (scholarship.fundingType === "Gov / Multi-Uni") {
+      return (
+        <span className="inline-flex items-center gap-1 rounded-md bg-purple-50 px-2 py-0.5 text-[10px] font-semibold text-purple-700 border border-purple-200/60">
+          <Landmark className="h-2.5 w-2.5" />
+          <span>Gov / Umbrella</span>
+        </span>
+      );
+    }
+    if (scholarship.fundingType === "Supervisor / RA-TA") {
+      return (
+        <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700 border border-blue-200/60">
+          <Microscope className="h-2.5 w-2.5" />
+          <span>Supervisor RA/TA</span>
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center gap-1 rounded-md bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-700 border border-zinc-200/60">
+        <GraduationCap className="h-2.5 w-2.5" />
+        <span>Uni Fellowship</span>
+      </span>
+    );
+  };
+
+  // Supervisor Requirement Pill
+  const renderSupervisorBadge = () => {
+    if (scholarship.supervisorRequired === "Mandatory Before Applying") {
+      return (
+        <span className="inline-flex items-center rounded-md bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-800 border border-amber-200/60">
+          👨‍🏫 Supervisor Req.
+        </span>
+      );
+    }
+    if (scholarship.supervisorRequired === "Not Required (Central Admission)") {
+      return (
+        <span className="inline-flex items-center rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-800 border border-emerald-200/60">
+          ✅ Direct Apply
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center rounded-md bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-600">
+        🤝 Supervisor Rec.
+      </span>
+    );
+  };
+
   return (
     <div
       onClick={() => setSelectedScholarship(scholarship)}
       className="group relative flex flex-col justify-between rounded-2xl border border-zinc-200/90 bg-white p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md cursor-pointer"
     >
       <div>
-        {/* Top Header: Location, Degrees, Field Tag */}
+        {/* Top Header: Location, Region, Degrees, Field Tag */}
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-100 pb-3">
           <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-600">
             <span className="text-base leading-none">{scholarship.countryFlag || "🌍"}</span>
             <span>
               {scholarship.city}, {scholarship.country}
             </span>
+            <span className="rounded-sm bg-zinc-100 px-1.5 py-0.2 text-[10px] text-zinc-500 font-medium">
+              {scholarship.region}
+            </span>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-1.5">
             {scholarship.degrees.map((deg) => (
               <span
                 key={deg}
@@ -126,8 +181,20 @@ export const ScholarshipCard: React.FC<ScholarshipCardProps> = ({
           </div>
         </div>
 
+        {/* Funding Model & Supervisor Pills Row */}
+        <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+          {renderFundingBadge()}
+          {renderSupervisorBadge()}
+          {isMultiUni && scholarship.partnerUniversities && (
+            <span className="inline-flex items-center gap-1 rounded-md bg-indigo-50/80 px-2 py-0.5 text-[10px] font-semibold text-indigo-800 border border-indigo-200/60">
+              <Users className="h-2.5 w-2.5" />
+              <span>{scholarship.partnerUniversities.length} Partner Unis</span>
+            </span>
+          )}
+        </div>
+
         {/* Scholarship Name & University */}
-        <div className="mt-3.5">
+        <div className="mt-3">
           <div className="flex items-start justify-between gap-2">
             <h3 className="text-base font-bold text-zinc-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
               {scholarship.name}
@@ -179,10 +246,14 @@ export const ScholarshipCard: React.FC<ScholarshipCardProps> = ({
               </span>
               <span
                 className={`mt-0.5 block font-mono font-extrabold ${
-                  netSavings >= 0 ? "text-emerald-700" : "text-amber-700"
+                  maxSavings >= 0 ? "text-emerald-700" : "text-amber-700"
                 }`}
               >
-                {netSavings >= 0 ? `+$${netSavings.toLocaleString()}` : `-$${Math.abs(netSavings).toLocaleString()}`}
+                {isMultiUni
+                  ? `+$${minSavings}–$${maxSavings}`
+                  : maxSavings >= 0
+                  ? `+$${maxSavings.toLocaleString()}`
+                  : `-$${Math.abs(maxSavings).toLocaleString()}`}
                 <span className="text-[10px] font-normal text-emerald-600/80">/mo</span>
               </span>
             </div>

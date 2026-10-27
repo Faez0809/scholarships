@@ -1,6 +1,7 @@
 import {
   EligibilityResult,
   PillFilter,
+  Region,
   Scholarship,
   SortOption,
   UserProfile,
@@ -14,7 +15,7 @@ export function calculateDaysRemaining(deadlineStr: string): {
 } {
   const deadline = new Date(deadlineStr);
   const today = new Date();
-  
+
   // Normalize both dates to midnight
   deadline.setHours(0, 0, 0, 0);
   today.setHours(0, 0, 0, 0);
@@ -39,6 +40,32 @@ export function calculateDaysRemaining(deadlineStr: string): {
 
 export function calculateNetSavings(scholarship: Scholarship): number {
   return scholarship.monthlyStipendUSD - scholarship.estimatedLivingCostUSD;
+}
+
+export function getSavingsRange(scholarship: Scholarship): {
+  minSavings: number;
+  maxSavings: number;
+  isMultiUni: boolean;
+} {
+  if (
+    scholarship.partnerUniversities &&
+    scholarship.partnerUniversities.length > 0
+  ) {
+    const savings = scholarship.partnerUniversities.map(
+      (u) => u.monthlyStipend - u.estimatedLivingCost
+    );
+    return {
+      minSavings: Math.min(...savings),
+      maxSavings: Math.max(...savings),
+      isMultiUni: true,
+    };
+  }
+  const single = calculateNetSavings(scholarship);
+  return {
+    minSavings: single,
+    maxSavings: single,
+    isMultiUni: false,
+  };
 }
 
 export function checkEligibility(
@@ -97,12 +124,12 @@ export function checkEligibility(
     }
   }
 
-  // Desired savings check
-  const netSavings = calculateNetSavings(scholarship);
-  const savingsPass = netSavings >= profile.minSavingsDesired;
+  // Desired savings check (accounts for multi-uni maximum potential)
+  const { maxSavings } = getSavingsRange(scholarship);
+  const savingsPass = maxSavings >= profile.minSavingsDesired;
   if (!savingsPass) {
     reasons.push(
-      `Net savings ($${netSavings}/mo) below your target of $${profile.minSavingsDesired}/mo`
+      `Net savings ($${maxSavings}/mo) below your target of $${profile.minSavingsDesired}/mo`
     );
   }
 
@@ -135,7 +162,35 @@ export function filterScholarships(
 ): Scholarship[] {
   let list = [...scholarships];
 
-  // 1. Classification Pills
+  // 1. World Region Filter
+  if (profile.selectedRegion && profile.selectedRegion !== "All") {
+    list = list.filter((s) => {
+      if (s.region === "Global" || s.region === profile.selectedRegion) {
+        return true;
+      }
+      return false;
+    });
+  }
+
+  // 2. Funding Track Filter
+  if (
+    profile.fundingTypePreference &&
+    profile.fundingTypePreference !== "All"
+  ) {
+    list = list.filter((s) => s.fundingType === profile.fundingTypePreference);
+  }
+
+  // 3. Supervisor Requirement Filter
+  if (
+    profile.supervisorPreference &&
+    profile.supervisorPreference === "No Supervisor Needed"
+  ) {
+    list = list.filter(
+      (s) => s.supervisorRequired === "Not Required (Central Admission)"
+    );
+  }
+
+  // 4. Classification Pills
   if (activePill === "masters") {
     list = list.filter((s) => s.degrees.includes("Master's"));
   } else if (activePill === "phd") {
@@ -143,7 +198,7 @@ export function filterScholarships(
   } else if (activePill === "eligible") {
     list = list.filter((s) => checkEligibility(s, profile).isEligible);
   } else if (activePill === "high_savings") {
-    list = list.filter((s) => calculateNetSavings(s) > 300);
+    list = list.filter((s) => getSavingsRange(s).maxSavings > 300);
   } else if (activePill === "closing_soon") {
     list = list.filter((s) => {
       const { isClosingSoon } = calculateDaysRemaining(s.deadline);
@@ -151,12 +206,12 @@ export function filterScholarships(
     });
   }
 
-  // 2. Profile "Only show 100% eligible" toggle
+  // 5. Profile "Only show 100% eligible" toggle
   if (profile.onlyEligible) {
     list = list.filter((s) => checkEligibility(s, profile).isEligible);
   }
 
-  // 3. Search query
+  // 6. Search query (search title, university, country, partner unis, field)
   if (searchQuery.trim()) {
     const q = searchQuery.toLowerCase().trim();
     list = list.filter(
@@ -165,18 +220,27 @@ export function filterScholarships(
         s.university.toLowerCase().includes(q) ||
         s.city.toLowerCase().includes(q) ||
         s.country.toLowerCase().includes(q) ||
+        s.region.toLowerCase().includes(q) ||
+        s.fundingType.toLowerCase().includes(q) ||
         s.field.toLowerCase().includes(q) ||
-        (s.fieldSpecifics && s.fieldSpecifics.toLowerCase().includes(q))
+        (s.fieldSpecifics && s.fieldSpecifics.toLowerCase().includes(q)) ||
+        (s.partnerUniversities &&
+          s.partnerUniversities.some(
+            (p) =>
+              p.name.toLowerCase().includes(q) ||
+              p.city.toLowerCase().includes(q) ||
+              p.country.toLowerCase().includes(q)
+          ))
     );
   }
 
-  // 4. Sorting
+  // 7. Sorting
   list.sort((a, b) => {
     if (sortBy === "deadline") {
       return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
     }
     if (sortBy === "savings_high") {
-      return calculateNetSavings(b) - calculateNetSavings(a);
+      return getSavingsRange(b).maxSavings - getSavingsRange(a).maxSavings;
     }
     if (sortBy === "stipend_high") {
       return b.monthlyStipendUSD - a.monthlyStipendUSD;

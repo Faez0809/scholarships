@@ -9,7 +9,9 @@ import React, {
   ReactNode,
 } from "react";
 import {
+  FundingType,
   PillFilter,
+  Region,
   Scholarship,
   SortOption,
   UserProfile,
@@ -17,8 +19,8 @@ import {
 import { SEED_SCHOLARSHIPS } from "../data/seedScholarships";
 import {
   calculateDaysRemaining,
-  calculateNetSavings,
   checkEligibility,
+  getSavingsRange,
 } from "../utils/scholarshipUtils";
 
 interface Stats {
@@ -26,6 +28,8 @@ interface Stats {
   eligibleCount: number;
   closingSoonCount: number;
   highSavingsCount: number;
+  regionCounts: Record<string, number>;
+  fundingCounts: Record<string, number>;
 }
 
 interface ScholarshipContextType {
@@ -70,12 +74,15 @@ const DEFAULT_PROFILE: UserProfile = {
   mediumPreference: "English Only",
   minSavingsDesired: 300,
   onlyEligible: false,
+  selectedRegion: "All",
+  fundingTypePreference: "All",
+  supervisorPreference: "All",
 };
 
-const STORAGE_KEY_SCHOLARSHIPS = "scholar_track_v1_scholarships";
-const STORAGE_KEY_PROFILE = "scholar_track_v1_profile";
-const STORAGE_KEY_ADMIN = "scholar_track_v1_is_admin";
-const STORAGE_KEY_DOCS = "scholar_track_v1_docs";
+const STORAGE_KEY_SCHOLARSHIPS = "scholar_track_v2_scholarships";
+const STORAGE_KEY_PROFILE = "scholar_track_v2_profile";
+const STORAGE_KEY_ADMIN = "scholar_track_v2_is_admin";
+const STORAGE_KEY_DOCS = "scholar_track_v2_docs";
 
 const ScholarshipContext = createContext<ScholarshipContextType | undefined>(
   undefined
@@ -99,15 +106,43 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
   >({});
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Initialize from LocalStorage
+  // Initialize from LocalStorage with smooth data migration
   useEffect(() => {
     try {
       // 1. Scholarships
-      const savedScholarships = localStorage.getItem(STORAGE_KEY_SCHOLARSHIPS);
+      const savedScholarships =
+        localStorage.getItem(STORAGE_KEY_SCHOLARSHIPS) ||
+        localStorage.getItem("scholar_track_v1_scholarships");
+
       if (savedScholarships) {
-        const parsed = JSON.parse(savedScholarships);
+        const parsed: any[] = JSON.parse(savedScholarships);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setScholarships(parsed);
+          // Migration: ensure every item has region, fundingType, supervisorRequired
+          const migrated: Scholarship[] = parsed.map((item) => {
+            const seedMatch = SEED_SCHOLARSHIPS.find((s) => s.id === item.id);
+            return {
+              ...item,
+              region: item.region || seedMatch?.region || "Global",
+              fundingType: item.fundingType || seedMatch?.fundingType || "University Direct",
+              supervisorRequired: item.supervisorRequired || seedMatch?.supervisorRequired || "Not Required (Central Admission)",
+              partnerUniversities: item.partnerUniversities || seedMatch?.partnerUniversities,
+              supervisorFundingGuide: item.supervisorFundingGuide || seedMatch?.supervisorFundingGuide,
+            };
+          });
+
+          // Merge any newly introduced seed scholarships that aren't present yet
+          const existingIds = new Set(migrated.map((m) => m.id));
+          for (const seed of SEED_SCHOLARSHIPS) {
+            if (!existingIds.has(seed.id)) {
+              migrated.push(seed);
+            }
+          }
+
+          setScholarships(migrated);
+          localStorage.setItem(
+            STORAGE_KEY_SCHOLARSHIPS,
+            JSON.stringify(migrated)
+          );
         } else {
           setScholarships(SEED_SCHOLARSHIPS);
           localStorage.setItem(
@@ -124,19 +159,29 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
       }
 
       // 2. Profile
-      const savedProfile = localStorage.getItem(STORAGE_KEY_PROFILE);
+      const savedProfile =
+        localStorage.getItem(STORAGE_KEY_PROFILE) ||
+        localStorage.getItem("scholar_track_v1_profile");
       if (savedProfile) {
-        setProfile(JSON.parse(savedProfile));
+        const parsedProf = JSON.parse(savedProfile);
+        setProfile({
+          ...DEFAULT_PROFILE,
+          ...parsedProf,
+        });
       }
 
       // 3. Admin status
-      const savedAdmin = localStorage.getItem(STORAGE_KEY_ADMIN);
+      const savedAdmin =
+        localStorage.getItem(STORAGE_KEY_ADMIN) ||
+        localStorage.getItem("scholar_track_v1_is_admin");
       if (savedAdmin === "true") {
         setIsAdmin(true);
       }
 
       // 4. Document checklist
-      const savedDocs = localStorage.getItem(STORAGE_KEY_DOCS);
+      const savedDocs =
+        localStorage.getItem(STORAGE_KEY_DOCS) ||
+        localStorage.getItem("scholar_track_v1_docs");
       if (savedDocs) {
         setDocumentChecklist(JSON.parse(savedDocs));
       }
@@ -271,12 +316,29 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
     );
   };
 
-  // Quick Stats
+  // Quick Stats & Breakdown Counts
   const stats = useMemo(() => {
     const total = scholarships.length;
     let eligibleCount = 0;
     let closingSoonCount = 0;
     let highSavingsCount = 0;
+
+    const regionCounts: Record<string, number> = {
+      All: total,
+      Europe: 0,
+      Asia: 0,
+      Americas: 0,
+      Oceania: 0,
+      "Middle East": 0,
+      Global: 0,
+    };
+
+    const fundingCounts: Record<string, number> = {
+      All: total,
+      "Gov / Multi-Uni": 0,
+      "University Direct": 0,
+      "Supervisor / RA-TA": 0,
+    };
 
     for (const s of scholarships) {
       if (checkEligibility(s, profile).isEligible) {
@@ -286,8 +348,15 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
       if (isClosingSoon) {
         closingSoonCount++;
       }
-      if (calculateNetSavings(s) > 300) {
+      if (getSavingsRange(s).maxSavings > 300) {
         highSavingsCount++;
+      }
+
+      if (s.region && regionCounts[s.region] !== undefined) {
+        regionCounts[s.region]++;
+      }
+      if (s.fundingType && fundingCounts[s.fundingType] !== undefined) {
+        fundingCounts[s.fundingType]++;
       }
     }
 
@@ -296,6 +365,8 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
       eligibleCount,
       closingSoonCount,
       highSavingsCount,
+      regionCounts,
+      fundingCounts,
     };
   }, [scholarships, profile]);
 

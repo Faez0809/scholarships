@@ -9,6 +9,35 @@ export type FieldCategory =
 
 export type MediumOfInstruction = "English Only" | "Any";
 
+export type Region =
+  | "Europe"
+  | "Asia"
+  | "Americas"
+  | "Oceania"
+  | "Middle East"
+  | "Global";
+
+export type FundingType =
+  | "Gov / Multi-Uni"
+  | "University Direct"
+  | "Supervisor / RA-TA";
+
+export type SupervisorRequirement =
+  | "Mandatory Before Applying"
+  | "Optional / Recommended"
+  | "Not Required (Central Admission)";
+
+export interface PartnerUniversity {
+  name: string;
+  city: string;
+  country: string;
+  flag: string;
+  estimatedLivingCost: number;
+  monthlyStipend: number;
+  rankingOrNote: string;
+  website?: string;
+}
+
 export interface Scholarship {
   id: string;
   name: string;
@@ -16,6 +45,11 @@ export interface Scholarship {
   city: string;
   country: string;
   countryFlag: string;
+  region: Region;
+  fundingType: FundingType;
+  supervisorRequired: SupervisorRequirement;
+  partnerUniversities?: PartnerUniversity[];
+  supervisorFundingGuide?: string;
   degrees: DegreeLevel[];
   field: FieldCategory;
   fieldSpecifics: string;
@@ -46,6 +80,9 @@ export interface UserProfile {
   mediumPreference: MediumOfInstruction;
   minSavingsDesired: number;
   onlyEligible: boolean;
+  selectedRegion: "All" | Region;
+  fundingTypePreference: "All" | FundingType;
+  supervisorPreference: "All" | "No Supervisor Needed" | "Supervisor Allowed";
 }
 
 export type PillFilter =

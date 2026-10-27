@@ -2,7 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import { useScholarship } from "../context/ScholarshipContext";
-import { DegreeLevel, FieldCategory, MediumOfInstruction } from "../types/scholarship";
+import {
+  DegreeLevel,
+  FieldCategory,
+  FundingType,
+  MediumOfInstruction,
+  PartnerUniversity,
+  Region,
+  SupervisorRequirement,
+} from "../types/scholarship";
 import {
   X,
   Sparkles,
@@ -16,7 +24,9 @@ import {
   Link2,
   Check,
   Loader2,
-  ExternalLink,
+  Landmark,
+  Microscope,
+  Users,
 } from "lucide-react";
 
 export const AdminModal: React.FC = () => {
@@ -41,6 +51,12 @@ export const AdminModal: React.FC = () => {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [countryFlag, setCountryFlag] = useState("🌍");
+  const [region, setRegion] = useState<Region>("Europe");
+  const [fundingType, setFundingType] = useState<FundingType>("University Direct");
+  const [supervisorRequired, setSupervisorRequired] =
+    useState<SupervisorRequirement>("Not Required (Central Admission)");
+  const [supervisorFundingGuide, setSupervisorFundingGuide] = useState("");
+  const [partnerUnisText, setPartnerUnisText] = useState("");
   const [degrees, setDegrees] = useState<DegreeLevel[]>(["Master's", "PhD"]);
   const [field, setField] = useState<FieldCategory>("Computer Science & AI");
   const [fieldSpecifics, setFieldSpecifics] = useState("");
@@ -65,6 +81,30 @@ export const AdminModal: React.FC = () => {
       setCity(editingScholarship.city);
       setCountry(editingScholarship.country);
       setCountryFlag(editingScholarship.countryFlag || "🌍");
+      setRegion(editingScholarship.region || "Europe");
+      setFundingType(editingScholarship.fundingType || "University Direct");
+      setSupervisorRequired(
+        editingScholarship.supervisorRequired ||
+          "Not Required (Central Admission)"
+      );
+      setSupervisorFundingGuide(editingScholarship.supervisorFundingGuide || "");
+
+      if (
+        editingScholarship.partnerUniversities &&
+        editingScholarship.partnerUniversities.length > 0
+      ) {
+        setPartnerUnisText(
+          editingScholarship.partnerUniversities
+            .map(
+              (u) =>
+                `${u.name} | ${u.city} | ${u.country} | ${u.flag} | ${u.estimatedLivingCost} | ${u.monthlyStipend} | ${u.rankingOrNote}`
+            )
+            .join("\n")
+        );
+      } else {
+        setPartnerUnisText("");
+      }
+
       setDegrees(editingScholarship.degrees);
       setField(editingScholarship.field);
       setFieldSpecifics(editingScholarship.fieldSpecifics || "");
@@ -89,6 +129,11 @@ export const AdminModal: React.FC = () => {
       setCity("");
       setCountry("");
       setCountryFlag("🌍");
+      setRegion("Europe");
+      setFundingType("University Direct");
+      setSupervisorRequired("Not Required (Central Admission)");
+      setSupervisorFundingGuide("");
+      setPartnerUnisText("");
       setDegrees(["Master's", "PhD"]);
       setField("Computer Science & AI");
       setFieldSpecifics("");
@@ -167,6 +212,22 @@ export const AdminModal: React.FC = () => {
       setCity(s.city || "");
       setCountry(s.country || "");
       setCountryFlag(s.countryFlag || "🌍");
+      if (s.region) setRegion(s.region);
+      if (s.fundingType) setFundingType(s.fundingType);
+      if (s.supervisorRequired) setSupervisorRequired(s.supervisorRequired);
+      if (s.supervisorFundingGuide) setSupervisorFundingGuide(s.supervisorFundingGuide);
+
+      if (Array.isArray(s.partnerUniversities) && s.partnerUniversities.length > 0) {
+        setPartnerUnisText(
+          s.partnerUniversities
+            .map(
+              (u: any) =>
+                `${u.name} | ${u.city} | ${u.country} | ${u.flag || "🌍"} | ${u.estimatedLivingCost} | ${u.monthlyStipend} | ${u.rankingOrNote}`
+            )
+            .join("\n")
+        );
+      }
+
       if (Array.isArray(s.degrees) && s.degrees.length > 0) {
         setDegrees(s.degrees);
       }
@@ -230,12 +291,38 @@ export const AdminModal: React.FC = () => {
       .map((d) => d.trim())
       .filter(Boolean);
 
+    // Parse partner universities if provided
+    let parsedPartnerUnis: PartnerUniversity[] | undefined = undefined;
+    if (partnerUnisText.trim()) {
+      parsedPartnerUnis = partnerUnisText
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .map((line) => {
+          const parts = line.split("|").map((p) => p.trim());
+          return {
+            name: parts[0] || "Partner Institution",
+            city: parts[1] || city,
+            country: parts[2] || country,
+            flag: parts[3] || countryFlag,
+            estimatedLivingCost: parseInt(parts[4] || String(estimatedLivingCostUSD), 10),
+            monthlyStipend: parseInt(parts[5] || String(monthlyStipendUSD), 10),
+            rankingOrNote: parts[6] || "",
+          };
+        });
+    }
+
     const payload = {
       name: name.trim(),
       university: university.trim(),
       city: city.trim(),
       country: country.trim(),
       countryFlag: countryFlag.trim() || "🌍",
+      region,
+      fundingType,
+      supervisorRequired,
+      partnerUniversities: parsedPartnerUnis,
+      supervisorFundingGuide: supervisorFundingGuide.trim() || undefined,
       degrees,
       field,
       fieldSpecifics: fieldSpecifics.trim(),
@@ -312,11 +399,11 @@ export const AdminModal: React.FC = () => {
                 AI URL Auto-Extractor (Gemini 2.5 Flash)
               </span>
               <span className="rounded-full bg-indigo-100 px-2.5 py-0.5 text-[10px] font-semibold text-indigo-800">
-                Powered by Gemini &amp; Jina
+                Multi-Uni &amp; Supervisor Aware
               </span>
             </div>
             <p className="text-xs text-indigo-900/80 mb-3">
-              Paste any official scholarship webpage URL. The AI will scrape the portal, calculate city living costs, and auto-populate all fields below:
+              Paste any government portal (CSC, Erasmus, DAAD) or university lab RA/TA link to auto-parse requirements, funding models, partner universities, and living costs:
             </p>
 
             <div className="flex flex-col gap-2 sm:flex-row">
@@ -331,7 +418,7 @@ export const AdminModal: React.FC = () => {
                     if (extractError) setExtractError(null);
                     if (extractSuccess) setExtractSuccess(false);
                   }}
-                  placeholder="https://www.ox.ac.uk/clarendon or https://kaust.edu.sa"
+                  placeholder="https://www.campuschina.org or https://uwaterloo.ca/graduate-studies"
                   className="w-full rounded-lg border border-indigo-200 bg-white py-2 pl-9 pr-3 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none disabled:bg-zinc-100"
                 />
               </div>
@@ -360,7 +447,7 @@ export const AdminModal: React.FC = () => {
               <div className="mt-3 flex items-center gap-2 rounded-lg bg-white/90 p-2.5 text-xs text-indigo-900 border border-indigo-200">
                 <Loader2 className="h-4 w-4 animate-spin text-indigo-600 shrink-0" />
                 <span className="font-medium">
-                  Reading webpage, calculating city living costs &amp; mapping requirements with Gemini Flash...
+                  Reading webpage, detecting funding model &amp; parsing partner universities with Gemini Flash...
                 </span>
               </div>
             )}
@@ -398,7 +485,7 @@ export const AdminModal: React.FC = () => {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Gates Cambridge Scholarship"
+                  placeholder="e.g. Chinese Government Scholarship (CSC)"
                   className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
                 />
                 {errors.name && (
@@ -408,13 +495,13 @@ export const AdminModal: React.FC = () => {
 
               <div>
                 <label className="block text-xs font-semibold text-zinc-700 mb-1">
-                  University Name *
+                  University / Consortium Host *
                 </label>
                 <input
                   type="text"
                   value={university}
                   onChange={(e) => setUniversity(e.target.value)}
-                  placeholder="e.g. University of Cambridge"
+                  placeholder="e.g. China Scholarship Council (Consortium of 280+ Universities)"
                   className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
                 />
                 {errors.university && (
@@ -423,8 +510,8 @@ export const AdminModal: React.FC = () => {
               </div>
             </div>
 
-            {/* City, Country, Country Flag Emoji */}
-            <div className="grid grid-cols-3 gap-3">
+            {/* City, Country, Flag, Region */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-zinc-700 mb-1">
                   City *
@@ -433,7 +520,7 @@ export const AdminModal: React.FC = () => {
                   type="text"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  placeholder="e.g. Zurich"
+                  placeholder="e.g. Beijing"
                   className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
                 />
                 {errors.city && (
@@ -449,7 +536,7 @@ export const AdminModal: React.FC = () => {
                   type="text"
                   value={country}
                   onChange={(e) => setCountry(e.target.value)}
-                  placeholder="e.g. Switzerland"
+                  placeholder="e.g. China"
                   className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
                 />
                 {errors.country && (
@@ -465,10 +552,111 @@ export const AdminModal: React.FC = () => {
                   type="text"
                   value={countryFlag}
                   onChange={(e) => setCountryFlag(e.target.value)}
-                  placeholder="e.g. 🇨🇭"
+                  placeholder="e.g. 🇨🇳"
                   className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
                 />
               </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-zinc-700 mb-1">
+                  World Region *
+                </label>
+                <select
+                  value={region}
+                  onChange={(e) => setRegion(e.target.value as Region)}
+                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                >
+                  <option value="Europe">Europe</option>
+                  <option value="Asia">Asia</option>
+                  <option value="Americas">Americas</option>
+                  <option value="Oceania">Oceania</option>
+                  <option value="Middle East">Middle East</option>
+                  <option value="Global">Global</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Funding Model & Supervisor Requirement */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 rounded-xl border border-zinc-200 bg-zinc-50/70 p-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-zinc-800 mb-1 flex items-center gap-1.5">
+                  <Landmark className="h-3.5 w-3.5 text-zinc-600" />
+                  Funding Model Track *
+                </label>
+                <select
+                  value={fundingType}
+                  onChange={(e) => setFundingType(e.target.value as FundingType)}
+                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none font-medium"
+                >
+                  <option value="Gov / Multi-Uni">
+                    🏛️ Gov / Multi-Uni (CSC, Erasmus, DAAD)
+                  </option>
+                  <option value="University Direct">
+                    🎓 University Direct Fellowship (KAUST, Gates, ETH)
+                  </option>
+                  <option value="Supervisor / RA-TA">
+                    🔬 Supervisor RA / TA (Canada, USA, Aus)
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-zinc-800 mb-1 flex items-center gap-1.5">
+                  <Microscope className="h-3.5 w-3.5 text-zinc-600" />
+                  Supervisor Requirement *
+                </label>
+                <select
+                  value={supervisorRequired}
+                  onChange={(e) =>
+                    setSupervisorRequired(e.target.value as SupervisorRequirement)
+                  }
+                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none font-medium"
+                >
+                  <option value="Not Required (Central Admission)">
+                    ✅ Not Required (Central Admission)
+                  </option>
+                  <option value="Optional / Recommended">
+                    🤝 Optional / Recommended
+                  </option>
+                  <option value="Mandatory Before Applying">
+                    👨‍🏫 Mandatory Before Applying
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            {/* Partner Universities Editor (For Umbrella Programs) */}
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
+                  <Users className="h-3.5 w-3.5 text-indigo-600" />
+                  Participating Partner Universities (One per line)
+                </label>
+                <span className="text-[10px] text-zinc-400">
+                  Format: Name | City | Country | Flag | LivingCost | Stipend | Note
+                </span>
+              </div>
+              <textarea
+                rows={3}
+                value={partnerUnisText}
+                onChange={(e) => setPartnerUnisText(e.target.value)}
+                placeholder="Tsinghua University | Beijing | China | 🇨🇳 | 550 | 900 | World #12 in Engineering&#10;Zhejiang University | Hangzhou | China | 🇨🇳 | 450 | 850 | China Silicon Valley Hub"
+                className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none font-mono"
+              />
+            </div>
+
+            {/* Supervisor Funding Guide (Optional) */}
+            <div>
+              <label className="block text-xs font-semibold text-zinc-700 mb-1">
+                Supervisor &amp; Lab Funding Guide (For RA/TA programs)
+              </label>
+              <textarea
+                rows={2}
+                value={supervisorFundingGuide}
+                onChange={(e) => setSupervisorFundingGuide(e.target.value)}
+                placeholder="How to approach professors at this university, cold email pitch tips, lab directories..."
+                className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+              />
             </div>
 
             {/* Degree Levels & Field */}

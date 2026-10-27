@@ -4,6 +4,7 @@ import React from "react";
 import { useScholarship } from "../context/ScholarshipContext";
 import { filterScholarships } from "../utils/scholarshipUtils";
 import { Navbar } from "./Navbar";
+import { WorldRegionBar } from "./WorldRegionBar";
 import { FilterPills } from "./FilterPills";
 import { ProfileSidebar } from "./ProfileSidebar";
 import { ScholarshipCard } from "./ScholarshipCard";
@@ -24,6 +25,7 @@ export const ScholarshipApp: React.FC = () => {
   const {
     scholarships,
     profile,
+    updateProfileField,
     activePill,
     setActivePill,
     searchQuery,
@@ -49,6 +51,9 @@ export const ScholarshipApp: React.FC = () => {
   const hasActiveFilters =
     activePill !== "all" ||
     profile.onlyEligible ||
+    profile.selectedRegion !== "All" ||
+    profile.fundingTypePreference !== "All" ||
+    profile.supervisorPreference !== "All" ||
     profile.majorCategory !== "All" ||
     profile.targetDegree !== "Both" ||
     searchQuery.trim().length > 0;
@@ -65,7 +70,12 @@ export const ScholarshipApp: React.FC = () => {
       <Navbar />
 
       {/* Main Container */}
-      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 py-6 sm:px-6">
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 py-5 sm:px-6">
+        {/* World Region Selector */}
+        <div className="mb-3">
+          <WorldRegionBar />
+        </div>
+
         {/* Classification Pills Bar */}
         <FilterPills />
 
@@ -80,11 +90,21 @@ export const ScholarshipApp: React.FC = () => {
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <h1 className="text-base font-bold text-zinc-900 tracking-tight">
-                  Global Scholarships
+                  Global Graduate Scholarships
                 </h1>
                 <span className="rounded-full bg-zinc-200/80 px-2 py-0.5 text-xs font-semibold text-zinc-700">
-                  {filteredScholarships.length} found
+                  {filteredScholarships.length} of {scholarships.length} available
                 </span>
+                {profile.selectedRegion !== "All" && (
+                  <span className="rounded-full bg-zinc-900 text-white px-2 py-0.5 text-[11px] font-semibold">
+                    {profile.selectedRegion}
+                  </span>
+                )}
+                {profile.fundingTypePreference !== "All" && (
+                  <span className="rounded-full bg-purple-100 text-purple-900 px-2 py-0.5 text-[11px] font-semibold">
+                    {profile.fundingTypePreference}
+                  </span>
+                )}
                 {profile.onlyEligible && (
                   <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
                     100% Eligible Mode
@@ -123,7 +143,7 @@ export const ScholarshipApp: React.FC = () => {
                   No scholarships match your current filters
                 </h3>
                 <p className="mt-1 max-w-md text-xs text-zinc-500 leading-relaxed">
-                  Try lowering your minimum desired savings, adjusting your target degree, or clearing the &ldquo;100% eligible only&rdquo; toggle in the sidebar.
+                  Try switching world regions, relaxing your supervisor requirement, or lowering the minimum desired net monthly savings.
                 </p>
                 <div className="mt-5 flex gap-2">
                   <button

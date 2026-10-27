@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
-import { FieldCategory, Scholarship } from "@/types/scholarship";
+import {
+  FieldCategory,
+  FundingType,
+  PartnerUniversity,
+  Region,
+  Scholarship,
+  SupervisorRequirement,
+} from "@/types/scholarship";
 
 // Helper to scrape webpage content using Jina Reader with fallback to direct HTML strip
 async function scrapeUrl(targetUrl: string): Promise<string> {
@@ -120,29 +127,51 @@ ${webpageText}
 """
 
 Instructions:
-1. name: Exact official name of the scholarship (e.g. "Gates Cambridge Scholarship", "KAUST Fellowship").
-2. university: Host university name.
-3. city: City where the university is located.
+1. name: Exact official name of the scholarship (e.g. "Chinese Government Scholarship - Silk Road Program", "Erasmus Mundus Joint Masters", "Graduate Research Assistantship").
+2. university: Host university name or Consortium host (e.g., "China Scholarship Council (280+ Universities)", "European Commission Consortium", "University of Waterloo").
+3. city: City where the university or main campus is located.
 4. country: Country name.
-5. countryFlag: Standard emoji flag of the country (e.g. "🇬🇧", "🇸🇦", "🇨🇭", "🇯🇵", "🇰🇷", "🇫🇷", "🇩🇪", "🇺🇸").
-6. degrees: Array containing "Master's", "PhD", or both ["Master's", "PhD"].
-7. field: Must be exactly one of: "Computer Science & AI", "Engineering", "Life Sciences", "Business & Social Sciences", "All Fields".
-8. fieldSpecifics: String listing target subjects/majors mentioned (e.g. "Artificial Intelligence, Data Science, Electrical Engineering").
-9. minCGPA: Minimum undergraduate CGPA on a 4.0 scale (number). If not explicitly stated, estimate a realistic minimum (e.g. 3.20 or 3.50 for prestigious awards).
-10. minIELTS: Minimum IELTS score (number, e.g. 6.5, 7.0, 7.5). If not mentioned, estimate 6.5.
-11. medium: "English Only" if courses are in English (almost always English for international scholarships), otherwise "Any".
-12. deadline: Date in YYYY-MM-DD format. If date is not found or has passed, estimate the next upcoming cycle deadline (in late 2026 or early 2027).
-13. monthlyStipendUSD: Convert any stated living allowance/stipend into equivalent Monthly USD (number). (e.g., £2,000/mo -> 2500, €1,500/mo -> 1650, 150,000 JPY -> 1000). If only tuition is covered and no living stipend is provided, set to 0.
-14. estimatedLivingCostUSD: Estimate a realistic single-student Monthly Living Cost in USD for that specific city. CRITICAL: If the scholarship includes free housing/dormitory, subtract rent and estimate only food/transport (~$500-$700/mo). If student must pay market rent in high-cost cities like London/Zurich/Tokyo/Paris, estimate realistically ($1,200-$1,900/mo).
-15. tuitionCovered: boolean (true if 100% tuition waiver).
-16. healthInsuranceCovered: boolean (true if health insurance is provided).
-17. relocationAirfareCovered: boolean (true if flight ticket/travel grant is covered).
-18. housingProvided: boolean (true if on-campus housing or free accommodation is provided).
-19. facilities: Array of strings detailing all perks & benefits (e.g. ["100% Full Tuition Waiver", "Monthly Living Stipend ($2,400/mo)", "Round-trip Airfare", "Health & Dental Insurance", "Visa Reimbursement", "Research & Travel Grant"]).
-20. requiredDocuments: Array of strings detailing all required application materials (e.g. ["Statement of Purpose (SOP)", "Two Academic Letters of Recommendation (LOR)", "Official Transcripts & Degree Certificate", "Curriculum Vitae (CV)", "IELTS / TOEFL Score Report", "Research Proposal"]).
-21. overview: 2-3 paragraph detailed summary of the academic prestige, research labs, ranking, and program quality.
-22. cityLifeOverview: 1-2 paragraph description of living in this city (safety, cost of living, transit, international student community).
-23. officialWebsiteUrl: The official application portal URL (use the provided URL if it's the official page).
+5. countryFlag: Standard emoji flag of the country (e.g. "🇨🇳", "🇪🇺", "🇬🇧", "🇸🇦", "🇨🇭", "🇯🇵", "🇰🇷", "🇫🇷", "🇩🇪", "🇺🇸", "🇨🇦", "🇦🇺").
+6. region: Must be exactly one of: "Europe", "Asia", "Americas", "Oceania", "Middle East", "Global".
+7. fundingType: Must be exactly one of:
+   - "Gov / Multi-Uni" (Umbrella government or multilateral programs like CSC China, Erasmus Mundus, DAAD, MEXT, Chevening, Fulbright)
+   - "University Direct" (Single-university endowments like KAUST, Gates Cambridge, ETH ESOP, Clarendon)
+   - "Supervisor / RA-TA" (Graduate programs funded through professor research lab grants, Research Assistantships, or Teaching Assistantships)
+8. supervisorRequired: Must be exactly one of:
+   - "Mandatory Before Applying" (Applicant must secure a written supervisor agreement before formal admission)
+   - "Optional / Recommended" (Finding a professor helps but central admission is possible)
+   - "Not Required (Central Admission)" (Admissions and funding are handled centrally without contacting professors)
+9. partnerUniversities: If this is an umbrella / multi-university scholarship (like CSC, Erasmus Mundus, DAAD, Commonwealth), extract or list 3 to 5 prominent participating partner universities. Format each item as:
+   {
+     "name": "University Name",
+     "city": "City",
+     "country": "Country",
+     "flag": "Flag emoji",
+     "estimatedLivingCost": number (USD/mo for this city),
+     "monthlyStipend": number (USD/mo),
+     "rankingOrNote": "Short notable strength e.g. World #12 in AI / Low Living Cost",
+     "website": "URL if available"
+   }
+   If this is a single university scholarship, omit partnerUniversities or set to null.
+10. supervisorFundingGuide: If fundingType is "Supervisor / RA-TA" or supervisor is required/recommended, provide a practical 1-2 paragraph guide on how to approach professors, pitch research topics, and secure research assistantships at this university.
+11. degrees: Array containing "Master's", "PhD", or both ["Master's", "PhD"].
+12. field: Must be exactly one of: "Computer Science & AI", "Engineering", "Life Sciences", "Business & Social Sciences", "All Fields".
+13. fieldSpecifics: String listing target subjects/majors mentioned (e.g. "Artificial Intelligence, Data Science, Electrical Engineering").
+14. minCGPA: Minimum undergraduate CGPA on a 4.0 scale (number). If not explicitly stated, estimate a realistic minimum (e.g. 3.20 or 3.50 for prestigious awards).
+15. minIELTS: Minimum IELTS score (number, e.g. 6.5, 7.0, 7.5). If not mentioned, estimate 6.5.
+16. medium: "English Only" if courses are in English (almost always English for international scholarships), otherwise "Any".
+17. deadline: Date in YYYY-MM-DD format. If date is not found or has passed, estimate the next upcoming cycle deadline (in late 2026 or early 2027).
+18. monthlyStipendUSD: Convert any stated living allowance/stipend into equivalent Monthly USD (number). (e.g., £2,000/mo -> 2500, €1,500/mo -> 1650, 150,000 JPY -> 1000). If only tuition is covered and no living stipend is provided, set to 0.
+19. estimatedLivingCostUSD: Estimate a realistic single-student Monthly Living Cost in USD for that specific city. CRITICAL: If the scholarship includes free housing/dormitory, subtract rent and estimate only food/transport (~$400-$700/mo). If student must pay market rent in high-cost cities like London/Zurich/Tokyo/Paris/Atlanta, estimate realistically ($1,200-$1,900/mo).
+20. tuitionCovered: boolean (true if 100% tuition waiver).
+21. healthInsuranceCovered: boolean (true if health insurance is provided).
+22. relocationAirfareCovered: boolean (true if flight ticket/travel grant is covered).
+23. housingProvided: boolean (true if on-campus housing or free accommodation is provided).
+24. facilities: Array of strings detailing all perks & benefits (e.g. ["100% Full Tuition Waiver", "Monthly Living Stipend ($2,400/mo)", "Round-trip Airfare", "Health & Dental Insurance", "Visa Reimbursement", "Research & Travel Grant"]).
+25. requiredDocuments: Array of strings detailing all required application materials (e.g. ["Statement of Purpose (SOP)", "Two Academic Letters of Recommendation (LOR)", "Official Transcripts & Degree Certificate", "Curriculum Vitae (CV)", "IELTS / TOEFL Score Report", "Research Proposal"]).
+26. overview: 2-3 paragraph detailed summary of the academic prestige, research labs, ranking, and program quality.
+27. cityLifeOverview: 1-2 paragraph description of living in this city (safety, cost of living, transit, international student community).
+28. officialWebsiteUrl: The official application portal URL (use the provided URL if it's the official page).
 
 Return ONLY valid JSON matching these fields. No markdown backticks, no explanations.`;
 
@@ -184,12 +213,53 @@ Return ONLY valid JSON matching these fields. No markdown backticks, no explanat
       "All Fields",
     ];
 
+    const validRegions: Region[] = [
+      "Europe",
+      "Asia",
+      "Americas",
+      "Oceania",
+      "Middle East",
+      "Global",
+    ];
+
+    const validFundingTypes: FundingType[] = [
+      "Gov / Multi-Uni",
+      "University Direct",
+      "Supervisor / RA-TA",
+    ];
+
+    const validSupervisorReqs: SupervisorRequirement[] = [
+      "Mandatory Before Applying",
+      "Optional / Recommended",
+      "Not Required (Central Admission)",
+    ];
+
     const result = {
       name: parsed.name || "Global Graduate Scholarship",
       university: parsed.university || "International University",
       city: parsed.city || "International City",
       country: parsed.country || "Worldwide",
       countryFlag: parsed.countryFlag || "🌍",
+      region: validRegions.includes(parsed.region) ? parsed.region : "Global",
+      fundingType: validFundingTypes.includes(parsed.fundingType)
+        ? parsed.fundingType
+        : "University Direct",
+      supervisorRequired: validSupervisorReqs.includes(parsed.supervisorRequired)
+        ? parsed.supervisorRequired
+        : "Not Required (Central Admission)",
+      partnerUniversities: Array.isArray(parsed.partnerUniversities) && parsed.partnerUniversities.length > 0
+        ? parsed.partnerUniversities.map((u: any) => ({
+            name: u.name || "Partner University",
+            city: u.city || parsed.city,
+            country: u.country || parsed.country,
+            flag: u.flag || parsed.countryFlag || "🌍",
+            estimatedLivingCost: typeof u.estimatedLivingCost === "number" ? u.estimatedLivingCost : 800,
+            monthlyStipend: typeof u.monthlyStipend === "number" ? u.monthlyStipend : 1200,
+            rankingOrNote: u.rankingOrNote || "",
+            website: u.website || undefined,
+          }))
+        : undefined,
+      supervisorFundingGuide: parsed.supervisorFundingGuide || undefined,
       degrees: Array.isArray(parsed.degrees) && parsed.degrees.length > 0
         ? parsed.degrees
         : ["Master's", "PhD"],

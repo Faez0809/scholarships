@@ -70,7 +70,7 @@ export const ScholarshipApp: React.FC = () => {
       <Navbar />
 
       {/* Main Container */}
-      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 py-5 sm:px-6">
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-3.5 py-4 sm:px-6 sm:py-5">
         {/* World Region Selector */}
         <div className="mb-3">
           <WorldRegionBar />

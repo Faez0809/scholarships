@@ -1,13 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useScholarship } from "../context/ScholarshipContext";
 import { FundingType, MediumOfInstruction } from "../types/scholarship";
 import {
   User,
   GraduationCap,
   Sparkles,
-  Sliders,
+  SlidersHorizontal,
   DollarSign,
   Globe2,
   RotateCcw,
@@ -15,6 +15,7 @@ import {
   Filter,
   Landmark,
   UserCheck,
+  ChevronDown,
 } from "lucide-react";
 
 const FIELD_OPTIONS: { value: string; label: string }[] = [
@@ -27,13 +28,59 @@ const FIELD_OPTIONS: { value: string; label: string }[] = [
 
 export const ProfileSidebar: React.FC = () => {
   const { profile, updateProfileField, resetProfile, stats } = useScholarship();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const matchPercentage =
     stats.total > 0 ? Math.round((stats.eligibleCount / stats.total) * 100) : 0;
 
   return (
     <aside className="w-full shrink-0 lg:w-80">
-      <div className="sticky top-20 rounded-2xl border border-zinc-200/90 bg-white p-5 shadow-xs transition-all">
+      {/* Mobile Collapsible Header / Filter Trigger */}
+      <div className="lg:hidden">
+        <div className="rounded-2xl border border-zinc-200/90 bg-white p-3.5 shadow-xs">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+                <SlidersHorizontal className="h-4 w-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <h2 className="text-xs font-bold text-zinc-900">
+                    Profile & Eligibility
+                  </h2>
+                  <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">
+                    {stats.eligibleCount} Eligible ({matchPercentage}%)
+                  </span>
+                </div>
+                <p className="text-[11px] text-zinc-500 truncate">
+                  CGPA {profile.cgpa.toFixed(2)} • IELTS {profile.ielts.toFixed(1)} • {profile.targetDegree}
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsMobileOpen((prev) => !prev)}
+              className="flex items-center gap-1.5 shrink-0 rounded-xl bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-zinc-800 transition"
+              aria-expanded={isMobileOpen}
+            >
+              <span>{isMobileOpen ? "Hide" : "Filter"}</span>
+              <ChevronDown
+                className={`h-3.5 w-3.5 transition-transform duration-200 ${
+                  isMobileOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Sidebar Panel (Always visible on lg+, Collapsible on mobile) */}
+      <div
+        className={`${
+          isMobileOpen ? "block mt-3" : "hidden"
+        } lg:block sticky top-20 rounded-2xl border border-zinc-200/90 bg-white p-5 shadow-xs transition-all`}
+      >
         {/* Panel Header */}
         <div className="flex items-center justify-between border-b border-zinc-100 pb-4">
           <div className="flex items-center gap-2">
@@ -321,6 +368,17 @@ export const ProfileSidebar: React.FC = () => {
                 <div className="h-5 w-9 rounded-full bg-zinc-300 peer-checked:bg-emerald-600 transition-colors peer-focus:outline-none after:absolute after:top-0.5 after:left-[2px] after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full"></div>
               </div>
             </label>
+          </div>
+
+          {/* Mobile Close/Apply Button */}
+          <div className="pt-2 lg:hidden">
+            <button
+              type="button"
+              onClick={() => setIsMobileOpen(false)}
+              className="w-full rounded-xl bg-zinc-900 py-2.5 text-center text-xs font-semibold text-white shadow-xs hover:bg-zinc-800 transition"
+            >
+              Apply &amp; View Matching Scholarships ({stats.eligibleCount})
+            </button>
           </div>
         </div>
       </div>

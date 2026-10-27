@@ -17,7 +17,7 @@ export const WorldRegionBar: React.FC = () => {
   const { profile, updateProfileField, stats } = useScholarship();
 
   return (
-    <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 pt-1 scrollbar-none">
+    <div className="-mx-4 flex items-center gap-1.5 overflow-x-auto px-4 pb-1.5 pt-1 sm:mx-0 sm:px-0 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {REGIONS.map((region) => {
         const isSelected = profile.selectedRegion === region.id;
         const count = stats.regionCounts[region.id] ?? 0;
@@ -25,10 +25,11 @@ export const WorldRegionBar: React.FC = () => {
         return (
           <button
             key={region.id}
+            type="button"
             onClick={() => updateProfileField("selectedRegion", region.id)}
             className={`flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-medium transition-all ${
               isSelected
-                ? "bg-zinc-900 text-white shadow-xs"
+                ? "bg-zinc-900 text-white shadow-xs font-semibold"
                 : "border border-zinc-200/90 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900"
             }`}
           >

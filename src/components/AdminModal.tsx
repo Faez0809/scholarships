@@ -356,7 +356,7 @@ export const AdminModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
@@ -364,9 +364,9 @@ export const AdminModal: React.FC = () => {
       />
 
       {/* Modal Dialog */}
-      <div className="relative z-10 flex max-h-[90vh] w-full max-w-3xl flex-col rounded-2xl bg-white shadow-2xl animate-in zoom-in-95 duration-200">
+      <div className="relative z-10 flex max-h-[94vh] sm:max-h-[90vh] w-full max-w-3xl flex-col rounded-2xl bg-white shadow-2xl animate-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-zinc-200 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3.5 sm:px-6 sm:py-4">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
               <Sparkles className="h-4 w-4" />
@@ -376,7 +376,7 @@ export const AdminModal: React.FC = () => {
                 {editingScholarship ? "Edit Scholarship Details" : "Add New Scholarship"}
               </h2>
               <p className="text-xs text-zinc-500">
-                Live changes will update the search index &amp; localStorage immediately
+                Live changes sync directly to Supabase cloud and update the directory immediately
               </p>
             </div>
           </div>
@@ -390,13 +390,13 @@ export const AdminModal: React.FC = () => {
         </div>
 
         {/* Scrollable Form Body */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
-          {/* AI Auto-Fill from URL Section */}
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5 space-y-5">
+          {/* Instant Auto-Fill from URL Section */}
           <div className="rounded-xl border border-indigo-200 bg-gradient-to-br from-indigo-50/70 to-violet-50/30 p-4">
             <div className="flex items-center justify-between mb-1.5">
               <span className="flex items-center gap-1.5 text-xs font-bold text-indigo-950">
                 <Sparkles className="h-4 w-4 text-indigo-600" />
-                AI URL Auto-Extractor (Gemini 2.5 Flash)
+                Instant URL Auto-Import
               </span>
               <span className="rounded-full bg-indigo-100 px-2.5 py-0.5 text-[10px] font-semibold text-indigo-800">
                 Multi-Uni &amp; Supervisor Aware
@@ -447,7 +447,7 @@ export const AdminModal: React.FC = () => {
               <div className="mt-3 flex items-center gap-2 rounded-lg bg-white/90 p-2.5 text-xs text-indigo-900 border border-indigo-200">
                 <Loader2 className="h-4 w-4 animate-spin text-indigo-600 shrink-0" />
                 <span className="font-medium">
-                  Reading webpage, detecting funding model &amp; parsing partner universities with Gemini Flash...
+                  Reading webpage, detecting funding model &amp; parsing university data...
                 </span>
               </div>
             )}

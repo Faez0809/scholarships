@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           error:
-            "GEMINI_API_KEY is not configured in .env.local. Please set your key.",
+            "URL parser engine key is not configured in .env.local. Please check your environment configuration.",
         },
         { status: 500 }
       );
@@ -186,7 +186,7 @@ Return ONLY valid JSON matching these fields. No markdown backticks, no explanat
     const responseText = response.text;
     if (!responseText) {
       return NextResponse.json(
-        { error: "Gemini did not return any content." },
+        { error: "The webpage parser was unable to extract structured data from this URL." },
         { status: 500 }
       );
     }

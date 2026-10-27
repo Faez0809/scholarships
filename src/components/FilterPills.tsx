@@ -105,16 +105,17 @@ export const FilterPills: React.FC = () => {
   return (
     <div className="flex flex-col gap-3 py-3 border-b border-zinc-200/80 sm:flex-row sm:items-center sm:justify-between">
       {/* Scrollable Horizontal Pill List */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+      <div className="-mx-4 flex items-center gap-1.5 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0 sm:pb-0 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {pills.map((pill) => {
           const isActive = activePill === pill.id;
           return (
             <button
               key={pill.id}
+              type="button"
               onClick={() => setActivePill(pill.id)}
               className={`group flex shrink-0 items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
                 isActive
-                  ? "bg-zinc-900 text-white shadow-xs"
+                  ? "bg-zinc-900 text-white shadow-xs font-semibold"
                   : "border border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900"
               }`}
             >
@@ -135,10 +136,10 @@ export const FilterPills: React.FC = () => {
       </div>
 
       {/* Sort Dropdown */}
-      <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+      <div className="flex items-center justify-between gap-2 shrink-0 self-stretch sm:self-auto sm:justify-start">
         <label className="flex items-center gap-1 text-xs text-zinc-500 font-medium">
           <ArrowUpDown className="h-3.5 w-3.5 text-zinc-400" />
-          <span className="hidden sm:inline">Sort:</span>
+          <span>Sort:</span>
         </label>
         <select
           value={sortBy}

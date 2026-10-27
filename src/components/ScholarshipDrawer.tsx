@@ -126,7 +126,7 @@ export const ScholarshipDrawer: React.FC = () => {
       {/* Drawer Container */}
       <div className="relative z-10 flex h-full w-full max-w-2xl flex-col bg-white shadow-2xl transition-transform animate-in slide-in-from-right duration-250 ease-out">
         {/* Drawer Header */}
-        <div className="flex items-center justify-between border-b border-zinc-200 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3.5 sm:px-6 sm:py-4">
           <div className="flex items-center gap-2">
             <span className="text-2xl leading-none">{s.countryFlag || "🌍"}</span>
             <div>
@@ -176,7 +176,7 @@ export const ScholarshipDrawer: React.FC = () => {
         </div>
 
         {/* Drawer Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
+        <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5 space-y-5 sm:space-y-6">
           {/* Title & Badges */}
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -559,8 +559,8 @@ export const ScholarshipDrawer: React.FC = () => {
         </div>
 
         {/* Drawer Footer with Official Website Link */}
-        <div className="border-t border-zinc-200 bg-white px-6 py-4 flex items-center justify-between gap-3">
-          <div className="text-xs text-zinc-500">
+        <div className="border-t border-zinc-200 bg-white px-4 py-3.5 sm:px-6 sm:py-4 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
+          <div className="text-center sm:text-left text-xs text-zinc-500">
             Last verified for 2026/2027 intake
           </div>
 
@@ -568,7 +568,7 @@ export const ScholarshipDrawer: React.FC = () => {
             href={s.officialWebsiteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900"
+            className="flex items-center justify-center gap-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 w-full sm:w-auto"
           >
             <span>Visit Official Application Portal</span>
             <ExternalLink className="h-3.5 w-3.5" />

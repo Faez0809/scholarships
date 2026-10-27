@@ -6,6 +6,7 @@ import React, {
   useState,
   useEffect,
   useMemo,
+  useCallback,
   ReactNode,
 } from "react";
 import {
@@ -22,6 +23,8 @@ import {
   checkEligibility,
   getSavingsRange,
 } from "../utils/scholarshipUtils";
+
+export type SyncStatus = "idle" | "syncing" | "synced" | "fallback" | "offline";
 
 interface Stats {
   total: number;
@@ -59,11 +62,13 @@ interface ScholarshipContextType {
   toggleDocumentCheck: (scholarshipId: string, docName: string) => void;
   addScholarship: (
     data: Omit<Scholarship, "id" | "createdAt" | "updatedAt">
-  ) => void;
-  updateScholarship: (id: string, updated: Partial<Scholarship>) => void;
-  deleteScholarship: (id: string) => void;
-  resetToSeedData: () => void;
+  ) => Promise<void>;
+  updateScholarship: (id: string, updated: Partial<Scholarship>) => Promise<void>;
+  deleteScholarship: (id: string) => Promise<void>;
+  resetToSeedData: () => Promise<void>;
   stats: Stats;
+  syncStatus: SyncStatus;
+  refreshFromCloud: () => Promise<void>;
 }
 
 const DEFAULT_PROFILE: UserProfile = {
@@ -82,6 +87,7 @@ const DEFAULT_PROFILE: UserProfile = {
 const STORAGE_KEY_SCHOLARSHIPS = "scholar_track_v2_scholarships";
 const STORAGE_KEY_PROFILE = "scholar_track_v2_profile";
 const STORAGE_KEY_ADMIN = "scholar_track_v2_is_admin";
+const STORAGE_KEY_PIN = "scholar_track_v2_admin_pin";
 const STORAGE_KEY_DOCS = "scholar_track_v2_docs";
 
 const ScholarshipContext = createContext<ScholarshipContextType | undefined>(
@@ -95,6 +101,7 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("deadline");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [adminPin, setAdminPin] = useState("1234");
   const [selectedScholarship, setSelectedScholarship] =
     useState<Scholarship | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -105,8 +112,40 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
     Record<string, boolean>
   >({});
   const [isInitialized, setIsInitialized] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>("idle");
 
-  // Initialize from LocalStorage with smooth data migration
+  // Fetch latest data from Supabase backend
+  const refreshFromCloud = useCallback(async () => {
+    try {
+      setSyncStatus("syncing");
+      const res = await fetch("/api/scholarships", {
+        headers: { "Cache-Control": "no-cache" },
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        if (
+          json.scholarships &&
+          Array.isArray(json.scholarships) &&
+          json.scholarships.length > 0
+        ) {
+          setScholarships(json.scholarships);
+          localStorage.setItem(
+            STORAGE_KEY_SCHOLARSHIPS,
+            JSON.stringify(json.scholarships)
+          );
+          setSyncStatus(json.source === "fallback" ? "fallback" : "synced");
+          return;
+        }
+      }
+      setSyncStatus("fallback");
+    } catch (e) {
+      console.warn("Could not sync with Supabase cloud, operating offline:", e);
+      setSyncStatus("offline");
+    }
+  }, []);
+
+  // Initialize from LocalStorage immediately for instant UI load
   useEffect(() => {
     try {
       // 1. Scholarships
@@ -117,16 +156,21 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
       if (savedScholarships) {
         const parsed: any[] = JSON.parse(savedScholarships);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // Migration: ensure every item has region, fundingType, supervisorRequired
           const migrated: Scholarship[] = parsed.map((item) => {
             const seedMatch = SEED_SCHOLARSHIPS.find((s) => s.id === item.id);
             return {
               ...item,
               region: item.region || seedMatch?.region || "Global",
-              fundingType: item.fundingType || seedMatch?.fundingType || "University Direct",
-              supervisorRequired: item.supervisorRequired || seedMatch?.supervisorRequired || "Not Required (Central Admission)",
-              partnerUniversities: item.partnerUniversities || seedMatch?.partnerUniversities,
-              supervisorFundingGuide: item.supervisorFundingGuide || seedMatch?.supervisorFundingGuide,
+              fundingType:
+                item.fundingType || seedMatch?.fundingType || "University Direct",
+              supervisorRequired:
+                item.supervisorRequired ||
+                seedMatch?.supervisorRequired ||
+                "Not Required (Central Admission)",
+              partnerUniversities:
+                item.partnerUniversities || seedMatch?.partnerUniversities,
+              supervisorFundingGuide:
+                item.supervisorFundingGuide || seedMatch?.supervisorFundingGuide,
             };
           });
 
@@ -170,12 +214,16 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
         });
       }
 
-      // 3. Admin status
+      // 3. Admin status & PIN
       const savedAdmin =
         localStorage.getItem(STORAGE_KEY_ADMIN) ||
         localStorage.getItem("scholar_track_v1_is_admin");
       if (savedAdmin === "true") {
         setIsAdmin(true);
+      }
+      const savedPin = localStorage.getItem(STORAGE_KEY_PIN);
+      if (savedPin) {
+        setAdminPin(savedPin);
       }
 
       // 4. Document checklist
@@ -190,8 +238,10 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
       setScholarships(SEED_SCHOLARSHIPS);
     } finally {
       setIsInitialized(true);
+      // Trigger live Supabase cloud sync in background
+      refreshFromCloud();
     }
-  }, []);
+  }, [refreshFromCloud]);
 
   // Sync scholarships to LocalStorage
   useEffect(() => {
@@ -258,7 +308,9 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
   const unlockAdmin = (pin: string): boolean => {
     if (pin.trim() === "1234") {
       setIsAdmin(true);
+      setAdminPin(pin.trim());
       localStorage.setItem(STORAGE_KEY_ADMIN, "true");
+      localStorage.setItem(STORAGE_KEY_PIN, pin.trim());
       setIsPasscodeModalOpen(false);
       return true;
     }
@@ -268,6 +320,7 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
   const lockAdmin = () => {
     setIsAdmin(false);
     localStorage.removeItem(STORAGE_KEY_ADMIN);
+    localStorage.removeItem(STORAGE_KEY_PIN);
   };
 
   const toggleDocumentCheck = (scholarshipId: string, docName: string) => {
@@ -278,7 +331,7 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
     }));
   };
 
-  const addScholarship = (
+  const addScholarship = async (
     data: Omit<Scholarship, "id" | "createdAt" | "updatedAt">
   ) => {
     const id = `scholarship-${Date.now()}`;
@@ -289,31 +342,136 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
       createdAt: now,
       updatedAt: now,
     };
+
+    // Optimistic local state update
     setScholarships((prev) => [newScholarship, ...prev]);
     setIsAddModalOpen(false);
+
+    // Sync to Supabase cloud
+    try {
+      setSyncStatus("syncing");
+      const res = await fetch("/api/scholarships", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-pin": adminPin || "1234",
+        },
+        body: JSON.stringify(newScholarship),
+      });
+
+      if (res.ok) {
+        setSyncStatus("synced");
+      } else {
+        console.warn("Could not save to Supabase cloud (saved locally).");
+        setSyncStatus("fallback");
+      }
+    } catch (err) {
+      console.warn("Network error during Supabase add (saved locally):", err);
+      setSyncStatus("offline");
+    }
   };
 
-  const updateScholarship = (id: string, updated: Partial<Scholarship>) => {
+  const updateScholarship = async (
+    id: string,
+    updated: Partial<Scholarship>
+  ) => {
     const now = new Date().toISOString();
+    let updatedRecord: Scholarship | undefined;
+
+    // Optimistic local state update
     setScholarships((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, ...updated, updatedAt: now } : s))
+      prev.map((s) => {
+        if (s.id === id) {
+          updatedRecord = { ...s, ...updated, updatedAt: now };
+          return updatedRecord;
+        }
+        return s;
+      })
     );
     setEditingScholarship(null);
+
+    // Sync to Supabase cloud
+    try {
+      setSyncStatus("syncing");
+      const res = await fetch("/api/scholarships", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-pin": adminPin || "1234",
+        },
+        body: JSON.stringify({ id, ...updated }),
+      });
+
+      if (res.ok) {
+        setSyncStatus("synced");
+      } else {
+        console.warn("Could not update in Supabase cloud (saved locally).");
+        setSyncStatus("fallback");
+      }
+    } catch (err) {
+      console.warn("Network error during Supabase update (saved locally):", err);
+      setSyncStatus("offline");
+    }
   };
 
-  const deleteScholarship = (id: string) => {
+  const deleteScholarship = async (id: string) => {
+    // Optimistic local state update
     setScholarships((prev) => prev.filter((s) => s.id !== id));
     if (selectedScholarship?.id === id) {
       setSelectedScholarship(null);
     }
+
+    // Sync to Supabase cloud
+    try {
+      setSyncStatus("syncing");
+      const res = await fetch(
+        `/api/scholarships?id=${encodeURIComponent(id)}`,
+        {
+          method: "DELETE",
+          headers: {
+            "x-admin-pin": adminPin || "1234",
+          },
+        }
+      );
+
+      if (res.ok) {
+        setSyncStatus("synced");
+      } else {
+        console.warn("Could not delete from Supabase cloud (deleted locally).");
+        setSyncStatus("fallback");
+      }
+    } catch (err) {
+      console.warn("Network error during Supabase delete (deleted locally):", err);
+      setSyncStatus("offline");
+    }
   };
 
-  const resetToSeedData = () => {
+  const resetToSeedData = async () => {
     setScholarships(SEED_SCHOLARSHIPS);
     localStorage.setItem(
       STORAGE_KEY_SCHOLARSHIPS,
       JSON.stringify(SEED_SCHOLARSHIPS)
     );
+
+    // Sync to Supabase cloud
+    try {
+      setSyncStatus("syncing");
+      const res = await fetch("/api/scholarships?action=reset", {
+        method: "POST",
+        headers: {
+          "x-admin-pin": adminPin || "1234",
+        },
+      });
+
+      if (res.ok) {
+        setSyncStatus("synced");
+      } else {
+        setSyncStatus("fallback");
+      }
+    } catch (err) {
+      console.warn("Network error during Supabase reset (reset locally):", err);
+      setSyncStatus("offline");
+    }
   };
 
   // Quick Stats & Breakdown Counts
@@ -402,6 +560,8 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
         deleteScholarship,
         resetToSeedData,
         stats,
+        syncStatus,
+        refreshFromCloud,
       }}
     >
       {children}

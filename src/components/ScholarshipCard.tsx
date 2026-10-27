@@ -151,7 +151,7 @@ export const ScholarshipCard: React.FC<ScholarshipCardProps> = ({
   return (
     <div
       onClick={() => setSelectedScholarship(scholarship)}
-      className="group relative flex flex-col justify-between rounded-2xl border border-zinc-200/90 bg-white p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md cursor-pointer"
+      className="group relative flex flex-col justify-between rounded-2xl border border-zinc-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md cursor-pointer"
     >
       <div>
         {/* Top Header: Location, Region, Degrees, Field Tag */}

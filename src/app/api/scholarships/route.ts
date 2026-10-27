@@ -1,5 +1,7 @@
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseClient } from "@/lib/supabase";
 import { SEED_SCHOLARSHIPS } from "@/data/seedScholarships";
 import { Scholarship } from "@/types/scholarship";
 
@@ -14,10 +16,22 @@ function verifyAdmin(req: NextRequest): boolean {
  * GET /api/scholarships
  * Fetches all scholarships from Supabase.
  * - If 0 rows, auto-inserts all 12 global seed scholarships and returns them.
- * - If table doesn't exist yet or connection fails, falls back to SEED_SCHOLARSHIPS gracefully.
+ * - If client cannot be initialized or table doesn't exist yet, falls back to SEED_SCHOLARSHIPS gracefully.
  */
 export async function GET() {
   try {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      return NextResponse.json(
+        {
+          scholarships: SEED_SCHOLARSHIPS,
+          source: "fallback",
+          warning: "Supabase client not configured; operating in local mode.",
+        },
+        { status: 200 }
+      );
+    }
+
     const { data: rows, error } = await supabase
       .from("scholarships")
       .select("id, data, updated_at")
@@ -26,7 +40,7 @@ export async function GET() {
     // Fallback if table is not created yet or Supabase returns error
     if (error) {
       console.warn(
-        "Supabase query error (falling back to local seed data):",
+        "Supabase query warning (falling back to local seed data):",
         error.message
       );
       return NextResponse.json(
@@ -113,6 +127,14 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return NextResponse.json(
+      { error: "Supabase database client is not configured." },
+      { status: 503 }
+    );
+  }
+
   const { searchParams } = new URL(req.url);
   const action = searchParams.get("action");
 
@@ -192,6 +214,14 @@ export async function PUT(req: NextRequest) {
     );
   }
 
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return NextResponse.json(
+      { error: "Supabase database client is not configured." },
+      { status: 503 }
+    );
+  }
+
   try {
     const body = await req.json();
     const id = body.id;
@@ -248,6 +278,14 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json(
       { error: "Unauthorized: Invalid or missing x-admin-pin header." },
       { status: 401 }
+    );
+  }
+
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return NextResponse.json(
+      { error: "Supabase database client is not configured." },
+      { status: 503 }
     );
   }
 

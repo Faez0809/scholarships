@@ -22,7 +22,19 @@ export const UniversitiesView: React.FC = () => {
       if (s.partnerUniversities?.length) s.partnerUniversities.forEach((u) => names.add(u.name));
       else if (s.fundingType !== "Gov / Multi-Uni") names.add(s.university);
     });
-    return Array.from(names).sort((a, b) => a.localeCompare(b));
+    // Leave out groupings that are not a single university, and keep the short form of a name
+    // when the list also has a longer version of it (e.g. "EPFL" and "EPFL (École ...)").
+    const byKey = new Map<string, string>();
+    Array.from(names)
+      .filter((n) => !/\b(with|ministry|universities|institutes|trust)\b/i.test(n))
+      .forEach((n) => {
+        const short = n.replace(/^the /i, "");
+        byKey.set(short.toLowerCase(), short);
+      });
+    const list = Array.from(byKey.values());
+    return list
+      .filter((n) => !list.some((other) => other !== n && n.startsWith(other + " (")))
+      .sort((a, b) => a.localeCompare(b));
   }, [scholarships]);
 
   useEffect(() => {
@@ -136,8 +148,8 @@ export const UniversitiesView: React.FC = () => {
         </article>
       ) : (
         <div>
-          <p className="mb-2 text-sm text-stone-600">Universities in our scholarship list</p>
-          <ul className="flex flex-wrap gap-2">
+          <h2 className="mb-1 text-sm font-semibold text-stone-900">Universities in our scholarship list</h2>
+          <ul className="grid grid-cols-1 divide-y divide-stone-100 border-y border-stone-100 sm:grid-cols-2 sm:gap-x-8 sm:divide-y-0">
             {catalogUniversities.map((u) => (
               <li key={u}>
                 <button
@@ -147,7 +159,7 @@ export const UniversitiesView: React.FC = () => {
                     setQuery(u);
                     setShowSuggestions(false);
                   }}
-                  className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-[13px] text-stone-700 hover:border-stone-300 hover:text-stone-900"
+                  className="w-full py-2.5 text-left text-sm text-stone-800 hover:text-blue-800 sm:border-b sm:border-stone-100"
                 >
                   {u}
                 </button>

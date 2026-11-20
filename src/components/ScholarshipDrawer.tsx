@@ -21,17 +21,12 @@ import {
   ExternalLink,
   Building2,
   MapPin,
-  Calendar,
-  Clock,
   CheckCircle2,
   AlertTriangle,
   GraduationCap,
-  DollarSign,
-  TrendingUp,
   FileCheck,
   Edit2,
   Trash2,
-  Sliders,
   Award,
   Landmark,
   Microscope,
@@ -98,7 +93,7 @@ export const ScholarshipDrawer: React.FC = () => {
   const effectiveLivingCost = Math.max(0, activeLivingCostBase + personalExpenseAdjustment);
   const adjustedNetSavings = activeStipend - effectiveLivingCost;
 
-  const { days, isClosingSoon, isExpired, formattedDate } =
+  const { isExpired, formattedDate } =
     calculateDaysRemaining(s.deadline);
 
   const handleEdit = () => {
@@ -188,37 +183,10 @@ export const ScholarshipDrawer: React.FC = () => {
                 {SUPERVISOR_LABELS[s.supervisorRequired]}
               </span>
 
-              {s.degrees.map((deg) => (
-                <span
-                  key={deg}
-                  className="rounded-md bg-stone-100 px-2.5 py-0.5 text-xs font-semibold text-stone-800"
-                >
-                  {deg}
-                </span>
-              ))}
-              <span className="rounded-md bg-stone-50 px-2.5 py-0.5 text-xs font-semibold text-blue-800">
-                {s.field}
+              <span className="rounded-md bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-800">
+                {s.degrees.join(" & ")}
               </span>
-
-              {/* Deadline Badge */}
-              <span
-                className={`ml-auto flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
-                  isExpired
-                    ? "bg-stone-100 text-stone-500"
-                    : isClosingSoon
-                    ? "border border-amber-300 bg-amber-50 text-amber-900"
-                    : "border border-stone-200 bg-stone-50 text-stone-700"
-                }`}
-              >
-                {isClosingSoon ? (
-                  <Clock className="h-3.5 w-3.5 text-amber-600" />
-                ) : (
-                  <Calendar className="h-3.5 w-3.5 text-stone-500" />
-                )}
-                <span>
-                  {isExpired ? "Passed" : isClosingSoon ? `${days} days left` : formattedDate}
-                </span>
-              </span>
+              <span className="px-1 py-0.5 text-xs text-stone-500">{s.field}</span>
             </div>
 
             <h2 className="font-serif text-2xl font-semibold leading-snug text-stone-950">{s.name}</h2>
@@ -258,11 +226,6 @@ export const ScholarshipDrawer: React.FC = () => {
                     </dt>
                     <dd className="mt-0.5 text-stone-600">{s.stipendNote}</dd>
                   </div>
-                )}
-                {s.lastVerified && (
-                  <p className="text-[11px] text-stone-500">
-                    Checked on {formatVerifiedDate(s.lastVerified)}. Always confirm on the official site before applying.
-                  </p>
                 )}
               </dl>
             )}
@@ -396,176 +359,89 @@ export const ScholarshipDrawer: React.FC = () => {
           {/* Supervisor & Lab Funding Guide (For Supervisor / RA-TA tracks) */}
           {s.fundingType === "Supervisor / RA-TA" && (
             <div className="rounded-xl border border-stone-200 bg-stone-50 p-4">
-              <div className="flex items-center gap-2 font-bold text-xs text-stone-900 mb-1.5">
-                <Microscope className="h-4 w-4 text-stone-700" />
-                <span>Supervisor &amp; Lab Funding Match Guide</span>
-              </div>
-              <p className="text-xs text-stone-900 leading-relaxed mb-3">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-stone-900">
+                <Microscope className="h-4 w-4 text-stone-500" />
+                Funding comes through a supervisor
+              </h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-stone-700">
                 {s.supervisorFundingGuide ||
-                  "This program provides guaranteed financial coverage via Professor Research Assistantships (RA) or Department Teaching Assistantships (TA). Securing a supervisor match before submitting your application confirms your multi-year stipend and tuition waiver."}
+                  "Funding is usually offered once a professor agrees to supervise you. Write to a few professors before you apply, with your CV and a one-page research idea that mentions their recent work."}
               </p>
-              <div className="flex flex-wrap gap-2 text-[11px]">
-                <span className="rounded-md bg-white px-2 py-1 font-medium text-stone-700 border border-stone-200">
-                  Tip: Attach CV &amp; 1-page research pitch
-                </span>
-                <span className="rounded-md bg-white px-2 py-1 font-medium text-stone-700 border border-stone-200">
-                  Cite 2 recent papers from the professor&apos;s lab
-                </span>
-              </div>
             </div>
           )}
 
-          {/* Dynamic Eligibility Comparison Banner */}
-          <div
-            id="drawer-eligibility"
-            className={`rounded-xl border p-4 ${
-              eligibility.isEligible
-                ? "border-emerald-200 bg-emerald-50/70 text-emerald-950"
-                : "border-amber-200 bg-amber-50/70 text-amber-950"
-            }`}
-          >
-            <div className="flex items-center gap-2 font-semibold text-sm">
+          {/* Requirements */}
+          <section id="drawer-eligibility" aria-labelledby="eligibility-title" className="scroll-mt-4">
+            <h3 id="eligibility-title" className="flex items-center gap-2 text-sm font-semibold text-stone-900">
               {eligibility.isEligible ? (
-                <>
-                  <CheckCircle2 className="h-5 w-5 text-emerald-600" />
-                  <span>You Are 100% Eligible For This Scholarship!</span>
-                </>
+                <CheckCircle2 className="h-4 w-4 text-emerald-700" />
               ) : (
-                <>
-                  <AlertTriangle className="h-5 w-5 text-amber-600" />
-                  <span>Eligibility Check Summary</span>
-                </>
+                <AlertTriangle className="h-4 w-4 text-amber-700" />
               )}
-            </div>
-
-            <div className="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
-              <div className="rounded-lg bg-white/80 p-2 shadow-2xs">
-                <span className="block text-[10px] text-stone-500 font-medium">Min CGPA</span>
-                <span className="font-semibold tabular-nums text-stone-900">
-                  {s.minCGPA.toFixed(2)}
-                </span>
-                <span
-                  className={`ml-1 text-[10px] font-semibold ${
-                    eligibility.cgpaPass ? "text-emerald-700" : "text-amber-800"
-                  }`}
-                >
-                  ({eligibility.cgpaPass ? "Passed" : "Low"})
-                </span>
-              </div>
-
-              <div className="rounded-lg bg-white/80 p-2 shadow-2xs">
-                <span className="block text-[10px] text-stone-500 font-medium">Min IELTS</span>
-                <span className="font-semibold tabular-nums text-stone-900">
-                  {s.minIELTS > 0 ? s.minIELTS.toFixed(1) : "None"}
-                </span>
-                <span
-                  className={`ml-1 text-[10px] font-semibold ${
-                    eligibility.ieltsPass ? "text-emerald-700" : "text-amber-800"
-                  }`}
-                >
-                  ({eligibility.ieltsPass ? "Passed" : "Low"})
-                </span>
-              </div>
-
-              <div className="rounded-lg bg-white/80 p-2 shadow-2xs">
-                <span className="block text-[10px] text-stone-500 font-medium">Degree Level</span>
-                <span className="font-semibold text-stone-900">
-                  {s.degrees.join("/")}
-                </span>
-                <span
-                  className={`ml-1 text-[10px] font-semibold ${
-                    eligibility.degreePass ? "text-emerald-700" : "text-amber-800"
-                  }`}
-                >
-                  ({eligibility.degreePass ? "Match" : "Not offered"})
-                </span>
-              </div>
-
-              <div className="rounded-lg bg-white/80 p-2 shadow-2xs">
-                <span className="block text-[10px] text-stone-500 font-medium">Medium</span>
-                <span className="font-semibold text-stone-900">{s.medium}</span>
-                <span className="ml-1 text-[10px] font-semibold text-emerald-700">
-                  (OK)
-                </span>
-              </div>
-            </div>
-
+              {eligibility.isEligible ? "You meet the requirements" : "Requirements"}
+            </h3>
+            <dl className="mt-2 divide-y divide-stone-100 rounded-xl border border-stone-200 text-sm">
+              {[
+                { label: "Minimum CGPA", value: s.minCGPA.toFixed(2), ok: eligibility.cgpaPass },
+                { label: "Minimum IELTS", value: s.minIELTS > 0 ? s.minIELTS.toFixed(1) : "Not required", ok: eligibility.ieltsPass },
+                { label: "Degree", value: s.degrees.join(" & "), ok: eligibility.degreePass },
+                { label: "Teaching language", value: s.medium === "Any" ? "English or local" : s.medium, ok: true },
+              ].map((row) => (
+                <div key={row.label} className="flex items-center justify-between gap-3 px-3 py-2">
+                  <dt className="text-stone-600">{row.label}</dt>
+                  <dd className="flex items-center gap-1.5 font-medium tabular-nums text-stone-900">
+                    {row.value}
+                    {row.ok ? (
+                      <Check className="h-4 w-4 text-emerald-700" aria-label="met" />
+                    ) : (
+                      <X className="h-4 w-4 text-amber-700" aria-label="not met" />
+                    )}
+                  </dd>
+                </div>
+              ))}
+            </dl>
             {!eligibility.isEligible && eligibility.reasons.length > 0 && (
-              <div className="mt-3 rounded-lg bg-white/90 p-2.5 text-xs text-amber-900 border border-amber-200">
-                <p className="font-semibold mb-1">To become eligible:</p>
-                <ul className="list-disc pl-4 space-y-0.5">
-                  {eligibility.reasons.map((r, i) => (
-                    <li key={i}>{r}</li>
-                  ))}
-                </ul>
-              </div>
+              <ul className="mt-2 list-disc space-y-0.5 pl-5 text-sm text-amber-900">
+                {eligibility.reasons.map((r, i) => (
+                  <li key={i}>{r}</li>
+                ))}
+              </ul>
             )}
-          </div>
+          </section>
 
-          {/* Interactive Financial Calculator & Breakdown */}
-          <div className="rounded-xl border border-stone-200 bg-stone-50/60 p-4">
-            <div className="flex items-center justify-between pb-3 border-b border-stone-200">
-              <h3 className="text-sm font-semibold text-stone-900 flex items-center gap-1.5">
-                <DollarSign className="h-4 w-4 text-emerald-600" />
-                Money each month
-                <InfoTip text={JARGON.leftEachMonth} />
-              </h3>
-              <span
-                className={`text-[11px] font-semibold px-2 py-0.5 rounded-md border ${
-                  adjustedNetSavings >= 0
-                    ? "text-emerald-700 bg-emerald-50 border-emerald-200"
-                    : "text-amber-800 bg-amber-50 border-amber-200"
-                }`}
-              >
-                Net: {formatSignedUSD(adjustedNetSavings)}/mo
-              </span>
-            </div>
+          {/* Money each month */}
+          <section aria-labelledby="money-title">
+            <h3 id="money-title" className="flex items-center gap-1.5 text-sm font-semibold text-stone-900">
+              Money each month
+              <InfoTip text={JARGON.leftEachMonth} />
+            </h3>
 
             {selectedPartnerUni && (
-              <div className="mt-2.5 text-xs text-blue-800 font-medium">
-                Showing live calculations for: <strong>{selectedPartnerUni.name}</strong> ({selectedPartnerUni.city})
-              </div>
+              <p className="mt-1 text-xs text-stone-500">
+                For {selectedPartnerUni.name} ({selectedPartnerUni.city})
+              </p>
             )}
 
-            <div className="mt-3 grid grid-cols-3 gap-3 text-center">
-              <div className="rounded-xl border border-stone-200 bg-white p-3 shadow-2xs">
-                <span className="block text-[10px] font-semibold uppercase tracking-wider text-stone-500">
-                  Monthly Stipend
-                </span>
-                <span className="mt-1 block text-base font-semibold tabular-nums text-stone-900">
-                  ${activeStipend.toLocaleString()}
-                </span>
-                <span className="text-[10px] text-stone-500">Fixed grant</span>
+            <dl className="mt-2 divide-y divide-stone-100 rounded-xl border border-stone-200 text-sm">
+              <div className="flex items-center justify-between px-3 py-2">
+                <dt className="text-stone-600">Stipend</dt>
+                <dd className="font-medium tabular-nums text-stone-900">${activeStipend.toLocaleString()}</dd>
               </div>
-
-              <div className="rounded-xl border border-stone-200 bg-white p-3 shadow-2xs">
-                <span className="block text-[10px] font-semibold uppercase tracking-wider text-stone-500">
-                  Est. Living Cost
-                </span>
-                <span className="mt-1 block text-base font-semibold tabular-nums text-stone-800">
-                  ${effectiveLivingCost.toLocaleString()}
-                </span>
-                <span className="text-[10px] text-stone-500">Rent, food, transit</span>
+              <div className="flex items-center justify-between px-3 py-2">
+                <dt className="text-stone-600">Typical living cost</dt>
+                <dd className="font-medium tabular-nums text-stone-900">−${effectiveLivingCost.toLocaleString()}</dd>
               </div>
-
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50/80 p-3 shadow-2xs">
-                <span className="block text-[10px] font-bold uppercase tracking-wider text-emerald-800 flex items-center justify-center gap-1">
-                  <TrendingUp className="h-3 w-3" /> Net Savings
-                </span>
-                <span className="mt-1 block text-base font-semibold tabular-nums text-emerald-700">
-                  {adjustedNetSavings >= 0 ? `+$${adjustedNetSavings.toLocaleString()}` : `-$${Math.abs(adjustedNetSavings).toLocaleString()}`}
-                </span>
-                <span className="text-[11px] text-emerald-800">Every month</span>
+              <div className="flex items-center justify-between px-3 py-2">
+                <dt className="font-medium text-stone-900">Left each month</dt>
+                <dd className={`font-semibold tabular-nums ${adjustedNetSavings >= 0 ? "text-emerald-800" : "text-amber-800"}`}>
+                  {formatSignedUSD(adjustedNetSavings)}
+                </dd>
               </div>
-            </div>
-
-            {/* Interactive Expense Adjuster */}
-            <div className="mt-4 rounded-xl border border-stone-200 bg-white p-3.5">
-              <div className="flex items-center justify-between text-xs font-medium text-stone-700">
-                <span className="flex items-center gap-1.5">
-                  <Sliders className="h-3.5 w-3.5 text-stone-400" />
-                  Adjust for your own spending
-                </span>
+            </dl>
+            {/* Personal spending adjuster */}
+            <div className="mt-3 px-1">
+              <div className="flex items-center justify-between text-xs text-stone-600">
+                <span>Adjust for your own spending</span>
                 <span className="font-semibold tabular-nums text-stone-900">
                   {personalExpenseAdjustment >= 0 ? `+$${personalExpenseAdjustment}` : `-$${Math.abs(personalExpenseAdjustment)}`}/mo
                 </span>
@@ -586,7 +462,7 @@ export const ScholarshipDrawer: React.FC = () => {
                 <span>Spend more</span>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* What the funding covers */}
           <div>
@@ -632,23 +508,20 @@ export const ScholarshipDrawer: React.FC = () => {
                 )}
               </ul>
             )}
-            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-stone-500">In detail</p>
-            <ul className="space-y-2">
+            <p className="mb-1.5 text-xs font-medium text-stone-500">From the official page</p>
+            <ul className="list-disc space-y-1 pl-5 text-sm text-stone-700 marker:text-stone-300">
               {s.facilities.map((facility, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-stone-700">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                  <span>{facility}</span>
-                </li>
+                <li key={idx}>{facility}</li>
               ))}
             </ul>
           </div>
 
-          {/* Complete Required Documents Checklist */}
+          {/* Complete Documents */}
           <div id="drawer-documents" className="scroll-mt-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-stone-900 flex items-center gap-1.5">
                 <FileCheck className="h-4 w-4 text-stone-500" />
-                Required Documents Checklist
+                Documents
               </h3>
               <span className="text-xs font-semibold text-stone-500">
                 {checkedDocsCount} of {s.requiredDocuments.length} ready

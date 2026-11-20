@@ -53,9 +53,9 @@ export const BrowseView: React.FC = () => {
   const closed = results.filter((s) => calculateDaysRemaining(s.deadline).isExpired);
 
   const quick: { id: Quick; label: string; count: number | null }[] = [
-    { id: "all", label: "All", count: counts.all },
+    { id: "all", label: "All", count: null },
     { id: "eligible", label: "I qualify", count: profile.isSet ? counts.eligible : null },
-    { id: "saved", label: "Shortlist", count: counts.saved },
+    { id: "saved", label: "Shortlist", count: counts.saved || null },
     { id: "closing_soon", label: "Closing soon", count: counts.closing_soon },
   ];
 
@@ -132,7 +132,7 @@ export const BrowseView: React.FC = () => {
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search name, university or country"
+              placeholder="Search by name or country"
               aria-label="Search scholarships"
               className="w-full rounded-lg border border-stone-300 bg-white py-2 pl-9 pr-9 text-sm placeholder:text-stone-400 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
             />
@@ -180,7 +180,7 @@ export const BrowseView: React.FC = () => {
                 type="button"
                 onClick={() => choose(q.id)}
                 aria-pressed={isActive(q.id)}
-                className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[13px] font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 ${
+                className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-[13px] font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 ${
                   isActive(q.id) ? "border-stone-900 bg-stone-900 text-white" : "border-stone-200 bg-white text-stone-700 hover:border-stone-300"
                 }`}
               >
@@ -193,7 +193,9 @@ export const BrowseView: React.FC = () => {
 
         <div className="mb-3 mt-4 flex items-center justify-between gap-2 text-sm">
           <p className="text-stone-600" aria-live="polite">
-            {openNow.length} open{closed.length > 0 ? ` · ${closed.length} closed for this round` : ""}
+            {anythingNarrowing || closed.length > 0
+              ? `${openNow.length} open${closed.length > 0 ? ` · ${closed.length} closed for this round` : ""}`
+              : ""}
           </p>
           {anythingNarrowing && (
             <button type="button" onClick={clearAll} className={btn.link}>

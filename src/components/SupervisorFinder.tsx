@@ -68,7 +68,12 @@ export const SupervisorFinder: React.FC = () => {
           names.add(s.university);
         }
       });
-    return Array.from(names).slice(0, 8);
+    // Only single universities make sense as a search target.
+    return Array.from(names)
+      .filter((n) => !/ with |universities|ministry|across/i.test(n))
+      .map((n) => n.replace(/^The /, ""))
+      .filter((n, i, all) => all.indexOf(n) === i)
+      .slice(0, 6);
   }, [scholarships]);
 
   // Institution autocomplete (debounced)
@@ -166,7 +171,7 @@ export const SupervisorFinder: React.FC = () => {
       <PageHeader
         id="supervisor-finder-title"
         title="Find supervisors"
-        description="Choose a university and your research topic. We list researchers there who recently published on it, so you know whom to email. Results show publication activity, not job titles, so check each profile before you write."
+        description="Pick a university and a topic to see who there publishes on it. Check each profile before you write; results show publications, not job titles."
         actions={
           contacts.length > 0 ? (
             <button type="button" className={btn.secondary} onClick={() => setActiveView("outreach")}>
@@ -295,7 +300,7 @@ export const SupervisorFinder: React.FC = () => {
 
         {quickPicks.length > 0 && !result && !isSearching && (
           <div className="mt-4 border-t border-stone-100 pt-3">
-            <p className="text-xs text-stone-500">From supervisor-funded programs in your catalog:</p>
+            <p className="text-xs text-stone-500">Try a university from the list:</p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {quickPicks.map((name) => (
                 <button

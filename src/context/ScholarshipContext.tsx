@@ -67,6 +67,7 @@ interface ScholarshipContextType {
   updateScholarship: (id: string, updated: Partial<Scholarship>) => Promise<void>;
   deleteScholarship: (id: string) => Promise<void>;
   resetToSeedData: () => Promise<void>;
+  syncNewPrograms: () => Promise<{ ok: boolean; added: number; updated: number; error?: string }>;
   stats: Stats;
   syncStatus: SyncStatus;
   refreshFromCloud: () => Promise<void>;
@@ -474,6 +475,32 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Adds built-in programs that are missing from the database, keeping all existing entries.
+  const syncNewPrograms = async (): Promise<{
+    ok: boolean;
+    added: number;
+    updated: number;
+    error?: string;
+  }> => {
+    try {
+      setSyncStatus("syncing");
+      const res = await fetch("/api/scholarships?action=sync", {
+        method: "POST",
+        headers: { "x-admin-pin": adminPin },
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setSyncStatus("fallback");
+        return { ok: false, added: 0, updated: 0, error: json.error || "Could not sync programs." };
+      }
+      await refreshFromCloud();
+      return { ok: true, added: Number(json.added) || 0, updated: Number(json.updated) || 0 };
+    } catch {
+      setSyncStatus("offline");
+      return { ok: false, added: 0, updated: 0, error: "Network error. Please try again." };
+    }
+  };
+
   const resetToSeedData = async () => {
     setScholarships(SEED_SCHOLARSHIPS);
     localStorage.setItem(
@@ -588,6 +615,7 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
         updateScholarship,
         deleteScholarship,
         resetToSeedData,
+        syncNewPrograms,
         stats,
         syncStatus,
         refreshFromCloud,

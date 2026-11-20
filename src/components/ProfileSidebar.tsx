@@ -106,7 +106,7 @@ export const ProfileSidebar: React.FC = () => {
         </div>
 
         {/* Live Match Summary Pill */}
-        <div className="mt-4 rounded-xl border border-indigo-100 bg-gradient-to-br from-indigo-50/70 to-violet-50/40 p-3">
+        <div className="mt-4 rounded-xl border border-indigo-100 bg-zinc-50 p-3">
           <div className="flex items-center justify-between text-xs font-semibold">
             <span className="flex items-center gap-1.5 text-indigo-900">
               <BadgeCheck className="h-3.5 w-3.5 text-indigo-600" />
@@ -118,7 +118,7 @@ export const ProfileSidebar: React.FC = () => {
           </div>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-indigo-100">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-emerald-500 transition-all duration-300"
+              className="h-full rounded-full bg-emerald-600 transition-all duration-300"
               style={{ width: `${matchPercentage}%` }}
             />
           </div>
@@ -171,13 +171,13 @@ export const ProfileSidebar: React.FC = () => {
             >
               <option value="All">All Funding Tracks ({stats.total})</option>
               <option value="Gov / Multi-Uni">
-                🏛️ Govt &amp; Umbrella (CSC, Erasmus, DAAD)
+                Govt &amp; Umbrella (CSC, Erasmus, DAAD)
               </option>
               <option value="University Direct">
-                🎓 University Fellowships (KAUST, Gates, ETH)
+                University Fellowships (KAUST, Gates, ETH)
               </option>
               <option value="Supervisor / RA-TA">
-                🔬 Supervisor RA / TA (Canada, USA, Aus)
+                Supervisor RA / TA (Canada, USA, Aus)
               </option>
             </select>
           </div>
@@ -202,10 +202,10 @@ export const ProfileSidebar: React.FC = () => {
             >
               <option value="All">Any (Central or Supervisor-backed)</option>
               <option value="No Supervisor Needed">
-                ✅ Direct Apply (No Professor Contact Needed)
+                Direct Apply (No Professor Contact Needed)
               </option>
               <option value="Supervisor Allowed">
-                🤝 Professor Contact / Lab Match Allowed
+                Professor Contact / Lab Match Allowed
               </option>
             </select>
           </div>

@@ -10,7 +10,7 @@ import { Scholarship } from "@/types/scholarship";
 /**
  * GET /api/scholarships
  * Fetches all scholarships from Supabase.
- * - If 0 rows, auto-inserts all 12 global seed scholarships and returns them.
+ * - If 0 rows, auto-inserts all built-in seed scholarships and returns them.
  * - If client cannot be initialized or table doesn't exist yet, falls back to SEED_SCHOLARSHIPS gracefully.
  */
 export async function GET() {
@@ -50,7 +50,7 @@ export async function GET() {
 
     // Auto-seed if the database table is completely empty
     if (!rows || rows.length === 0) {
-      console.log("Supabase scholarships table is empty. Auto-seeding 12 global scholarships...");
+      console.log("Supabase scholarships table is empty. Auto-seeding built-in scholarships...");
       const now = new Date().toISOString();
       const seedInserts = SEED_SCHOLARSHIPS.map((item) => ({
         id: item.id,
@@ -112,7 +112,8 @@ export async function GET() {
 /**
  * POST /api/scholarships
  * Creates or upserts a scholarship in Supabase.
- * Supports ?action=reset to reset table back to original 12 seed scholarships,
+ * Supports ?action=reset to replace the table with the built-in seed scholarships,
+ * ?action=sync to add missing built-in programs and refresh their dated deadline facts (keeps custom entries),
  * and ?action=verify to confirm an admin passcode without writing anything.
  * Protected by the 'x-admin-pin' header (checked against ADMIN_PIN on the server).
  */
@@ -134,6 +135,73 @@ export async function POST(req: NextRequest) {
 
   const { searchParams } = new URL(req.url);
   const action = searchParams.get("action");
+
+  // Add built-in programs that are missing and refresh dated deadline facts,
+  // without deleting or overwriting anything an admin has entered.
+  if (action === "sync") {
+    try {
+      const { data: existingRows, error: readErr } = await supabase
+        .from("scholarships")
+        .select("id, data");
+      if (readErr) {
+        return NextResponse.json({ error: readErr.message }, { status: 500 });
+      }
+
+      const existing = new Map(
+        (existingRows || []).map((r) => [r.id as string, (r.data || {}) as Partial<Scholarship>])
+      );
+      const now = new Date().toISOString();
+
+      // 1. Programs that are not in the database yet
+      const missing = SEED_SCHOLARSHIPS.filter((item) => !existing.has(item.id));
+
+      // 2. Built-in programs whose stored deadline facts are older than the curated ones.
+      //    Only the deadline/stipend note fields are refreshed; other edits are kept.
+      const refreshed = SEED_SCHOLARSHIPS.filter((item) => {
+        const stored = existing.get(item.id);
+        if (!stored || !item.lastVerified) return false;
+        return !stored.lastVerified || stored.lastVerified < item.lastVerified;
+      }).map((item) => {
+        const stored = existing.get(item.id)!;
+        const merged: Partial<Scholarship> = {
+          ...stored,
+          deadline: item.deadline,
+          deadlineIsEstimate: item.deadlineIsEstimate,
+          deadlineNote: item.deadlineNote,
+          stipendIsEstimate: item.stipendIsEstimate,
+          stipendNote: item.stipendNote,
+          lastVerified: item.lastVerified,
+          updatedAt: now,
+        };
+        return { id: item.id, data: merged, updated_at: now };
+      });
+
+      const writes = [
+        ...missing.map((item) => ({
+          id: item.id,
+          data: { ...item, createdAt: now, updatedAt: now },
+          updated_at: now,
+        })),
+        ...refreshed,
+      ];
+
+      if (writes.length > 0) {
+        const { error: writeErr } = await supabase.from("scholarships").upsert(writes);
+        if (writeErr) {
+          return NextResponse.json({ error: writeErr.message }, { status: 500 });
+        }
+      }
+
+      return NextResponse.json({
+        success: true,
+        added: missing.length,
+        updated: refreshed.length,
+        addedIds: missing.map((m) => m.id),
+      });
+    } catch (err: any) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+  }
 
   // Reset database back to default seed scholarships
   if (action === "reset") {
@@ -159,7 +227,7 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: "Successfully reset to 12 global seed scholarships",
+        message: `Reset to ${SEED_SCHOLARSHIPS.length} built-in scholarships`,
         scholarships: SEED_SCHOLARSHIPS,
       });
     } catch (err: any) {

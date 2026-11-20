@@ -105,7 +105,7 @@ export const FilterPills: React.FC = () => {
   return (
     <div className="flex flex-col gap-3 py-3 border-b border-zinc-200/80 sm:flex-row sm:items-center sm:justify-between">
       {/* Scrollable Horizontal Pill List */}
-      <div className="-mx-4 flex items-center gap-1.5 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0 sm:pb-0 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="-mx-3.5 flex items-center gap-1.5 overflow-x-auto px-3.5 pb-1 sm:mx-0 sm:px-0 sm:pb-0 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {pills.map((pill) => {
           const isActive = activePill === pill.id;
           return (

@@ -13,7 +13,11 @@ export function calculateDaysRemaining(deadlineStr: string): {
   isExpired: boolean;
   formattedDate: string;
 } {
-  const deadline = new Date(deadlineStr);
+  // Parse YYYY-MM-DD as a local calendar date so the day never shifts by time zone.
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(deadlineStr?.trim() ?? "");
+  const deadline = match
+    ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+    : new Date(deadlineStr);
   const today = new Date();
 
   // Normalize both dates to midnight
@@ -255,4 +259,19 @@ export function filterScholarships(
   });
 
   return list;
+}
+
+/** Formats a monthly amount with an explicit sign, e.g. "+$420" or "-$168". */
+export function formatSignedUSD(amount: number): string {
+  const rounded = Math.round(amount);
+  const abs = Math.abs(rounded).toLocaleString("en-US");
+  return rounded >= 0 ? `+$${abs}` : `-$${abs}`;
+}
+
+/** Formats a YYYY-MM-DD date as e.g. "20 Nov 2026". */
+export function formatVerifiedDate(dateStr: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr);
+  if (!m) return dateStr;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }

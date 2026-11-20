@@ -68,6 +68,16 @@ export interface Scholarship {
   overview: string;
   cityLifeOverview: string;
   officialWebsiteUrl: string;
+  /** True when the date is an expected date for the next cycle, not an announced one. */
+  deadlineIsEstimate?: boolean;
+  /** Short context for the deadline, e.g. "Varies by country" or "Previous round closed 15 Oct 2026". */
+  deadlineNote?: string;
+  /** True when the USD stipend is an approximation (unconfirmed rate or currency conversion). */
+  stipendIsEstimate?: boolean;
+  /** The stipend as officially published, in local currency. */
+  stipendNote?: string;
+  /** Date (YYYY-MM-DD) the figures were last checked against public sources. */
+  lastVerified?: string;
   createdAt: string;
   updatedAt: string;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useScholarship } from "../context/ScholarshipContext";
 import {
   GraduationCap,
@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   Clock,
   RotateCcw,
+  RefreshCw,
   CloudCheck,
   Cloud,
   CloudOff,
@@ -30,6 +31,7 @@ export const Navbar: React.FC = () => {
     searchQuery,
     setSearchQuery,
     resetToSeedData,
+    syncNewPrograms,
     syncStatus,
     refreshFromCloud,
   } = useScholarship();
@@ -39,12 +41,44 @@ export const Navbar: React.FC = () => {
     setIsAddModalOpen(true);
   };
 
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const showNotice = (text: string) => {
+    setNotice(text);
+    window.setTimeout(() => setNotice(null), 4500);
+  };
+
+  const handleSyncPrograms = async () => {
+    if (isSyncing) return;
+    setIsSyncing(true);
+    const result = await syncNewPrograms();
+    setIsSyncing(false);
+    if (!result.ok) {
+      showNotice(result.error || "Could not sync programs.");
+    } else if (result.added === 0 && result.updated === 0) {
+      showNotice("Everything is up to date.");
+    } else {
+      const parts = [];
+      if (result.added > 0) parts.push(`${result.added} new program${result.added === 1 ? "" : "s"} added`);
+      if (result.updated > 0) parts.push(`${result.updated} deadline${result.updated === 1 ? "" : "s"} refreshed`);
+      showNotice(parts.join(", ") + ".");
+    }
+  };
+
+  const handleResetSeed = () => {
+    const ok = window.confirm(
+      "Replace the whole catalog with the built-in programs? Custom entries and edits will be permanently removed."
+    );
+    if (ok) resetToSeedData();
+  };
+
   return (
     <header className="sticky top-0 z-30 w-full border-b border-zinc-200/80 bg-white/90 backdrop-blur-md transition-all">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-3.5 py-2.5 sm:px-6 sm:py-3">
         {/* Brand Logo & Name */}
         <div className="flex items-center gap-2.5 sm:gap-3">
-          <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 shadow-sm shadow-indigo-200 text-white shrink-0">
+          <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-zinc-900 text-white shrink-0">
             <GraduationCap className="h-5 w-5" />
           </div>
           <div>
@@ -169,9 +203,20 @@ export const Navbar: React.FC = () => {
               </button>
 
               <button
-                onClick={resetToSeedData}
+                onClick={handleSyncPrograms}
+                disabled={isSyncing}
+                className="flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2 sm:px-2.5 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 hover:text-zinc-900 disabled:opacity-60"
+                title="Add new built-in programs and refresh deadlines without removing your entries"
+                aria-label="Sync built-in programs"
+              >
+                <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? "animate-spin" : ""}`} />
+                <span className="hidden sm:inline">{isSyncing ? "Syncing..." : "Sync Programs"}</span>
+              </button>
+
+              <button
+                onClick={handleResetSeed}
                 className="hidden rounded-lg border border-zinc-200 bg-white p-1.5 text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 xl:flex items-center gap-1 text-xs"
-                title="Reset to 12 Default Global Seed Scholarships"
+                title="Replace the catalog with the built-in programs"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
                 <span>Reset Seed</span>
@@ -213,6 +258,14 @@ export const Navbar: React.FC = () => {
           />
         </div>
       </div>
+      {notice && (
+        <div
+          role="status"
+          className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-sm rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-800 shadow-lg sm:inset-x-auto sm:right-6"
+        >
+          {notice}
+        </div>
+      )}
     </header>
   );
 };

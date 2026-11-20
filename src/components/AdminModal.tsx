@@ -52,7 +52,7 @@ export const AdminModal: React.FC = () => {
   const [university, setUniversity] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
-  const [countryFlag, setCountryFlag] = useState("🌍");
+  const [countryFlag, setCountryFlag] = useState("");
   const [region, setRegion] = useState<Region>("Europe");
   const [fundingType, setFundingType] = useState<FundingType>("University Direct");
   const [supervisorRequired, setSupervisorRequired] =
@@ -82,7 +82,7 @@ export const AdminModal: React.FC = () => {
       setUniversity(editingScholarship.university);
       setCity(editingScholarship.city);
       setCountry(editingScholarship.country);
-      setCountryFlag(editingScholarship.countryFlag || "🌍");
+      setCountryFlag(editingScholarship.countryFlag || "");
       setRegion(editingScholarship.region || "Europe");
       setFundingType(editingScholarship.fundingType || "University Direct");
       setSupervisorRequired(
@@ -130,7 +130,7 @@ export const AdminModal: React.FC = () => {
       setUniversity("");
       setCity("");
       setCountry("");
-      setCountryFlag("🌍");
+      setCountryFlag("");
       setRegion("Europe");
       setFundingType("University Direct");
       setSupervisorRequired("Not Required (Central Admission)");
@@ -214,7 +214,7 @@ export const AdminModal: React.FC = () => {
       setUniversity(s.university || "");
       setCity(s.city || "");
       setCountry(s.country || "");
-      setCountryFlag(s.countryFlag || "🌍");
+      setCountryFlag(s.countryFlag || "");
       if (s.region) setRegion(s.region);
       if (s.fundingType) setFundingType(s.fundingType);
       if (s.supervisorRequired) setSupervisorRequired(s.supervisorRequired);
@@ -225,7 +225,7 @@ export const AdminModal: React.FC = () => {
           s.partnerUniversities
             .map(
               (u: any) =>
-                `${u.name} | ${u.city} | ${u.country} | ${u.flag || "🌍"} | ${u.estimatedLivingCost} | ${u.monthlyStipend} | ${u.rankingOrNote}`
+                `${u.name} | ${u.city} | ${u.country} | ${u.flag || ""} | ${u.estimatedLivingCost} | ${u.monthlyStipend} | ${u.rankingOrNote}`
             )
             .join("\n")
         );
@@ -320,7 +320,7 @@ export const AdminModal: React.FC = () => {
       university: university.trim(),
       city: city.trim(),
       country: country.trim(),
-      countryFlag: countryFlag.trim() || "🌍",
+      countryFlag: countryFlag.trim() || "",
       region,
       fundingType,
       supervisorRequired,
@@ -395,7 +395,7 @@ export const AdminModal: React.FC = () => {
         {/* Scrollable Form Body */}
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5 space-y-5">
           {/* Instant Auto-Fill from URL Section */}
-          <div className="rounded-xl border border-indigo-200 bg-gradient-to-br from-indigo-50/70 to-violet-50/30 p-4">
+          <div className="rounded-xl border border-indigo-200 bg-zinc-50 p-4">
             <div className="flex items-center justify-between mb-1.5">
               <span className="flex items-center gap-1.5 text-xs font-bold text-indigo-950">
                 <Link2 className="h-4 w-4 text-indigo-600" />
@@ -460,7 +460,7 @@ export const AdminModal: React.FC = () => {
               <div className="mt-3 flex items-center gap-2 rounded-lg bg-emerald-50 p-2.5 text-xs text-emerald-950 border border-emerald-200 font-medium">
                 <Check className="h-4 w-4 text-emerald-600 shrink-0" />
                 <span>
-                  ✨ Extracted successfully! Review the parsed scholarship data below, make any tweaks, and click Save.
+                  Extracted successfully! Review the parsed scholarship data below, make any tweaks, and click Save.
                 </span>
               </div>
             )}
@@ -592,13 +592,13 @@ export const AdminModal: React.FC = () => {
                   className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none font-medium"
                 >
                   <option value="Gov / Multi-Uni">
-                    🏛️ Gov / Multi-Uni (CSC, Erasmus, DAAD)
+                    Gov / Multi-Uni (CSC, Erasmus, DAAD)
                   </option>
                   <option value="University Direct">
-                    🎓 University Direct Fellowship (KAUST, Gates, ETH)
+                    University Direct Fellowship (KAUST, Gates, ETH)
                   </option>
                   <option value="Supervisor / RA-TA">
-                    🔬 Supervisor RA / TA (Canada, USA, Aus)
+                    Supervisor RA / TA (Canada, USA, Aus)
                   </option>
                 </select>
               </div>
@@ -616,13 +616,13 @@ export const AdminModal: React.FC = () => {
                   className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none font-medium"
                 >
                   <option value="Not Required (Central Admission)">
-                    ✅ Not Required (Central Admission)
+                    Not Required (Central Admission)
                   </option>
                   <option value="Optional / Recommended">
-                    🤝 Optional / Recommended
+                    Optional / Recommended
                   </option>
                   <option value="Mandatory Before Applying">
-                    👨‍🏫 Mandatory Before Applying
+                    Mandatory Before Applying
                   </option>
                 </select>
               </div>

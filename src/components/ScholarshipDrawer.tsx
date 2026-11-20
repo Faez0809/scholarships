@@ -5,6 +5,8 @@ import { useScholarship } from "../context/ScholarshipContext";
 import { PartnerUniversity } from "../types/scholarship";
 import {
   calculateDaysRemaining,
+  formatSignedUSD,
+  formatVerifiedDate,
   checkEligibility,
 } from "../utils/scholarshipUtils";
 import {
@@ -127,7 +129,6 @@ export const ScholarshipDrawer: React.FC = () => {
         {/* Drawer Header */}
         <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3.5 sm:px-6 sm:py-4">
           <div className="flex items-center gap-2">
-            <span className="text-2xl leading-none">{s.countryFlag || "🌍"}</span>
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
@@ -231,11 +232,37 @@ export const ScholarshipDrawer: React.FC = () => {
                 Specializations: <span className="text-zinc-700">{s.fieldSpecifics}</span>
               </p>
             )}
+
+            {(s.deadlineNote || s.stipendNote) && (
+              <dl className="mt-3 space-y-2 rounded-xl border border-zinc-200 bg-white p-3 text-xs">
+                {s.deadlineNote && (
+                  <div>
+                    <dt className="font-semibold text-zinc-800">
+                      Deadline{s.deadlineIsEstimate ? " (expected, not yet announced)" : ""}
+                    </dt>
+                    <dd className="mt-0.5 text-zinc-600">{s.deadlineNote}</dd>
+                  </div>
+                )}
+                {s.stipendNote && (
+                  <div>
+                    <dt className="font-semibold text-zinc-800">
+                      Stipend{s.stipendIsEstimate ? " (USD figure is approximate)" : ""}
+                    </dt>
+                    <dd className="mt-0.5 text-zinc-600">{s.stipendNote}</dd>
+                  </div>
+                )}
+                {s.lastVerified && (
+                  <p className="text-[11px] text-zinc-400">
+                    Checked on {formatVerifiedDate(s.lastVerified)}. Always confirm on the official site before applying.
+                  </p>
+                )}
+              </dl>
+            )}
           </div>
 
           {/* Interactive Multi-University & City Savings Selector (If Partner Unis Exist) */}
           {s.partnerUniversities && s.partnerUniversities.length > 0 && (
-            <div className="rounded-2xl border border-indigo-200/90 bg-gradient-to-br from-indigo-50/60 to-purple-50/30 p-4 shadow-2xs">
+            <div className="rounded-2xl border border-indigo-200/90 bg-zinc-50 p-4 shadow-2xs">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-xs font-bold text-indigo-950 flex items-center gap-1.5">
                   <Landmark className="h-4 w-4 text-indigo-600" />
@@ -267,7 +294,7 @@ export const ScholarshipDrawer: React.FC = () => {
                     >
                       <div className="flex items-start justify-between gap-1">
                         <div className="font-semibold text-xs text-zinc-900 line-clamp-1">
-                          {uni.flag} {uni.name}
+                          {uni.name}
                         </div>
                         {isSelected && (
                           <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-white">
@@ -277,8 +304,8 @@ export const ScholarshipDrawer: React.FC = () => {
                       </div>
                       <div className="mt-1 text-[11px] text-zinc-500 flex items-center justify-between">
                         <span>{uni.city}, {uni.country}</span>
-                        <span className="font-mono font-bold text-emerald-700">
-                          +${uniSavings}/mo
+                        <span className={`font-mono font-bold ${uniSavings >= 0 ? "text-emerald-700" : "text-amber-700"}`}>
+                          {formatSignedUSD(uniSavings)}/mo
                         </span>
                       </div>
                       {uni.rankingOrNote && (
@@ -306,10 +333,10 @@ export const ScholarshipDrawer: React.FC = () => {
               </p>
               <div className="flex flex-wrap gap-2 text-[11px]">
                 <span className="rounded-md bg-white px-2 py-1 font-medium text-blue-800 border border-blue-200">
-                  💡 Tip: Attach CV &amp; 1-page research pitch
+                  Tip: Attach CV &amp; 1-page research pitch
                 </span>
                 <span className="rounded-md bg-white px-2 py-1 font-medium text-blue-800 border border-blue-200">
-                  🎯 Cite 2 recent papers from the professor&apos;s lab
+                  Cite 2 recent papers from the professor&apos;s lab
                 </span>
               </div>
             </div>
@@ -408,14 +435,20 @@ export const ScholarshipDrawer: React.FC = () => {
                 <DollarSign className="h-4 w-4 text-emerald-600" />
                 Financial Breakdown &amp; Living Cost Calculator
               </h3>
-              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                Net: +${adjustedNetSavings.toLocaleString()}/mo
+              <span
+                className={`text-[11px] font-semibold px-2 py-0.5 rounded-md border ${
+                  adjustedNetSavings >= 0
+                    ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+                    : "text-amber-800 bg-amber-50 border-amber-200"
+                }`}
+              >
+                Net: {formatSignedUSD(adjustedNetSavings)}/mo
               </span>
             </div>
 
             {selectedPartnerUni && (
               <div className="mt-2.5 text-xs text-indigo-700 font-medium">
-                📍 Showing live calculations for: <strong>{selectedPartnerUni.name}</strong> ({selectedPartnerUni.city})
+                Showing live calculations for: <strong>{selectedPartnerUni.name}</strong> ({selectedPartnerUni.city})
               </div>
             )}
 
@@ -560,7 +593,7 @@ export const ScholarshipDrawer: React.FC = () => {
         {/* Drawer Footer with Official Website Link */}
         <div className="border-t border-zinc-200 bg-white px-4 py-3.5 sm:px-6 sm:py-4 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
           <div className="text-center sm:text-left text-xs text-zinc-500">
-            Last verified for 2026/2027 intake
+            {s.lastVerified ? `Last checked ${formatVerifiedDate(s.lastVerified)}` : "Confirm details on the official site"}
           </div>
 
           <a

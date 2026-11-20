@@ -6,6 +6,7 @@ import { useScholarship } from "../context/ScholarshipContext";
 import {
   calculateDaysRemaining,
   calculateNetSavings,
+  formatSignedUSD,
   checkEligibility,
   getSavingsRange,
 } from "../utils/scholarshipUtils";
@@ -69,23 +70,23 @@ export const ScholarshipCard: React.FC<ScholarshipCardProps> = ({
       return (
         <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200/90 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700">
           <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-          <span>Eligible ✅</span>
+          <span>Eligible</span>
         </span>
       );
     }
 
     // Specific reasons for badging
-    let label = "Needs Requirements ⚠️";
+    let label = "Needs Requirements";
     if (!eligibility.cgpaPass && !eligibility.ieltsPass) {
-      label = `Needs CGPA ${scholarship.minCGPA.toFixed(2)} & IELTS ${scholarship.minIELTS.toFixed(1)} ⚠️`;
+      label = `Needs CGPA ${scholarship.minCGPA.toFixed(2)} & IELTS ${scholarship.minIELTS.toFixed(1)}`;
     } else if (!eligibility.cgpaPass) {
-      label = `Needs CGPA ${scholarship.minCGPA.toFixed(2)} ⚠️`;
+      label = `Needs CGPA ${scholarship.minCGPA.toFixed(2)}`;
     } else if (!eligibility.ieltsPass) {
-      label = `Needs IELTS ${scholarship.minIELTS.toFixed(1)} ⚠️`;
+      label = `Needs IELTS ${scholarship.minIELTS.toFixed(1)}`;
     } else if (!eligibility.degreePass) {
-      label = `Requires ${scholarship.degrees.join("/")} ⚠️`;
+      label = `Requires ${scholarship.degrees.join("/")}`;
     } else if (!eligibility.savingsPass) {
-      label = `Savings < $${profile.minSavingsDesired}/mo ⚠️`;
+      label = `Savings < $${profile.minSavingsDesired}/mo`;
     }
 
     return (
@@ -130,20 +131,20 @@ export const ScholarshipCard: React.FC<ScholarshipCardProps> = ({
     if (scholarship.supervisorRequired === "Mandatory Before Applying") {
       return (
         <span className="inline-flex items-center rounded-md bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-800 border border-amber-200/60">
-          👨‍🏫 Supervisor Req.
+          Supervisor Req.
         </span>
       );
     }
     if (scholarship.supervisorRequired === "Not Required (Central Admission)") {
       return (
         <span className="inline-flex items-center rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-800 border border-emerald-200/60">
-          ✅ Direct Apply
+          Direct Apply
         </span>
       );
     }
     return (
       <span className="inline-flex items-center rounded-md bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-600">
-        🤝 Supervisor Rec.
+        Supervisor Rec.
       </span>
     );
   };
@@ -157,7 +158,6 @@ export const ScholarshipCard: React.FC<ScholarshipCardProps> = ({
         {/* Top Header: Location, Region, Degrees, Field Tag */}
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-100 pb-3">
           <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-600">
-            <span className="text-base leading-none">{scholarship.countryFlag || "🌍"}</span>
             <span>
               {scholarship.city}, {scholarship.country}
             </span>
@@ -249,12 +249,10 @@ export const ScholarshipCard: React.FC<ScholarshipCardProps> = ({
                   maxSavings >= 0 ? "text-emerald-700" : "text-amber-700"
                 }`}
               >
-                {isMultiUni
-                  ? `+$${minSavings}–$${maxSavings}`
-                  : maxSavings >= 0
-                  ? `+$${maxSavings.toLocaleString()}`
-                  : `-$${Math.abs(maxSavings).toLocaleString()}`}
-                <span className="text-[10px] font-normal text-emerald-600/80">/mo</span>
+                {isMultiUni && minSavings !== maxSavings
+                  ? `${formatSignedUSD(minSavings)} to ${formatSignedUSD(maxSavings)}`
+                  : formatSignedUSD(maxSavings)}
+                <span className="text-[10px] font-normal text-zinc-500">/mo</span>
               </span>
             </div>
           </div>
@@ -280,6 +278,14 @@ export const ScholarshipCard: React.FC<ScholarshipCardProps> = ({
           )}
           <span>
             {isExpired ? "Passed" : isClosingSoon ? `${days}d left (${formattedDate})` : formattedDate}
+            {scholarship.deadlineIsEstimate && !isExpired && (
+              <span
+                className="ml-1 text-[10px] font-normal text-zinc-400"
+                title={scholarship.deadlineNote || "Expected date, not yet announced"}
+              >
+                est.
+              </span>
+            )}
           </span>
         </div>
 

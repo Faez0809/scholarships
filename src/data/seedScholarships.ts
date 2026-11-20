@@ -1,11 +1,5 @@
 import { Scholarship } from "../types/scholarship";
-
-// Helper to generate future dates relative to current date
-function getFutureDate(days: number): string {
-  const date = new Date();
-  date.setDate(date.getDate() + days);
-  return date.toISOString().split("T")[0];
-}
+import { ADDITIONAL_SCHOLARSHIPS } from "./additionalScholarships";
 
 export const SEED_SCHOLARSHIPS: Scholarship[] = [
   // 1. CSC Chinese Government Scholarship (Gov / Multi-Uni - Asia)
@@ -77,7 +71,11 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     minCGPA: 3.20,
     minIELTS: 6.0,
     medium: "English Only",
-    deadline: getFutureDate(75),
+    deadline: "2027-02-28",
+    deadlineIsEstimate: true,
+    deadlineNote:
+      "Varies by university and embassy (roughly Dec 2026 to Apr 2027). Many university-route first batches close 31 Dec 2026.",
+    lastVerified: "2026-11-20",
     monthlyStipendUSD: 880,
     estimatedLivingCostUSD: 500,
     tuitionCovered: true,
@@ -168,7 +166,11 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     minCGPA: 3.40,
     minIELTS: 6.5,
     medium: "English Only",
-    deadline: getFutureDate(38),
+    deadline: "2027-01-15",
+    deadlineIsEstimate: true,
+    deadlineNote:
+      "Each Erasmus Mundus programme sets its own deadline, usually between December 2026 and February 2027.",
+    lastVerified: "2026-11-20",
     monthlyStipendUSD: 1550,
     estimatedLivingCostUSD: 950,
     tuitionCovered: true,
@@ -260,7 +262,11 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     minCGPA: 3.20,
     minIELTS: 6.5,
     medium: "English Only",
-    deadline: getFutureDate(60),
+    deadline: "2027-10-15",
+    deadlineIsEstimate: true,
+    deadlineNote:
+      "The 2027/28 round closed for most courses on 15 Oct 2026 (some by 30 Nov 2026). Next round expected around mid-October 2027.",
+    lastVerified: "2026-11-20",
     monthlyStipendUSD: 1400,
     estimatedLivingCostUSD: 900,
     tuitionCovered: true,
@@ -312,7 +318,11 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     minCGPA: 3.50,
     minIELTS: 7.0,
     medium: "English Only",
-    deadline: getFutureDate(45),
+    deadline: "2026-12-01",
+    deadlineIsEstimate: true,
+    deadlineNote:
+      "Cheriton School of Computer Science deadline for Fall 2027 entry; other departments differ. Confirm on the program page.",
+    lastVerified: "2026-11-20",
     monthlyStipendUSD: 2100,
     estimatedLivingCostUSD: 1400,
     tuitionCovered: true,
@@ -364,7 +374,11 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     minCGPA: 3.60,
     minIELTS: 7.5,
     medium: "English Only",
-    deadline: getFutureDate(52),
+    deadline: "2026-12-15",
+    deadlineIsEstimate: false,
+    deadlineNote:
+      "College of Computing PhD deadline for Fall 2027 entry.",
+    lastVerified: "2026-11-20",
     monthlyStipendUSD: 2850,
     estimatedLivingCostUSD: 1600,
     tuitionCovered: true,
@@ -414,7 +428,11 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     minCGPA: 3.70,
     minIELTS: 7.0,
     medium: "English Only",
-    deadline: getFutureDate(70),
+    deadline: "2027-01-31",
+    deadlineIsEstimate: false,
+    deadlineNote:
+      "Round 2 for 2027 commencement. Round 1 closed 31 Oct 2026; Round 3 closes 15 May 2027.",
+    lastVerified: "2026-11-20",
     monthlyStipendUSD: 2050,
     estimatedLivingCostUSD: 1450,
     tuitionCovered: true,
@@ -463,7 +481,11 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     minCGPA: 3.50,
     minIELTS: 6.5,
     medium: "English Only",
-    deadline: getFutureDate(25),
+    deadline: "2027-01-03",
+    deadlineIsEstimate: false,
+    deadlineNote:
+      "Fall 2027 MS and PhD admission. Applying for admission also considers you for the fellowship.",
+    lastVerified: "2026-11-20",
     monthlyStipendUSD: 2500,
     estimatedLivingCostUSD: 750,
     tuitionCovered: true,
@@ -512,7 +534,11 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     minCGPA: 3.80,
     minIELTS: 7.5,
     medium: "English Only",
-    deadline: getFutureDate(42),
+    deadline: "2026-12-08",
+    deadlineIsEstimate: false,
+    deadlineNote:
+      "International round. Some courses use 6 Jan 2027; check your course's funding deadline.",
+    lastVerified: "2026-11-20",
     monthlyStipendUSD: 2400,
     estimatedLivingCostUSD: 1650,
     tuitionCovered: true,
@@ -561,16 +587,22 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     minCGPA: 3.80,
     minIELTS: 7.0,
     medium: "English Only",
-    deadline: getFutureDate(18),
-    monthlyStipendUSD: 2450,
+    deadline: "2026-11-30",
+    deadlineIsEstimate: false,
+    deadlineNote:
+      "ESOP is only open in the November window for Autumn 2027 entry.",
+    lastVerified: "2026-11-20",
+    monthlyStipendUSD: 2690,
     estimatedLivingCostUSD: 1900,
+    stipendIsEstimate: true,
+    stipendNote: "CHF 13,500 per semester from Autumn 2027 (reported), about CHF 2,250/month.",
     tuitionCovered: true,
     healthInsuranceCovered: false,
     relocationAirfareCovered: false,
     housingProvided: false,
     facilities: [
       "Full Tuition Fee Waiver (100%)",
-      "Living & Study Grant of CHF 12,000 per semester (~$2,450/mo)",
+      "Living & Study Grant of CHF 13,500 per semester from Autumn 2027 (~$2,690/mo)",
       "Special ESOP Scholar Network & Direct Professor Mentorship",
       "Access to ETH Innovation Labs and Swiss Quantum Labs",
       "Priority Access to Master's Thesis Industry Partnerships"
@@ -609,7 +641,11 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     minCGPA: 3.20,
     minIELTS: 6.5,
     medium: "English Only",
-    deadline: getFutureDate(65),
+    deadline: "2027-04-30",
+    deadlineIsEstimate: true,
+    deadlineNote:
+      "Embassy recommendation for 2028 entry is usually due April to May 2027; each embassy sets its own date.",
+    lastVerified: "2026-11-20",
     monthlyStipendUSD: 1100,
     estimatedLivingCostUSD: 850,
     tuitionCovered: true,
@@ -657,7 +693,11 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     minCGPA: 3.30,
     minIELTS: 6.5,
     medium: "English Only",
-    deadline: getFutureDate(48),
+    deadline: "2027-02-05",
+    deadlineIsEstimate: true,
+    deadlineNote:
+      "Fall 2027 regular round. An earlier round usually runs in December.",
+    lastVerified: "2026-11-20",
     monthlyStipendUSD: 1050,
     estimatedLivingCostUSD: 620,
     tuitionCovered: true,
@@ -705,7 +745,11 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     minCGPA: 3.60,
     minIELTS: 6.5,
     medium: "English Only",
-    deadline: getFutureDate(22),
+    deadline: "2027-01-06",
+    deadlineIsEstimate: false,
+    deadlineNote:
+      "This is when your French university submits nominations to Campus France. Its internal deadline is earlier, often late November to December.",
+    lastVerified: "2026-11-20",
     monthlyStipendUSD: 1650,
     estimatedLivingCostUSD: 1200,
     tuitionCovered: true,
@@ -734,4 +778,6 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
+
+  ...ADDITIONAL_SCHOLARSHIPS,
 ];

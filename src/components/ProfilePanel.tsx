@@ -50,7 +50,7 @@ export const ProfileSummaryBar: React.FC = () => {
 /** The profile form: sticky sidebar on desktop, bottom sheet on smaller screens. */
 export const ProfilePanel: React.FC = () => {
   const { isProfileOpen, setIsProfileOpen, markStep } = useGuide();
-  const { stats } = useScholarship();
+  const { stats, setActivePill } = useScholarship();
 
   const sheetRef = useRef<HTMLDivElement>(null);
   const [isSmall, setIsSmall] = useState(false);
@@ -73,6 +73,12 @@ export const ProfilePanel: React.FC = () => {
   const done = () => {
     markStep("profile");
     setIsProfileOpen(false);
+  };
+  // From the phone sheet the button promises "Show my N matches", so apply that filter.
+  const showMatches = () => {
+    done();
+    setActivePill("eligible");
+    window.setTimeout(() => document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   };
 
   return (
@@ -101,7 +107,7 @@ export const ProfilePanel: React.FC = () => {
               </button>
             </div>
             <div className="overflow-y-auto">
-              <ProfileForm titleId="profile-title-sheet" onDone={done} matchCount={stats.eligibleCount} sheet />
+              <ProfileForm titleId="profile-title-sheet" onDone={showMatches} matchCount={stats.eligibleCount} sheet />
             </div>
           </div>
         </div>

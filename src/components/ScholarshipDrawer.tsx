@@ -6,6 +6,7 @@ import { PartnerUniversity } from "../types/scholarship";
 import { useGuide } from "../context/GuideContext";
 import { FUNDING_HELP, FUNDING_LABELS, InfoTip, JARGON, SUPERVISOR_LABELS, coverageItems, fundingLevel, useDialog } from "./ui";
 import { nationalityLabel, nationalityNote, nationalityStatus } from "../data/nationality";
+import { AGE_LIMITS, englishTestExpired } from "../data/rules";
 import { UniversityGallery } from "./UniversityGallery";
 import { listingStatus } from "./BrowseParts";
 import { Bookmark, BookmarkCheck } from "lucide-react";
@@ -615,6 +616,21 @@ export const ScholarshipDrawer: React.FC = () => {
                   : "check the official country list."}
                 {nationalityNote(s.id) && <span className="text-stone-500"> {nationalityNote(s.id)}</span>}
               </p>
+            )}
+            {(AGE_LIMITS[s.id] || englishTestExpired(profile.englishTestDate, s.deadline)) && (
+              <ul className="mb-4 space-y-1 text-sm text-stone-700">
+                {AGE_LIMITS[s.id] && (
+                  <li>
+                    <span className="font-medium">Age limit: </span>
+                    {AGE_LIMITS[s.id].note}
+                  </li>
+                )}
+                {englishTestExpired(profile.englishTestDate, s.deadline) && (
+                  <li className="text-amber-800">
+                    Your IELTS will be more than two years old by the deadline. Most programs need a recent result.
+                  </li>
+                )}
+              </ul>
             )}
             <p className="mb-2 text-xs font-medium uppercase tracking-wide text-stone-500">In detail</p>
             <ul className="space-y-2">

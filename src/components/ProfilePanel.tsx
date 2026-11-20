@@ -163,6 +163,34 @@ export const ProfileFields: React.FC<{ compact?: boolean }> = ({ compact }) => {
 
       {!compact && (
         <>
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-stone-700">Year of birth</span>
+              <input
+                type="number"
+                inputMode="numeric"
+                min={1960}
+                max={2012}
+                placeholder="Optional"
+                value={profile.birthYear ?? ""}
+                onChange={(e) => {
+                  const v = parseInt(e.target.value, 10);
+                  updateProfileField("birthYear", Number.isNaN(v) ? undefined : v);
+                }}
+                className={`${selectClass} tabular-nums`}
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-stone-700">IELTS test month</span>
+              <input
+                type="month"
+                value={profile.englishTestDate ?? ""}
+                onChange={(e) => updateProfileField("englishTestDate", e.target.value || undefined)}
+                className={`${selectClass} tabular-nums`}
+              />
+            </label>
+          </div>
+          <p className="-mt-3 text-xs text-stone-500">Optional. Used to warn you about age limits and test results older than two years.</p>
           <Segmented
             label="Language of teaching"
             value={profile.mediumPreference}

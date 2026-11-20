@@ -38,6 +38,7 @@ export const ScholarshipCard: React.FC<{ scholarship: Scholarship }> = ({ schola
         : { ok: true, text: "You qualify" };
     }
     if (!eligibility.nationalityPass) return { ok: false, text: "Not open to your passport" };
+    if (!eligibility.agePass) return { ok: false, text: "Over the age limit" };
     if (!eligibility.degreePass) return { ok: false, text: `Only ${s.degrees.join(" and ")}` };
     if (!eligibility.cgpaPass) return { ok: false, text: `Needs CGPA ${s.minCGPA.toFixed(2)}` };
     if (!eligibility.ieltsPass) return { ok: false, text: `Needs IELTS ${s.minIELTS.toFixed(1)}` };

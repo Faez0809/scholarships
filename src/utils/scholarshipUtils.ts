@@ -6,6 +6,7 @@ import {
   UserProfile,
 } from "../types/scholarship";
 import { nationalityLabel, nationalityStatus } from "../data/nationality";
+import { ageAtDeadline, ageLimitFor } from "../data/rules";
 
 export function calculateDaysRemaining(deadlineStr: string): {
   days: number;
@@ -85,6 +86,14 @@ export function checkEligibility(
     reasons.push(`Not open to citizens of ${nationalityLabel(profile.nationality)}`);
   }
 
+  // Age limit (only programs with a confirmed rule, only if a birth year is given)
+  const limit = ageLimitFor(scholarship.id, profile.targetDegree);
+  const age = ageAtDeadline(profile.birthYear, scholarship.deadline);
+  const agePass = limit === null || age === null || age <= limit;
+  if (!agePass) {
+    reasons.push(`Age limit is ${limit} (you would be about ${age})`);
+  }
+
   // Degree check
   let degreePass = true;
   if (profile.targetDegree !== "Both") {
@@ -146,11 +155,13 @@ export function checkEligibility(
     mediumPass &&
     fieldPass &&
     savingsPass &&
-    nationalityPass;
+    nationalityPass &&
+    agePass;
 
   return {
     isEligible,
     nationalityPass,
+    agePass,
     degreePass,
     cgpaPass,
     ieltsPass,

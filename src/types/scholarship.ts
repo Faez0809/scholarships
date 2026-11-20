@@ -99,6 +99,10 @@ export interface UserProfile {
   nationality?: string;
   /** True once the visitor has answered the profile questions. */
   isSet?: boolean;
+  /** Optional; used only for programs with a confirmed age limit. */
+  birthYear?: number;
+  /** Month of the English test, YYYY-MM; used to warn when it will be too old. */
+  englishTestDate?: string;
 }
 
 export type PillFilter =
@@ -125,5 +129,6 @@ export interface EligibilityResult {
   mediumPass: boolean;
   fieldPass: boolean;
   nationalityPass: boolean;
+  agePass: boolean;
   reasons: string[];
 }

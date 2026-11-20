@@ -92,11 +92,11 @@ export const BrowseView: React.FC = () => {
         description={
           profile.isSet ? (
             <>
-              {counts.all} fully funded programs, checked against official pages. You qualify for{" "}
+              {counts.all} Master&apos;s and PhD scholarships, checked against official pages. You qualify for{" "}
               <strong className="font-semibold text-stone-900">{counts.eligible}</strong>.
             </>
           ) : (
-            <>{counts.all} fully funded Master&apos;s and PhD programs, checked against official pages.</>
+            <>{counts.all} Master&apos;s and PhD scholarships, checked against official pages.</>
           )
         }
         actions={

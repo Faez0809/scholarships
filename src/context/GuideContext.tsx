@@ -19,7 +19,7 @@ import { useOutreach } from "./OutreachContext";
 
 export type GuideStep = "profile" | "open" | "save" | "supervisor" | "outreach";
 
-interface GuideState {
+export interface GuideState {
   profileConfirmed: boolean;
   openedScholarship: boolean;
   searchedSupervisors: boolean;
@@ -38,6 +38,8 @@ interface GuideContextType {
   markStep: (step: "profile" | "supervisor") => void;
   isProfileOpen: boolean;
   setIsProfileOpen: (open: boolean) => void;
+  guideState: GuideState;
+  replaceGuide: (savedIds: string[], guide: Partial<GuideState>) => void;
 }
 
 const STORAGE_SAVED = "scholar_track_v2_saved_scholarships";
@@ -141,6 +143,11 @@ export function GuideProvider({ children }: { children: ReactNode }) {
     markStep,
     isProfileOpen,
     setIsProfileOpen,
+    guideState: guide,
+    replaceGuide: (ids: string[], g: Partial<GuideState>) => {
+      setSavedIds(Array.isArray(ids) ? ids : []);
+      setGuide({ ...EMPTY_GUIDE, ...g });
+    },
   };
 
   return <GuideContext.Provider value={value}>{children}</GuideContext.Provider>;

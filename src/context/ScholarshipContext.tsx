@@ -68,6 +68,7 @@ interface ScholarshipContextType {
   setIsPasscodeModalOpen: (open: boolean) => void;
   documentChecklist: Record<string, boolean>;
   toggleDocumentCheck: (scholarshipId: string, docName: string) => void;
+  replaceDocumentChecklist: (next: Record<string, boolean>) => void;
   addScholarship: (
     data: Omit<Scholarship, "id" | "createdAt" | "updatedAt">
   ) => Promise<void>;
@@ -642,6 +643,7 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
         setIsPasscodeModalOpen,
         documentChecklist,
         toggleDocumentCheck,
+        replaceDocumentChecklist: setDocumentChecklist,
         addScholarship,
         updateScholarship,
         deleteScholarship,

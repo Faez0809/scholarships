@@ -17,6 +17,7 @@ import {
 import { AppView, useScholarship } from "../context/ScholarshipContext";
 import { useGuide } from "../context/GuideContext";
 import { isFollowUpOverdue, useOutreach } from "../context/OutreachContext";
+import { AccountButton } from "./AuthDialog";
 
 export const NAV_ITEMS: { id: AppView; label: string; short: string; Icon: React.ElementType }[] = [
   { id: "scholarships", label: "Browse scholarships", short: "Browse", Icon: GraduationCap },
@@ -75,6 +76,7 @@ export const AppHeader: React.FC = () => {
 
         <div className="ml-auto flex items-center gap-2">
           <AdminMenu />
+          <AccountButton />
         </div>
       </div>
     </header>

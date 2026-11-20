@@ -9,6 +9,7 @@ import { OutreachTracker } from "./OutreachTracker";
 import { ScholarshipDrawer } from "./ScholarshipDrawer";
 import { AdminModal } from "./AdminModal";
 import { PasscodeModal } from "./PasscodeModal";
+import { AuthDialog } from "./AuthDialog";
 
 export const ScholarshipApp: React.FC = () => {
   const { activeView, syncStatus, refreshFromCloud } = useScholarship();
@@ -51,6 +52,7 @@ export const ScholarshipApp: React.FC = () => {
       <ScholarshipDrawer />
       <AdminModal />
       <PasscodeModal />
+      <AuthDialog />
     </div>
   );
 };

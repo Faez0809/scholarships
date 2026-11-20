@@ -14,6 +14,7 @@ import {
 import { ScholarshipCard } from "./ScholarshipCard";
 import { ProfilePanel, ProfileSummaryBar } from "./ProfilePanel";
 import { GetStarted } from "./GetStarted";
+import { SaveProgressPrompt } from "./AuthDialog";
 import { PageHeader, btn } from "./ui";
 
 const REGIONS: ("All" | Region)[] = ["All", "Europe", "Asia", "Americas", "Oceania", "Middle East"];
@@ -36,7 +37,7 @@ export const BrowseView: React.FC = () => {
     setEditingScholarship,
     stats,
   } = useScholarship();
-  const { savedIds, setIsProfileOpen } = useGuide();
+  const { savedIds, setIsProfileOpen, completedCount } = useGuide();
   const [showSaved, setShowSaved] = useState(false);
 
   const counts = useMemo(() => {
@@ -135,6 +136,7 @@ export const BrowseView: React.FC = () => {
       />
 
       <GetStarted />
+      <SaveProgressPrompt visible={completedCount >= 2 || savedIds.length > 0} />
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         <ProfilePanel />

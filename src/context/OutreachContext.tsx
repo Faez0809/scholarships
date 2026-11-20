@@ -70,6 +70,7 @@ interface OutreachContextType {
   removeContact: (id: string) => void;
   isSaved: (openAlexId: string | null | undefined, name?: string, institution?: string) => boolean;
   isLoaded: boolean;
+  replaceAll: (contacts: OutreachContact[], sender: SenderDetails) => void;
 }
 
 const STORAGE_CONTACTS = "scholar_track_v2_outreach_contacts";
@@ -232,6 +233,10 @@ export function OutreachProvider({ children }: { children: ReactNode }) {
       removeContact,
       isSaved,
       isLoaded,
+      replaceAll: (next: OutreachContact[], nextSender: SenderDetails) => {
+        setContacts(Array.isArray(next) ? next : []);
+        setSender({ ...EMPTY_SENDER, ...nextSender });
+      },
     }),
     [contacts, sender, setSender, addContact, updateContact, setStatus, removeContact, isSaved, isLoaded]
   );

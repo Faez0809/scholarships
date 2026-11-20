@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-11-20 (evening)
+
+### Interface redesign
+- New navigation: Browse scholarships, Find supervisors and My outreach in the header, and a bottom tab bar (with Profile) on phones.
+- Get started checklist, saved shortlist, page headers with next actions, plain-language labels and tooltips.
+- Cards rebuilt around the name, your fit, the money and the deadline; the detail panel opens with "What to do next".
+- Admin actions grouped in one menu. Plan and audit in `docs/UX_REDESIGN.md`.
+
+### Accounts
+- Optional sign-in with email and password or an email link (Google button appears when `NEXT_PUBLIC_ENABLE_GOOGLE_SIGNIN=true`).
+- Signed-in users get their profile, document checklist, shortlist, outreach contacts, sender details and guide progress saved to their own row in `user_state` (Row-Level Security: only the owner can read or write it).
+- On first sign-in the data already in this browser is copied into the account. Guests keep using browser storage.
+- If the `user_state` table has not been created yet, the app keeps working and says so in the account menu.
+- SQL: `supabase/migrations/20261120_user_accounts.sql`.
+
 ## 2026-11-20
 
 ### Security

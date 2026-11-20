@@ -221,7 +221,7 @@ export const AuthDialog: React.FC = () => {
                 </p>
               )}
             </div>
-        <p className="mt-4 text-center text-[11px] text-zinc-400">
+        <p className="mt-4 text-center text-[11px] text-zinc-500">
           Browsing works without an account. When you sign in, what you&apos;ve saved in this browser is copied to your account.
         </p>
       </div>

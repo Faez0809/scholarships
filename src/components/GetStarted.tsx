@@ -77,7 +77,7 @@ export const GetStarted: React.FC = () => {
         <button
           type="button"
           onClick={dismissGuide}
-          className="rounded-md p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+          className="rounded-md p-1 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
           aria-label="Hide the getting started guide"
         >
           <X className="h-4 w-4" />

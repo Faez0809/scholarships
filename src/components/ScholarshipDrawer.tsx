@@ -258,7 +258,7 @@ export const ScholarshipDrawer: React.FC = () => {
                   </div>
                 )}
                 {s.lastVerified && (
-                  <p className="text-[11px] text-zinc-400">
+                  <p className="text-[11px] text-zinc-500">
                     Checked on {formatVerifiedDate(s.lastVerified)}. Always confirm on the official site before applying.
                   </p>
                 )}
@@ -527,23 +527,23 @@ export const ScholarshipDrawer: React.FC = () => {
 
             <div className="mt-3 grid grid-cols-3 gap-3 text-center">
               <div className="rounded-xl border border-zinc-200 bg-white p-3 shadow-2xs">
-                <span className="block text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
+                <span className="block text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
                   Monthly Stipend
                 </span>
                 <span className="mt-1 block font-mono text-base font-extrabold text-zinc-900">
                   ${activeStipend.toLocaleString()}
                 </span>
-                <span className="text-[10px] text-zinc-400">Fixed grant</span>
+                <span className="text-[10px] text-zinc-500">Fixed grant</span>
               </div>
 
               <div className="rounded-xl border border-zinc-200 bg-white p-3 shadow-2xs">
-                <span className="block text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
+                <span className="block text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
                   Est. Living Cost
                 </span>
                 <span className="mt-1 block font-mono text-base font-bold text-zinc-800">
                   ${effectiveLivingCost.toLocaleString()}
                 </span>
-                <span className="text-[10px] text-zinc-400">Rent, food, transit</span>
+                <span className="text-[10px] text-zinc-500">Rent, food, transit</span>
               </div>
 
               <div className="rounded-xl border border-emerald-200 bg-emerald-50/80 p-3 shadow-2xs">
@@ -578,7 +578,7 @@ export const ScholarshipDrawer: React.FC = () => {
                 onChange={(e) => setPersonalExpenseAdjustment(parseInt(e.target.value, 10))}
                 className="mt-2.5 h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-indigo-600"
               />
-              <div className="mt-1 flex justify-between text-[10px] text-zinc-400 font-mono">
+              <div className="mt-1 flex justify-between text-[10px] text-zinc-500 font-mono">
                 <span>Frugal (-$300)</span>
                 <span>Base Average ($0)</span>
                 <span>Comfortable (+$500)</span>

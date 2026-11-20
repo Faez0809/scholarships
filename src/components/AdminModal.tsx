@@ -392,7 +392,7 @@ export const AdminModal: React.FC = () => {
 
           <button
             onClick={handleClose}
-            className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
+            className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
           >
             <X className="h-5 w-5" />
           </button>
@@ -641,7 +641,7 @@ export const AdminModal: React.FC = () => {
                   <Users className="h-3.5 w-3.5 text-indigo-600" />
                   Participating Partner Universities (One per line)
                 </label>
-                <span className="text-[10px] text-zinc-400">
+                <span className="text-[10px] text-zinc-500">
                   Format: Name | City | Country | Flag | LivingCost | Stipend | Note
                 </span>
               </div>

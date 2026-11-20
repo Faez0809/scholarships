@@ -212,7 +212,7 @@ const Field: React.FC<{ label: string; required?: boolean; children: React.React
   <label className="block">
     <span className="mb-1 block text-xs font-medium text-zinc-700">
       {label}
-      {required && <span className="text-zinc-400"> (required)</span>}
+      {required && <span className="text-zinc-500"> (required)</span>}
     </span>
     {children}
   </label>

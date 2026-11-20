@@ -62,7 +62,7 @@ export const PasscodeModal: React.FC = () => {
           </div>
           <button
             onClick={() => setIsPasscodeModalOpen(false)}
-            className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
+            className="rounded-lg p-1 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
           >
             <X className="h-5 w-5" />
           </button>

@@ -74,7 +74,7 @@ export const ScholarshipCard: React.FC<{ scholarship: Scholarship }> = ({ schola
             aria-pressed={saved}
             aria-label={saved ? `Remove ${s.name} from saved` : `Save ${s.name}`}
             className={`relative z-10 -mr-1 -mt-1 rounded-md p-1.5 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
-              saved ? "text-indigo-700" : "text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
+              saved ? "text-indigo-700" : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
             }`}
           >
             {saved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
@@ -137,7 +137,7 @@ export const ScholarshipCard: React.FC<{ scholarship: Scholarship }> = ({ schola
       <div className="relative flex items-center justify-between gap-2 border-t border-zinc-100 px-4 py-2.5">
         <span
           className={`inline-flex items-center gap-1.5 text-xs ${
-            isExpired ? "text-zinc-400" : isClosingSoon ? "font-medium text-amber-800" : "text-zinc-600"
+            isExpired ? "text-zinc-500" : isClosingSoon ? "font-medium text-amber-800" : "text-zinc-600"
           }`}
         >
           {isClosingSoon ? <Clock className="h-3.5 w-3.5" /> : <Calendar className="h-3.5 w-3.5" />}
@@ -146,7 +146,7 @@ export const ScholarshipCard: React.FC<{ scholarship: Scholarship }> = ({ schola
             : isClosingSoon
             ? `Closes in ${days} day${days === 1 ? "" : "s"}`
             : `Closes ${formattedDate}`}
-          {s.deadlineIsEstimate && !isExpired && <span className="text-zinc-400">(expected)</span>}
+          {s.deadlineIsEstimate && !isExpired && <span className="text-zinc-500">(expected)</span>}
         </span>
 
         {isAdmin ? (

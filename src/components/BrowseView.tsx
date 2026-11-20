@@ -223,7 +223,7 @@ export const BrowseView: React.FC = () => {
                   }`}
                 >
                   {q.label}
-                  <span className={isActive(q.id) ? "text-zinc-300" : "text-zinc-400"}>{q.count}</span>
+                  <span className={isActive(q.id) ? "text-zinc-300" : "text-zinc-500"}>{q.count}</span>
                 </button>
               ))}
             </div>

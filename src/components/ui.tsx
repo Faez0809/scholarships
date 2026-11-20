@@ -79,7 +79,7 @@ export const InfoTip: React.FC<{ text: string; label?: string; className?: strin
           e.stopPropagation();
           setOpen((v) => !v);
         }}
-        className="inline-flex h-4 w-4 items-center justify-center rounded-full text-zinc-400 hover:text-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+        className="-m-1 inline-flex h-6 w-6 items-center justify-center rounded-full text-zinc-500 hover:text-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
       >
         <Info className="h-3.5 w-3.5" />
       </button>

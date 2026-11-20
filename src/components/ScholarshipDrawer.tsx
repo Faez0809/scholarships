@@ -282,7 +282,7 @@ export const ScholarshipDrawer: React.FC = () => {
                     : eligibility.reasons[0] || "Some requirements are not met yet."
                 }
                 action={
-                  <a href="#drawer-eligibility" className="text-xs font-medium text-indigo-700 hover:underline">
+                  <a href="#drawer-eligibility" className="-my-1.5 -mr-1 inline-block rounded px-1 py-1.5 text-xs font-medium text-indigo-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
                     See details
                   </a>
                 }
@@ -293,7 +293,7 @@ export const ScholarshipDrawer: React.FC = () => {
                 title="Prepare your documents"
                 detail={`${docsReady} of ${s.requiredDocuments.length} ready. Tick them off as you go.`}
                 action={
-                  <a href="#drawer-documents" className="text-xs font-medium text-indigo-700 hover:underline">
+                  <a href="#drawer-documents" className="-my-1.5 -mr-1 inline-block rounded px-1 py-1.5 text-xs font-medium text-indigo-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
                     Checklist
                   </a>
                 }
@@ -310,7 +310,7 @@ export const ScholarshipDrawer: React.FC = () => {
                       onClick={() =>
                         openSupervisorFinder(selectedPartnerUni?.name || s.university, (s.fieldSpecifics || "").split(",")[0]?.trim() || "")
                       }
-                      className="text-xs font-medium text-indigo-700 hover:underline"
+                      className="-my-1.5 -mr-1 inline-block rounded px-1 py-1.5 text-xs font-medium text-indigo-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                     >
                       Find supervisors
                     </button>
@@ -323,7 +323,7 @@ export const ScholarshipDrawer: React.FC = () => {
                 title="Apply on the official website"
                 detail={isExpired ? "This round has closed. Check the site for the next one." : `Deadline ${formattedDate}${s.deadlineIsEstimate ? " (expected)" : ""}.`}
                 action={
-                  <a href={s.officialWebsiteUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-medium text-indigo-700 hover:underline">
+                  <a href={s.officialWebsiteUrl} target="_blank" rel="noopener noreferrer" className="-my-1.5 -mr-1 inline-flex items-center gap-1 rounded px-1 py-1.5 text-xs font-medium text-indigo-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
                     Open site <ExternalLink className="h-3 w-3" />
                   </a>
                 }
@@ -444,7 +444,7 @@ export const ScholarshipDrawer: React.FC = () => {
                 </span>
                 <span
                   className={`ml-1 text-[10px] font-semibold ${
-                    eligibility.cgpaPass ? "text-emerald-600" : "text-amber-600"
+                    eligibility.cgpaPass ? "text-emerald-700" : "text-amber-800"
                   }`}
                 >
                   ({eligibility.cgpaPass ? "Passed" : "Low"})
@@ -458,7 +458,7 @@ export const ScholarshipDrawer: React.FC = () => {
                 </span>
                 <span
                   className={`ml-1 text-[10px] font-semibold ${
-                    eligibility.ieltsPass ? "text-emerald-600" : "text-amber-600"
+                    eligibility.ieltsPass ? "text-emerald-700" : "text-amber-800"
                   }`}
                 >
                   ({eligibility.ieltsPass ? "Passed" : "Low"})
@@ -472,17 +472,17 @@ export const ScholarshipDrawer: React.FC = () => {
                 </span>
                 <span
                   className={`ml-1 text-[10px] font-semibold ${
-                    eligibility.degreePass ? "text-emerald-600" : "text-amber-600"
+                    eligibility.degreePass ? "text-emerald-700" : "text-amber-800"
                   }`}
                 >
-                  ({eligibility.degreePass ? "Match" : "Diff"})
+                  ({eligibility.degreePass ? "Match" : "Not offered"})
                 </span>
               </div>
 
               <div className="rounded-lg bg-white/80 p-2 shadow-2xs">
                 <span className="block text-[10px] text-zinc-500 font-medium">Medium</span>
                 <span className="font-semibold text-zinc-900">{s.medium}</span>
-                <span className="ml-1 text-[10px] font-semibold text-emerald-600">
+                <span className="ml-1 text-[10px] font-semibold text-emerald-700">
                   (OK)
                 </span>
               </div>
@@ -553,7 +553,7 @@ export const ScholarshipDrawer: React.FC = () => {
                 <span className="mt-1 block text-base font-semibold tabular-nums text-emerald-700">
                   {adjustedNetSavings >= 0 ? `+$${adjustedNetSavings.toLocaleString()}` : `-$${Math.abs(adjustedNetSavings).toLocaleString()}`}
                 </span>
-                <span className="text-[10px] text-emerald-600/80">Every month</span>
+                <span className="text-[11px] text-emerald-800">Every month</span>
               </div>
             </div>
 

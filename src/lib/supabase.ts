@@ -1,10 +1,10 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-const DEFAULT_SUPABASE_URL = "https://skuopdhtzyfcrvvjhkej.supabase.co";
+export const DEFAULT_SUPABASE_URL = "https://skuopdhtzyfcrvvjhkej.supabase.co";
 const DEFAULT_SUPABASE_KEY =
   "sb_publishable_fo6AHwwcCUyt7bJwfI_j-g_zpcaoEd4";
 
-function isValidHttpUrl(url?: string | null): boolean {
+export function isValidHttpUrl(url?: string | null): boolean {
   if (!url) return false;
   const trimmed = url.trim();
   return trimmed.startsWith("http://") || trimmed.startsWith("https://");

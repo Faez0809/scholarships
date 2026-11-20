@@ -6,7 +6,7 @@ function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
 }
 import { getSupabaseClient } from "@/lib/supabase";
-import { getSupabaseAdminClient } from "@/lib/supabaseAdmin";
+import { describeWriteConfig, getSupabaseAdminClient } from "@/lib/supabaseAdmin";
 import { requireAdmin } from "@/lib/adminAuth";
 import { SEED_SCHOLARSHIPS } from "@/data/seedScholarships";
 import { Scholarship } from "@/types/scholarship";
@@ -126,7 +126,7 @@ export async function POST(req: NextRequest) {
   if (denied) return denied;
 
   if (new URL(req.url).searchParams.get("action") === "verify") {
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, writeConfig: describeWriteConfig() });
   }
 
   const supabase = getSupabaseAdminClient();

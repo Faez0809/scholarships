@@ -1,5 +1,5 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { getSupabaseClient } from "./supabase";
+import { DEFAULT_SUPABASE_URL, getSupabaseClient, isValidHttpUrl } from "./supabase";
 
 /**
  * Server-only Supabase client for write operations.
@@ -17,10 +17,13 @@ let warnedMissingServiceKey = false;
 export function getSupabaseAdminClient(): SupabaseClient | null {
   if (cachedAdminClient) return cachedAdminClient;
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  // Same fallback as the public client, so a missing URL variable does not
+  // silently push writes onto the read-only public key.
+  const url = isValidHttpUrl(rawUrl) ? rawUrl! : DEFAULT_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim().replace(/^["']|["']$/g, "");
 
-  if (url && /^https?:\/\//.test(url) && serviceKey) {
+  if (serviceKey) {
     try {
       cachedAdminClient = createClient(url, serviceKey, {
         auth: { persistSession: false, autoRefreshToken: false },
@@ -40,4 +43,22 @@ export function getSupabaseAdminClient(): SupabaseClient | null {
     warnedMissingServiceKey = true;
   }
   return getSupabaseClient();
+}
+
+/** Which credentials the server would use for writes (no secret values). */
+export function describeWriteConfig() {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || "";
+  return {
+    serviceKeyPresent: key.length > 0,
+    serviceKeyFormat: key.startsWith("sb_secret_")
+      ? "secret"
+      : key.startsWith("sb_publishable_")
+      ? "publishable (wrong key)"
+      : key.startsWith("eyJ")
+      ? "jwt"
+      : key
+      ? "unrecognised"
+      : "missing",
+    urlVariablePresent: isValidHttpUrl(process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()),
+  };
 }

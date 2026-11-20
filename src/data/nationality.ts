@@ -81,6 +81,12 @@ const RULES: Record<string, { status: Partial<Record<NationalityCode, Nationalit
   "daad-helmut-schmidt-2028": { status: ALL_YES, note: "For graduates from developing countries on the DAAD list." },
   "knight-hennessy-stanford-2028": { status: ALL_YES },
   "schwarzman-tsinghua-2028": { status: ALL_YES },
+  "oist-phd-japan-2028": { status: ALL_YES },
+  "mbzuai-uae-2027": { status: ALL_YES },
+  "nus-research-scholarship-2027": { status: ALL_YES },
+  "yenching-pku-2027": { status: ALL_YES },
+  "tigp-academia-sinica-2027": { status: ALL_YES },
+  "daad-doctoral-germany-2028": { status: ALL_YES },
 };
 
 export function nationalityStatus(scholarshipId: string, code: string | undefined): NationalityStatus | null {

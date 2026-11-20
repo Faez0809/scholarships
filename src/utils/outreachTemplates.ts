@@ -20,6 +20,12 @@ function degreePhrase(profile: UserProfile): string {
   return "graduate study (Master's or PhD)";
 }
 
+function studentLabel(profile: UserProfile): string {
+  if (profile.targetDegree === "PhD") return "PhD";
+  if (profile.targetDegree === "Master's") return "Master's";
+  return "graduate";
+}
+
 function or(value: string, placeholder: string): string {
   return value.trim() ? value.trim() : placeholder;
 }
@@ -46,7 +52,7 @@ export function buildEmail(
 
   if (kind === "follow_up") {
     return {
-      subject: `Following up: prospective ${profile.targetDegree === "Master's" ? "Master's" : "PhD"} student interested in ${topic}`,
+      subject: `Following up: prospective ${studentLabel(profile)} student interested in ${topic}`,
       body: [
         greeting,
         "",
@@ -85,7 +91,7 @@ export function buildEmail(
     : `I have been following your group's recent work on ${topic}, and it closely matches the questions I want to work on.`;
 
   return {
-    subject: `Prospective ${profile.targetDegree === "Master's" ? "Master's" : "PhD"} student interested in ${topic}`,
+    subject: `Prospective ${studentLabel(profile)} student interested in ${topic}`,
     body: [
       greeting,
       "",

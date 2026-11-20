@@ -29,7 +29,7 @@ Severity: **High** = wrong information or blocks some users. **Medium** = confus
 | 15 | Medium | Detail panel | Found on re-test: small tap targets in the detail panel (info buttons and next-step links are 16px tall) and a few low-contrast labels ("(OK)", "(Low)", "Every month"). | Fixed |
 | 16 | Medium | Layout, desktop | Second sweep: the profile sidebar is taller than the screen (1030px in a 720px window) and sticky, so "Only show scholarships I qualify for" and "Save profile" can't be reached until the end of the list. | Fixed |
 | 17 | Medium | UX, phone | Second sweep: the profile sheet button says "Show my 9 matches" but closes without filtering, so all 25 still show. | Fixed |
-| 18 | Low | Copy | Second sweep: email subject says "Prospective PhD student" when the profile says "Either", while the body says "Master's or PhD". | Open |
+| 18 | Low | Copy | Second sweep: email subject says "Prospective PhD student" when the profile says "Either", while the body says "Master's or PhD". | Fixed |
 | 19 | Low | Wayfinding | Second sweep: the 404 page is the plain default with no way back to the app. | Open |
 | 20 | Low | Branding | Second sweep: the browser tab uses a generic icon instead of the ScholarTrack mark. | Open |
 Fixes are made one per commit, in the order above, and ticked off here.

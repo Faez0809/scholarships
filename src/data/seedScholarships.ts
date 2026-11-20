@@ -1,5 +1,6 @@
 import { Scholarship } from "../types/scholarship";
 import { ADDITIONAL_SCHOLARSHIPS } from "./additionalScholarships";
+import { MORE_SCHOLARSHIPS } from "./moreScholarships";
 
 export const SEED_SCHOLARSHIPS: Scholarship[] = [
   // 1. CSC Chinese Government Scholarship (Gov / Multi-Uni - Asia)
@@ -803,4 +804,5 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
   },
 
   ...ADDITIONAL_SCHOLARSHIPS,
+  ...MORE_SCHOLARSHIPS,
 ];

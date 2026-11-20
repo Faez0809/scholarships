@@ -72,6 +72,15 @@ const RULES: Record<string, { status: Partial<Record<NationalityCode, Nationalit
     note: "MOE applications go through a Taipei office in your country; TaiwanICDF is for partner countries only.",
   },
   "singa-singapore-2027": { status: ALL_YES },
+  "chevening-uk-2028": { status: ALL_YES, note: "Open to Chevening-eligible countries, which include all five." },
+  "hkpfs-hong-kong-2027": { status: ALL_YES },
+  "clarendon-oxford-2027": { status: ALL_YES },
+  "rhodes-oxford-2028": { status: ALL_YES, note: "India and Pakistan have their own rounds; other countries apply through Rhodes Global." },
+  "adb-jsp-2027": { status: ALL_YES, note: "For nationals of ADB borrowing member countries." },
+  "jds-japan-2027": { status: { BD: "yes", PK: "yes", NP: "yes", LK: "yes", IN: "no" }, note: "Only for JDS partner countries; mainly government officials." },
+  "daad-helmut-schmidt-2028": { status: ALL_YES, note: "For graduates from developing countries on the DAAD list." },
+  "knight-hennessy-stanford-2028": { status: ALL_YES },
+  "schwarzman-tsinghua-2028": { status: ALL_YES },
 };
 
 export function nationalityStatus(scholarshipId: string, code: string | undefined): NationalityStatus | null {

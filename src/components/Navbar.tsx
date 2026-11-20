@@ -17,7 +17,6 @@ import {
   Cloud,
   CloudOff,
   Loader2,
-  Tag,
 } from "lucide-react";
 
 export const Navbar: React.FC = () => {
@@ -87,7 +86,7 @@ export const Navbar: React.FC = () => {
                 Scholar<span className="text-indigo-600">Track</span>
               </span>
               <span className="hidden rounded-full bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200 sm:inline-flex items-center gap-1">
-                <Tag className="h-2.5 w-2.5" /> v1.0
+                v2.0
               </span>
             </div>
             <p className="hidden text-xs text-zinc-500 md:block">
@@ -124,7 +123,8 @@ export const Navbar: React.FC = () => {
           <button
             onClick={() => refreshFromCloud()}
             className="flex items-center gap-1.5 rounded-lg border border-zinc-200/80 bg-zinc-50/60 px-2 sm:px-2.5 py-1 text-xs transition hover:bg-zinc-100"
-            title={`Supabase Sync: ${syncStatus}. Click to refresh.`}
+            title="Data status. Click to refresh."
+            aria-label={`Data status: ${syncStatus}. Click to refresh.`}
           >
             {syncStatus === "syncing" && (
               <span className="flex items-center gap-1 text-indigo-600 font-medium">
@@ -135,13 +135,13 @@ export const Navbar: React.FC = () => {
             {syncStatus === "synced" && (
               <span className="flex items-center gap-1 text-emerald-700 font-medium">
                 <CloudCheck className="h-3.5 w-3.5 text-emerald-600" />
-                <span className="hidden sm:inline">Supabase Live</span>
+                <span className="hidden sm:inline">Up to date</span>
               </span>
             )}
             {syncStatus === "fallback" && (
               <span className="flex items-center gap-1 text-zinc-600 font-medium">
                 <Cloud className="h-3.5 w-3.5 text-zinc-400" />
-                <span className="hidden sm:inline">Local Cache</span>
+                <span className="hidden sm:inline">Saved copy</span>
               </span>
             )}
             {syncStatus === "offline" && (
@@ -153,7 +153,7 @@ export const Navbar: React.FC = () => {
             {syncStatus === "idle" && (
               <span className="flex items-center gap-1 text-zinc-500 font-medium">
                 <Cloud className="h-3.5 w-3.5 text-zinc-400" />
-                <span className="hidden sm:inline">Cloud Ready</span>
+                <span className="hidden sm:inline">Ready</span>
               </span>
             )}
           </button>

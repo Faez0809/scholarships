@@ -10,9 +10,7 @@ import React, {
   ReactNode,
 } from "react";
 import {
-  FundingType,
   PillFilter,
-  Region,
   Scholarship,
   SortOption,
   UserProfile,
@@ -117,8 +115,15 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
   const [sortBy, setSortBy] = useState<SortOption>("deadline");
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminPin, setAdminPin] = useState("");
-  const [selectedScholarship, setSelectedScholarship] =
-    useState<Scholarship | null>(null);
+  const [selectedScholarshipId, setSelectedScholarshipId] = useState<string | null>(null);
+  const selectedScholarship = React.useMemo(
+    () => scholarships.find((s) => s.id === selectedScholarshipId) || null,
+    [scholarships, selectedScholarshipId]
+  );
+  const setSelectedScholarship = useCallback(
+    (scholarship: Scholarship | null) => setSelectedScholarshipId(scholarship?.id ?? null),
+    []
+  );
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingScholarship, setEditingScholarship] =
     useState<Scholarship | null>(null);
@@ -140,6 +145,8 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
       setSelectedScholarship(null);
       setActiveView("supervisors");
     },
+    // setSelectedScholarship is stable (useCallback with no deps)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setActiveView]
   );
   const [documentChecklist, setDocumentChecklist] = useState<
@@ -179,7 +186,9 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Initialize from LocalStorage immediately for instant UI load
+  // Initialize from LocalStorage immediately for instant UI load.
+  // localStorage only exists on the client, so this hydration has to run in an effect.
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     try {
       // 1. Scholarships
@@ -188,7 +197,7 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
         localStorage.getItem("scholar_track_v1_scholarships");
 
       if (savedScholarships) {
-        const parsed: any[] = JSON.parse(savedScholarships);
+        const parsed: Scholarship[] = JSON.parse(savedScholarships);
         if (Array.isArray(parsed) && parsed.length > 0) {
           const migrated: Scholarship[] = parsed.map((item) => {
             const seedMatch = SEED_SCHOLARSHIPS.find((s) => s.id === item.id);
@@ -291,6 +300,7 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
       refreshFromCloud();
     }
   }, [refreshFromCloud]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Sync scholarships to LocalStorage
   useEffect(() => {
@@ -328,17 +338,6 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
     }
   }, [documentChecklist, isInitialized]);
 
-  // Keep selectedScholarship updated if it was edited
-  useEffect(() => {
-    if (selectedScholarship) {
-      const fresh = scholarships.find((s) => s.id === selectedScholarship.id);
-      if (fresh) {
-        setSelectedScholarship(fresh);
-      } else {
-        setSelectedScholarship(null);
-      }
-    }
-  }, [scholarships]);
 
   const updateProfileField = <K extends keyof UserProfile>(
     key: K,

@@ -131,8 +131,10 @@ export function OutreachProvider({ children }: { children: ReactNode }) {
   const [sender, setSenderState] = useState<SenderDetails>(EMPTY_SENDER);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // Hydrate once on the client; localStorage is not available during server rendering.
   useEffect(() => {
     const stored = readStorage<OutreachContact[]>(STORAGE_CONTACTS, []);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setContacts(Array.isArray(stored) ? stored : []);
     setSenderState({ ...EMPTY_SENDER, ...readStorage<Partial<SenderDetails>>(STORAGE_SENDER, {}) });
     setIsLoaded(true);

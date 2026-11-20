@@ -70,10 +70,7 @@ export const SupervisorFinder: React.FC = () => {
   useEffect(() => {
     if (selectedInstitution && selectedInstitution.name === universityQuery) return;
     const q = universityQuery.trim();
-    if (q.length < 2) {
-      setSuggestions([]);
-      return;
-    }
+    if (q.length < 2) return;
     const timer = window.setTimeout(async () => {
       suggestAbort.current?.abort();
       const controller = new AbortController();
@@ -192,11 +189,13 @@ export const SupervisorFinder: React.FC = () => {
                   setUniversityQuery(e.target.value);
                   setSelectedInstitution(null);
                   setShowSuggestions(true);
+                  if (e.target.value.trim().length < 2) setSuggestions([]);
                 }}
                 onFocus={() => setShowSuggestions(true)}
                 onBlur={() => window.setTimeout(() => setShowSuggestions(false), 150)}
                 placeholder="e.g. University of Waterloo"
                 className="w-full rounded-lg border border-zinc-300 bg-white py-2 pl-9 pr-8 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                role="combobox"
                 aria-autocomplete="list"
                 aria-controls="sf-university-list"
                 aria-expanded={showSuggestions && suggestions.length > 0}

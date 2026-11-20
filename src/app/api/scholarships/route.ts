@@ -1,6 +1,10 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+
+function errorMessage(err: unknown): string {
+  return err instanceof Error ? err.message : String(err);
+}
 import { getSupabaseClient } from "@/lib/supabase";
 import { getSupabaseAdminClient } from "@/lib/supabaseAdmin";
 import { requireAdmin } from "@/lib/adminAuth";
@@ -96,13 +100,13 @@ export async function GET() {
       },
       { status: 200 }
     );
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Unexpected error in GET /api/scholarships:", err);
     return NextResponse.json(
       {
         scholarships: SEED_SCHOLARSHIPS,
         source: "fallback_exception",
-        error: err?.message,
+        error: errorMessage(err),
       },
       { status: 200 }
     );
@@ -198,8 +202,8 @@ export async function POST(req: NextRequest) {
         updated: refreshed.length,
         addedIds: missing.map((m) => m.id),
       });
-    } catch (err: any) {
-      return NextResponse.json({ error: err.message }, { status: 500 });
+    } catch (err: unknown) {
+      return NextResponse.json({ error: errorMessage(err) }, { status: 500 });
     }
   }
 
@@ -230,8 +234,8 @@ export async function POST(req: NextRequest) {
         message: `Reset to ${SEED_SCHOLARSHIPS.length} built-in scholarships`,
         scholarships: SEED_SCHOLARSHIPS,
       });
-    } catch (err: any) {
-      return NextResponse.json({ error: err.message }, { status: 500 });
+    } catch (err: unknown) {
+      return NextResponse.json({ error: errorMessage(err) }, { status: 500 });
     }
   }
 
@@ -261,8 +265,8 @@ export async function POST(req: NextRequest) {
       { success: true, scholarship: scholarshipRecord },
       { status: 201 }
     );
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 400 });
+  } catch (err: unknown) {
+    return NextResponse.json({ error: errorMessage(err) }, { status: 400 });
   }
 }
 
@@ -323,8 +327,8 @@ export async function PUT(req: NextRequest) {
       success: true,
       scholarship: mergedScholarship,
     });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 400 });
+  } catch (err: unknown) {
+    return NextResponse.json({ error: errorMessage(err) }, { status: 400 });
   }
 }
 
@@ -376,7 +380,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, deletedId: id });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    return NextResponse.json({ error: errorMessage(err) }, { status: 500 });
   }
 }

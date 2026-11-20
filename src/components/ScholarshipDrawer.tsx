@@ -19,10 +19,6 @@ import {
   CheckCircle2,
   AlertTriangle,
   GraduationCap,
-  Plane,
-  Home,
-  Shield,
-  BookOpen,
   DollarSign,
   TrendingUp,
   FileCheck,
@@ -32,8 +28,6 @@ import {
   Award,
   Landmark,
   Microscope,
-  HelpCircle,
-  Mail,
   Check,
   Search,
 } from "lucide-react";
@@ -57,15 +51,13 @@ export const ScholarshipDrawer: React.FC = () => {
   // Selected partner university for multi-uni scholarships
   const [selectedPartnerUni, setSelectedPartnerUni] = useState<PartnerUniversity | null>(null);
 
-  // Reset adjustment & partner uni whenever selected scholarship changes
-  useEffect(() => {
+  // Reset adjustment & partner uni whenever a different scholarship is opened
+  const [shownId, setShownId] = useState<string | null>(null);
+  if ((selectedScholarship?.id ?? null) !== shownId) {
+    setShownId(selectedScholarship?.id ?? null);
     setPersonalExpenseAdjustment(0);
-    if (selectedScholarship?.partnerUniversities && selectedScholarship.partnerUniversities.length > 0) {
-      setSelectedPartnerUni(selectedScholarship.partnerUniversities[0]);
-    } else {
-      setSelectedPartnerUni(null);
-    }
-  }, [selectedScholarship?.id]);
+    setSelectedPartnerUni(selectedScholarship?.partnerUniversities?.[0] ?? null);
+  }
 
   // Handle ESC key to close drawer
   useEffect(() => {
@@ -119,7 +111,7 @@ export const ScholarshipDrawer: React.FC = () => {
   ).length;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true" aria-label={s.name}>
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
@@ -528,6 +520,7 @@ export const ScholarshipDrawer: React.FC = () => {
               </div>
               <input
                 type="range"
+                aria-label="Adjust your monthly living expenses"
                 min="-300"
                 max="500"
                 step="50"

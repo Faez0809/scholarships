@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useScholarship } from "../context/ScholarshipContext";
-import { Lock, X, KeyRound, AlertCircle, ShieldCheck } from "lucide-react";
+import { X, KeyRound, AlertCircle } from "lucide-react";
 
 export const PasscodeModal: React.FC = () => {
   const { isPasscodeModalOpen, setIsPasscodeModalOpen, unlockAdmin } =
@@ -12,12 +12,19 @@ export const PasscodeModal: React.FC = () => {
   const [isChecking, setIsChecking] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
+  const [wasOpen, setWasOpen] = useState(isPasscodeModalOpen);
+  if (isPasscodeModalOpen !== wasOpen) {
+    setWasOpen(isPasscodeModalOpen);
     if (isPasscodeModalOpen) {
       setPin("");
       setError(false);
-      setTimeout(() => inputRef.current?.focus(), 100);
     }
+  }
+
+  useEffect(() => {
+    if (!isPasscodeModalOpen) return;
+    const t = window.setTimeout(() => inputRef.current?.focus(), 100);
+    return () => window.clearTimeout(t);
   }, [isPasscodeModalOpen]);
 
   if (!isPasscodeModalOpen) return null;
@@ -36,7 +43,7 @@ export const PasscodeModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Admin passcode">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"

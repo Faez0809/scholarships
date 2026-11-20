@@ -16,19 +16,15 @@ import { SupervisorFinder } from "./SupervisorFinder";
 import { OutreachTracker } from "./OutreachTracker";
 import { isFollowUpOverdue, useOutreach } from "../context/OutreachContext";
 import {
-  GraduationCap,
   SearchX,
   RotateCcw,
   Plus,
-  HelpCircle,
-  ExternalLink,
 } from "lucide-react";
 
 export const ScholarshipApp: React.FC = () => {
   const {
     scholarships,
     profile,
-    updateProfileField,
     activePill,
     setActivePill,
     searchQuery,

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useScholarship } from "../context/ScholarshipContext";
-import { FundingType, MediumOfInstruction } from "../types/scholarship";
+import { FundingType, MediumOfInstruction, UserProfile } from "../types/scholarship";
 import {
   User,
   GraduationCap,
@@ -195,7 +195,7 @@ export const ProfileSidebar: React.FC = () => {
               onChange={(e) =>
                 updateProfileField(
                   "supervisorPreference",
-                  e.target.value as any
+                  e.target.value as UserProfile["supervisorPreference"]
                 )
               }
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs font-medium text-zinc-800 shadow-2xs focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -241,6 +241,7 @@ export const ProfileSidebar: React.FC = () => {
             </div>
             <input
               type="range"
+              aria-label="My CGPA on a 4.00 scale"
               min="2.00"
               max="4.00"
               step="0.05"
@@ -268,6 +269,7 @@ export const ProfileSidebar: React.FC = () => {
             </div>
             <input
               type="range"
+              aria-label="My IELTS band score"
               min="5.0"
               max="9.0"
               step="0.5"
@@ -324,6 +326,7 @@ export const ProfileSidebar: React.FC = () => {
             </div>
             <input
               type="range"
+              aria-label="Minimum monthly savings I want"
               min="0"
               max="1500"
               step="50"

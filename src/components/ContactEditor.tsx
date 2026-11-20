@@ -237,10 +237,12 @@ const EmailPanel: React.FC<{ contact: OutreachContact }> = ({ contact }) => {
   const [editingSender, setEditingSender] = useState(!sender.fullName);
 
   // Regenerate when the template inputs change
-  useEffect(() => {
+  const [shownDraft, setShownDraft] = useState(generated);
+  if (shownDraft !== generated) {
+    setShownDraft(generated);
     setSubject(generated.subject);
     setBody(generated.body);
-  }, [generated]);
+  }
 
   const copy = async () => {
     try {
@@ -324,7 +326,11 @@ const SenderForm: React.FC<{
   setOpen: (v: boolean) => void;
 }> = ({ sender, onSave, open, setOpen }) => {
   const [draft, setDraft] = useState(sender);
-  useEffect(() => setDraft(sender), [sender]);
+  const [shownSender, setShownSender] = useState(sender);
+  if (shownSender !== sender) {
+    setShownSender(sender);
+    setDraft(sender);
+  }
 
   if (!open) {
     return (

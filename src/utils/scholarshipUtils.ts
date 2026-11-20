@@ -1,7 +1,6 @@
 import {
   EligibilityResult,
   PillFilter,
-  Region,
   Scholarship,
   SortOption,
   UserProfile,

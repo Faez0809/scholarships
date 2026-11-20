@@ -14,11 +14,7 @@ import {
 import {
   X,
   Save,
-  Globe2,
-  Building2,
   DollarSign,
-  GraduationCap,
-  Calendar,
   AlertCircle,
   Link2,
   Check,
@@ -75,7 +71,10 @@ export const AdminModal: React.FC = () => {
   const [officialWebsiteUrl, setOfficialWebsiteUrl] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Sync state when editingScholarship changes
+  // Sync state when editingScholarship changes.
+  // The form is a set of controlled inputs that must be reset whenever a different
+  // record is opened, so resetting them here is intentional.
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (editingScholarship) {
       setName(editingScholarship.name);
@@ -161,6 +160,7 @@ export const AdminModal: React.FC = () => {
     setExtractError(null);
     setExtractSuccess(false);
   }, [editingScholarship, isAddModalOpen]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   if (!isAddModalOpen) return null;
 
@@ -224,7 +224,7 @@ export const AdminModal: React.FC = () => {
         setPartnerUnisText(
           s.partnerUniversities
             .map(
-              (u: any) =>
+              (u: PartnerUniversity) =>
                 `${u.name} | ${u.city} | ${u.country} | ${u.flag || ""} | ${u.estimatedLivingCost} | ${u.monthlyStipend} | ${u.rankingOrNote}`
             )
             .join("\n")
@@ -255,9 +255,11 @@ export const AdminModal: React.FC = () => {
       if (s.officialWebsiteUrl) setOfficialWebsiteUrl(s.officialWebsiteUrl);
 
       setExtractSuccess(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Auto-extraction failed:", err);
-      setExtractError(err.message || "An error occurred during extraction.");
+      setExtractError(
+        (err instanceof Error && err.message) || "An error occurred during extraction."
+      );
     } finally {
       setIsExtracting(false);
     }
@@ -359,7 +361,7 @@ export const AdminModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4" role="dialog" aria-modal="true" aria-label="Scholarship editor">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
@@ -379,7 +381,7 @@ export const AdminModal: React.FC = () => {
                 {editingScholarship ? "Edit Scholarship Details" : "Add New Scholarship"}
               </h2>
               <p className="text-xs text-zinc-500">
-                Live changes sync directly to Supabase cloud and update the directory immediately
+                Changes are saved to the shared database and appear for everyone right away
               </p>
             </div>
           </div>

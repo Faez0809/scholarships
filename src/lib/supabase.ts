@@ -58,7 +58,7 @@ export const supabase = new Proxy({} as SupabaseClient, {
         "Supabase client could not be initialized. Please check your NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY."
       );
     }
-    const val = (client as any)[prop];
-    return typeof val === "function" ? val.bind(client) : val;
+    const val = (client as unknown as Record<PropertyKey, unknown>)[prop];
+    return typeof val === "function" ? (val as (...args: unknown[]) => unknown).bind(client) : val;
   },
 });

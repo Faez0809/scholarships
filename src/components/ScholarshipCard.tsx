@@ -5,7 +5,6 @@ import { Scholarship } from "../types/scholarship";
 import { useScholarship } from "../context/ScholarshipContext";
 import {
   calculateDaysRemaining,
-  calculateNetSavings,
   formatSignedUSD,
   checkEligibility,
   getSavingsRange,

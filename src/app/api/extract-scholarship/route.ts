@@ -1,14 +1,17 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+
+// The extracted JSON is loosely shaped; every field is validated before use.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type LooseJson = any;
+
 import { GoogleGenAI } from "@google/genai";
 import { requireAdmin } from "@/lib/adminAuth";
 import {
   FieldCategory,
   FundingType,
-  PartnerUniversity,
   Region,
-  Scholarship,
   SupervisorRequirement,
 } from "@/types/scholarship";
 
@@ -198,7 +201,7 @@ Return ONLY valid JSON matching these fields. No markdown backticks, no explanat
     }
 
     // Parse JSON
-    let parsed: any;
+    let parsed: LooseJson;
     try {
       parsed = JSON.parse(responseText);
     } catch {
@@ -254,7 +257,7 @@ Return ONLY valid JSON matching these fields. No markdown backticks, no explanat
         ? parsed.supervisorRequired
         : "Not Required (Central Admission)",
       partnerUniversities: Array.isArray(parsed.partnerUniversities) && parsed.partnerUniversities.length > 0
-        ? parsed.partnerUniversities.map((u: any) => ({
+        ? parsed.partnerUniversities.map((u: LooseJson) => ({
             name: u.name || "Partner University",
             city: u.city || parsed.city,
             country: u.country || parsed.country,
@@ -299,12 +302,12 @@ Return ONLY valid JSON matching these fields. No markdown backticks, no explanat
     };
 
     return NextResponse.json({ success: true, scholarship: result });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Scholarship extraction error:", error);
     return NextResponse.json(
       {
         error:
-          error.message ||
+          (error instanceof Error && error.message) ||
           "An unexpected error occurred while parsing the scholarship webpage.",
       },
       { status: 500 }

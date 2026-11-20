@@ -110,13 +110,13 @@ export const BrowseView: React.FC = () => {
         description={
           <>
             {stats.total} fully funded Master&apos;s and PhD programs. Based on your profile you qualify for{" "}
-            <strong className="font-semibold text-zinc-900">{stats.eligibleCount}</strong>. Open any card to see
-            requirements, money and next steps.
+            <strong className="font-semibold text-zinc-900">{stats.eligibleCount}</strong>.
+            <span className="hidden sm:inline"> Open any card to see requirements, money and next steps.</span>
           </>
         }
         actions={
           <>
-            <button type="button" className={`${btn.secondary} lg:hidden`} onClick={() => setIsProfileOpen(true)}>
+            <button type="button" className={`${btn.secondary} hidden sm:inline-flex lg:hidden`} onClick={() => setIsProfileOpen(true)}>
               <SlidersHorizontal className="h-4 w-4" /> Edit profile
             </button>
             {isAdmin && (

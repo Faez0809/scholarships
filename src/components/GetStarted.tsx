@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { Check, X, ArrowRight } from "lucide-react";
+import React, { useState } from "react";
+import { Check, X, ArrowRight, ChevronDown } from "lucide-react";
 import { GuideStep, useGuide } from "../context/GuideContext";
 import { useScholarship } from "../context/ScholarshipContext";
 
@@ -36,6 +36,7 @@ const STEP_COPY: Record<GuideStep, { title: string; hint: string; cta: string }>
 export const GetStarted: React.FC = () => {
   const { steps, completedCount, isGuideVisible, dismissGuide, setIsProfileOpen } = useGuide();
   const { setActiveView, setActivePill } = useScholarship();
+  const [expanded, setExpanded] = useState(false);
 
   if (!isGuideVisible) return null;
 
@@ -92,7 +93,10 @@ export const GetStarted: React.FC = () => {
           const copy = STEP_COPY[s.id];
           const isNext = s.id === nextStep;
           return (
-            <li key={s.id} className={`flex items-center gap-3 px-4 py-3 sm:px-5 ${isNext ? "bg-indigo-50/40" : ""}`}>
+            <li
+              key={s.id}
+              className={`${isNext || expanded ? "flex" : "hidden sm:flex"} items-center gap-3 px-4 py-3 sm:px-5 ${isNext ? "bg-indigo-50/40" : ""}`}
+            >
               <span
                 className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-semibold ${
                   s.done
@@ -128,6 +132,15 @@ export const GetStarted: React.FC = () => {
           );
         })}
       </ol>
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded}
+        className="flex w-full items-center justify-center gap-1 border-t border-zinc-100 py-2.5 text-xs font-medium text-zinc-600 hover:text-zinc-900 sm:hidden"
+      >
+        {expanded ? "Show only the next step" : `Show all ${steps.length} steps`}
+        <ChevronDown className={`h-3.5 w-3.5 transition ${expanded ? "rotate-180" : ""}`} />
+      </button>
     </section>
   );
 };

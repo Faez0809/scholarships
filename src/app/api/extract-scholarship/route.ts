@@ -164,7 +164,7 @@ Instructions:
    If this is a single university scholarship, omit partnerUniversities or set to null.
 10. supervisorFundingGuide: If fundingType is "Supervisor / RA-TA" or supervisor is required/recommended, provide a practical 1-2 paragraph guide on how to approach professors, pitch research topics, and secure research assistantships at this university.
 11. degrees: Array containing "Master's", "PhD", or both ["Master's", "PhD"].
-12. field: Must be exactly one of: "Computer Science & AI", "Engineering", "Life Sciences", "Business & Social Sciences", "All Fields".
+12. field: Must be exactly one of: "Computer Science & AI", "Engineering", "Life Sciences", "Natural Sciences", "Business & Social Sciences", "All Fields".
 13. fieldSpecifics: String listing target subjects/majors mentioned (e.g. "Artificial Intelligence, Data Science, Electrical Engineering").
 14. minCGPA: Minimum undergraduate CGPA on a 4.0 scale (number). If not explicitly stated, estimate a realistic minimum (e.g. 3.20 or 3.50 for prestigious awards).
 15. minIELTS: Minimum IELTS score (number, e.g. 6.5, 7.0, 7.5). If not mentioned, estimate 6.5.
@@ -218,6 +218,7 @@ Return ONLY valid JSON matching these fields. No markdown backticks, no explanat
       "Computer Science & AI",
       "Engineering",
       "Life Sciences",
+      "Natural Sciences",
       "Business & Social Sciences",
       "All Fields",
     ];

@@ -166,7 +166,8 @@ export async function POST(req: NextRequest) {
         if (!stored || !item.lastVerified) return false;
         const newerFacts = !stored.lastVerified || stored.lastVerified < item.lastVerified;
         const correctedMoney = (item.dataVersion || 1) > (stored.dataVersion || 1);
-        return newerFacts || correctedMoney;
+        const retagged = stored.field !== item.field || JSON.stringify(stored.extraFields || []) !== JSON.stringify(item.extraFields || []);
+        return newerFacts || correctedMoney || retagged;
       }).map((item) => {
         const stored = existing.get(item.id)!;
         const correctedMoney = (item.dataVersion || 1) > (stored.dataVersion || 1);
@@ -183,6 +184,8 @@ export async function POST(req: NextRequest) {
                 dataVersion: item.dataVersion,
               }
             : {}),
+          field: item.field,
+          extraFields: item.extraFields,
           deadline: item.deadline,
           deadlineIsEstimate: item.deadlineIsEstimate,
           deadlineNote: item.deadlineNote,

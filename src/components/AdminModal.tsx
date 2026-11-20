@@ -718,6 +718,7 @@ export const AdminModal: React.FC = () => {
                   <option value="Computer Science & AI">Computer Science & AI</option>
                   <option value="Engineering">Engineering</option>
                   <option value="Life Sciences">Life Sciences</option>
+                  <option value="Natural Sciences">Natural Sciences</option>
                   <option value="Business & Social Sciences">Business & Social Sciences</option>
                   <option value="All Fields">All Fields</option>
                 </select>

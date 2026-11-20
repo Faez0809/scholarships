@@ -7,11 +7,12 @@
  * and "ME" is Mechanical Engineering.
  */
 
-export type FieldCategoryValue = "Computer Science & AI" | "Engineering" | "Life Sciences" | "Business & Social Sciences";
+export type FieldCategoryValue = "Computer Science & AI" | "Engineering" | "Natural Sciences" | "Life Sciences" | "Business & Social Sciences";
 
 export const FIELD_CATEGORY_LABELS: Record<FieldCategoryValue, string> = {
   "Computer Science & AI": "Computer Science & AI",
-  Engineering: "Engineering, Physical Sciences & Maths",
+  Engineering: "Engineering & Technology",
+  "Natural Sciences": "Natural Sciences & Maths",
   "Life Sciences": "Life Sciences, Health & Agriculture",
   "Business & Social Sciences": "Business, Social Sciences & Humanities",
 };
@@ -27,6 +28,7 @@ interface Entry {
 
 const CS: FieldCategoryValue = "Computer Science & AI";
 const ENG: FieldCategoryValue = "Engineering";
+const NAT: FieldCategoryValue = "Natural Sciences";
 const LIFE: FieldCategoryValue = "Life Sciences";
 const BUS: FieldCategoryValue = "Business & Social Sciences";
 
@@ -43,7 +45,7 @@ const ENTRIES: Entry[] = [
   { name: "Human–Computer Interaction", cat: CS, abbr: ["hci"], aka: ["human computer interaction", "interaction design", "ux research"] },
   { name: "Bioinformatics", cat: CS, aka: ["computational biology", "computational genomics"] },
 
-  // Engineering, physical sciences and maths
+  // Engineering and technology
   { name: "Electrical & Electronic Engineering", cat: ENG, abbr: ["eee", "ee", "eece", "eie"], aka: ["electrical engineering", "electronic engineering", "electrical and electronics engineering", "power systems", "power engineering", "power electronics", "control systems", "signal processing", "vlsi", "circuits", "renewable energy", "smart grid", "semiconductors", "microelectronics", "photonics"] },
   { name: "Electronics & Communication Engineering", cat: ENG, abbr: ["ece", "ete", "etce", "ecte", "tce"], aka: ["electronics and telecommunication engineering", "telecommunication engineering", "communication engineering", "wireless communication", "electronics", "antenna", "5g"] },
   { name: "Mechanical Engineering", cat: ENG, abbr: ["me", "mech", "mce"], aka: ["thermodynamics", "fluid mechanics", "heat transfer", "machine design", "automotive engineering", "manufacturing", "cad", "solid mechanics", "turbomachinery", "hvac"] },
@@ -64,11 +66,12 @@ const ENTRIES: Entry[] = [
   { name: "Urban & Regional Planning", cat: ENG, abbr: ["urp", "mup"], aka: ["urban planning", "city planning", "regional planning", "town planning", "urban design", "transport planning"] },
   { name: "Biomedical Engineering", cat: ENG, abbr: ["bme"], aka: ["biomedical engineering", "medical devices", "biomechanics", "medical imaging", "bioengineering"] },
   { name: "Agricultural Engineering", cat: ENG, aka: ["farm machinery", "irrigation engineering", "farm power"] },
-  { name: "Physics", cat: ENG, abbr: ["phy", "phys"], aka: ["applied physics", "theoretical physics", "condensed matter", "quantum physics", "quantum computing", "astrophysics", "astronomy", "optics", "particle physics", "engineering physics"] },
-  { name: "Mathematics", cat: ENG, abbr: ["math", "maths", "amath"], aka: ["applied mathematics", "pure mathematics", "mathematical sciences", "numerical analysis", "algebra", "topology"] },
-  { name: "Statistics", cat: ENG, abbr: ["stat", "stats", "isrt"], aka: ["applied statistics", "biostatistics", "probability", "actuarial science", "statistical science"] },
-  { name: "Chemistry", cat: ENG, abbr: ["chem"], aka: ["applied chemistry", "organic chemistry", "inorganic chemistry", "physical chemistry", "analytical chemistry", "chemical technology"] },
-  { name: "Geology & Earth Sciences", cat: ENG, aka: ["geology", "earth science", "geophysics", "geoscience", "seismology", "meteorology", "climate science", "atmospheric science", "disaster management"] },
+  // Natural sciences and maths
+  { name: "Physics", cat: NAT, abbr: ["phy", "phys"], aka: ["applied physics", "theoretical physics", "condensed matter", "quantum physics", "quantum computing", "astrophysics", "astronomy", "optics", "particle physics", "engineering physics"] },
+  { name: "Mathematics", cat: NAT, abbr: ["math", "maths", "amath"], aka: ["applied mathematics", "pure mathematics", "mathematical sciences", "numerical analysis", "algebra", "topology"] },
+  { name: "Statistics", cat: NAT, abbr: ["stat", "stats", "isrt"], aka: ["applied statistics", "biostatistics", "probability", "actuarial science", "statistical science"] },
+  { name: "Chemistry", cat: NAT, abbr: ["chem"], aka: ["applied chemistry", "organic chemistry", "inorganic chemistry", "physical chemistry", "analytical chemistry", "chemical technology"] },
+  { name: "Geology & Earth Sciences", cat: NAT, aka: ["geology", "earth science", "geophysics", "geoscience", "seismology", "meteorology", "climate science", "atmospheric science", "disaster management"] },
 
   // Life sciences, health and agriculture
   { name: "Biochemistry & Molecular Biology", cat: LIFE, abbr: ["bmb", "bcmb"], aka: ["biochemistry", "molecular biology", "structural biology", "proteomics"] },

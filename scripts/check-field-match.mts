@@ -4,9 +4,10 @@
  */
 import { matchField, bestFieldCategory } from "../src/utils/fieldMatch.ts";
 
-type Cat = "Computer Science & AI" | "Engineering" | "Life Sciences" | "Business & Social Sciences";
+type Cat = "Computer Science & AI" | "Engineering" | "Natural Sciences" | "Life Sciences" | "Business & Social Sciences";
 const CS: Cat = "Computer Science & AI";
 const ENG: Cat = "Engineering";
+const NAT: Cat = "Natural Sciences";
 const LIFE: Cat = "Life Sciences";
 const BUS: Cat = "Business & Social Sciences";
 
@@ -63,10 +64,19 @@ const CASES: [string, Cat, string?][] = [
   ["Public Administration", BUS],
   ["English literature", BUS],
   ["Pharmacy", LIFE],
-  ["Physics", ENG],
-  ["Applied Mathematics", ENG],
-  ["Statistics", ENG],
+  ["Physics", NAT],
+  ["Applied Mathematics", NAT],
+  ["Statistics", NAT],
   ["Architecture", ENG],
+  ["Chemistry", NAT, "Chemistry"],
+  ["Dept. of Physics", NAT, "Physics"],
+  ["Maths", NAT, "Mathematics"],
+  ["quantum physics", NAT],
+  ["organic chemistry", NAT],
+  ["geology", NAT],
+  ["astrophysics", NAT],
+  ["chemical engineering", ENG, "Chemical Engineering"],
+  ["engineering physics", NAT],
   // Subjects and research topics
   ["machine learning", CS],
   ["reinforcement learning", CS],
@@ -88,7 +98,7 @@ const CASES: [string, Cat, string?][] = [
   ["public health", LIFE],
   ["agriculture", LIFE],
   ["neuroscience", LIFE],
-  ["climate science", ENG],
+  ["climate science", NAT],
   // Partial typing
   ["elec", ENG],
   ["mech", ENG],

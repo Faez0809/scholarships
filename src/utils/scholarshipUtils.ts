@@ -9,6 +9,11 @@ import { nationalityLabel, nationalityStatus } from "../data/nationality";
 import { ageAtDeadline, ageLimitFor } from "../data/rules";
 import { bestFieldCategory } from "./fieldMatch";
 
+/** True when the program funds students of this field (its main field, an extra one, or all fields). */
+export function inField(s: Scholarship, category: string): boolean {
+  return s.field === "All Fields" || s.field === category || Boolean(s.extraFields?.includes(category as Scholarship["field"]));
+}
+
 export function calculateDaysRemaining(deadlineStr: string): {
   days: number;
   isClosingSoon: boolean;
@@ -137,9 +142,7 @@ export function checkEligibility(
   // Field check
   let fieldPass = true;
   if (profile.majorCategory !== "All" && profile.majorCategory !== "All Fields") {
-    fieldPass =
-      scholarship.field === "All Fields" ||
-      scholarship.field === profile.majorCategory;
+    fieldPass = inField(scholarship, profile.majorCategory);
     if (!fieldPass) {
       reasons.push(`Field focuses on ${scholarship.field}`);
     }
@@ -212,7 +215,7 @@ export function filterScholarships(
 
   // 3b. Field chosen in the profile: programs in that field or open to all fields
   if (profile.majorCategory && profile.majorCategory !== "All" && profile.majorCategory !== "All Fields") {
-    list = list.filter((s) => s.field === "All Fields" || s.field === profile.majorCategory);
+    list = list.filter((s) => inField(s, profile.majorCategory));
   }
 
   // 4. Classification Pills
@@ -259,7 +262,7 @@ export function filterScholarships(
       (s) =>
         byNameOrPlace(s) ||
         bySubjectText(s) ||
-        (fieldCat !== null && (s.field === fieldCat || s.field === "All Fields"))
+        (fieldCat !== null && inField(s, fieldCat))
     );
   }
 

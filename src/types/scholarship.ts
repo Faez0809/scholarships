@@ -5,6 +5,7 @@ export type FieldCategory =
   | "Computer Science & AI"
   | "Engineering"
   | "Life Sciences"
+  | "Natural Sciences"
   | "Business & Social Sciences";
 
 export type MediumOfInstruction = "English Only" | "Any";
@@ -52,6 +53,8 @@ export interface Scholarship {
   supervisorFundingGuide?: string;
   degrees: DegreeLevel[];
   field: FieldCategory;
+  /** Other fields the program also funds, e.g. an engineering school that also takes physics. */
+  extraFields?: FieldCategory[];
   fieldSpecifics: string;
   minCGPA: number;
   minIELTS: number;

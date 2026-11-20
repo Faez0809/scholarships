@@ -79,7 +79,7 @@ export const ProfilePanel: React.FC = () => {
     <>
       {/* Desktop sidebar */}
       <aside id="profile-panel" aria-labelledby="profile-title-desktop" className="hidden w-80 shrink-0 lg:block">
-        <div className="sticky top-20 rounded-xl border border-zinc-200 bg-white">
+        <div className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto overscroll-contain rounded-xl border border-zinc-200 bg-white">
           <ProfileForm titleId="profile-title-desktop" onDone={done} matchCount={stats.eligibleCount} />
         </div>
       </aside>

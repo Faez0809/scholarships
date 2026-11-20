@@ -335,12 +335,12 @@ export const ScholarshipDrawer: React.FC = () => {
           {s.partnerUniversities && s.partnerUniversities.length > 0 && (
             <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 shadow-2xs">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-xs font-bold text-zinc-900 flex items-center gap-1.5">
-                  <Landmark className="h-4 w-4 text-indigo-600" />
-                  Participating Universities &amp; City-by-City Savings
+                <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
+                  <Landmark className="h-4 w-4 text-zinc-500" />
+                  Where you can study
                 </h3>
                 <span className="text-[10px] font-semibold text-indigo-700 bg-white px-2 py-0.5 rounded-md border border-zinc-200">
-                  {s.partnerUniversities.length} Institutions Available
+                  {s.partnerUniversities.length} options
                 </span>
               </div>
               <p className="text-xs text-zinc-900/80 mb-3">
@@ -375,12 +375,12 @@ export const ScholarshipDrawer: React.FC = () => {
                       </div>
                       <div className="mt-1 text-[11px] text-zinc-500 flex items-center justify-between">
                         <span>{uni.city}, {uni.country}</span>
-                        <span className={`font-mono font-bold ${uniSavings >= 0 ? "text-emerald-700" : "text-amber-700"}`}>
+                        <span className={`font-semibold tabular-nums ${uniSavings >= 0 ? "text-emerald-700" : "text-amber-700"}`}>
                           {formatSignedUSD(uniSavings)}/mo
                         </span>
                       </div>
                       {uni.rankingOrNote && (
-                        <div className="mt-1 text-[10px] text-indigo-700 font-medium truncate">
+                        <div className="mt-1 text-[11px] text-zinc-500 truncate">
                           {uni.rankingOrNote}
                         </div>
                       )}
@@ -439,7 +439,7 @@ export const ScholarshipDrawer: React.FC = () => {
             <div className="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
               <div className="rounded-lg bg-white/80 p-2 shadow-2xs">
                 <span className="block text-[10px] text-zinc-500 font-medium">Min CGPA</span>
-                <span className="font-mono font-bold text-zinc-900">
+                <span className="font-semibold tabular-nums text-zinc-900">
                   {s.minCGPA.toFixed(2)}
                 </span>
                 <span
@@ -453,7 +453,7 @@ export const ScholarshipDrawer: React.FC = () => {
 
               <div className="rounded-lg bg-white/80 p-2 shadow-2xs">
                 <span className="block text-[10px] text-zinc-500 font-medium">Min IELTS</span>
-                <span className="font-mono font-bold text-zinc-900">
+                <span className="font-semibold tabular-nums text-zinc-900">
                   {s.minIELTS > 0 ? s.minIELTS.toFixed(1) : "None"}
                 </span>
                 <span
@@ -503,7 +503,7 @@ export const ScholarshipDrawer: React.FC = () => {
           {/* Interactive Financial Calculator & Breakdown */}
           <div className="rounded-xl border border-zinc-200 bg-zinc-50/60 p-4">
             <div className="flex items-center justify-between pb-3 border-b border-zinc-200">
-              <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-1.5">
+              <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
                 <DollarSign className="h-4 w-4 text-emerald-600" />
                 Money each month
                 <InfoTip text={JARGON.leftEachMonth} />
@@ -530,7 +530,7 @@ export const ScholarshipDrawer: React.FC = () => {
                 <span className="block text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
                   Monthly Stipend
                 </span>
-                <span className="mt-1 block font-mono text-base font-extrabold text-zinc-900">
+                <span className="mt-1 block text-base font-semibold tabular-nums text-zinc-900">
                   ${activeStipend.toLocaleString()}
                 </span>
                 <span className="text-[10px] text-zinc-500">Fixed grant</span>
@@ -540,7 +540,7 @@ export const ScholarshipDrawer: React.FC = () => {
                 <span className="block text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
                   Est. Living Cost
                 </span>
-                <span className="mt-1 block font-mono text-base font-bold text-zinc-800">
+                <span className="mt-1 block text-base font-semibold tabular-nums text-zinc-800">
                   ${effectiveLivingCost.toLocaleString()}
                 </span>
                 <span className="text-[10px] text-zinc-500">Rent, food, transit</span>
@@ -550,7 +550,7 @@ export const ScholarshipDrawer: React.FC = () => {
                 <span className="block text-[10px] font-bold uppercase tracking-wider text-emerald-800 flex items-center justify-center gap-1">
                   <TrendingUp className="h-3 w-3" /> Net Savings
                 </span>
-                <span className="mt-1 block font-mono text-base font-extrabold text-emerald-700">
+                <span className="mt-1 block text-base font-semibold tabular-nums text-emerald-700">
                   {adjustedNetSavings >= 0 ? `+$${adjustedNetSavings.toLocaleString()}` : `-$${Math.abs(adjustedNetSavings).toLocaleString()}`}
                 </span>
                 <span className="text-[10px] text-emerald-600/80">Every month</span>
@@ -562,9 +562,9 @@ export const ScholarshipDrawer: React.FC = () => {
               <div className="flex items-center justify-between text-xs font-medium text-zinc-700">
                 <span className="flex items-center gap-1.5">
                   <Sliders className="h-3.5 w-3.5 text-zinc-400" />
-                  Personal Lifestyle Budget Adjustment
+                  Adjust for your own spending
                 </span>
-                <span className="font-mono font-bold text-zinc-900">
+                <span className="font-semibold tabular-nums text-zinc-900">
                   {personalExpenseAdjustment >= 0 ? `+$${personalExpenseAdjustment}` : `-$${Math.abs(personalExpenseAdjustment)}`}/mo
                 </span>
               </div>
@@ -578,38 +578,35 @@ export const ScholarshipDrawer: React.FC = () => {
                 onChange={(e) => setPersonalExpenseAdjustment(parseInt(e.target.value, 10))}
                 className="mt-2.5 h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-indigo-600"
               />
-              <div className="mt-1 flex justify-between text-[10px] text-zinc-500 font-mono">
-                <span>Frugal (-$300)</span>
-                <span>Base Average ($0)</span>
-                <span>Comfortable (+$500)</span>
+              <div className="mt-1 flex justify-between text-[11px] text-zinc-500">
+                <span>Spend less</span>
+                <span>Typical</span>
+                <span>Spend more</span>
               </div>
             </div>
           </div>
 
           {/* All Scholarship Facilities & Benefits */}
           <div>
-            <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-1.5 mb-3">
-              <Award className="h-4 w-4 text-indigo-600" />
-              Full Scholarship Facilities &amp; Perks
+            <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5 mb-3">
+              <Award className="h-4 w-4 text-zinc-500" />
+              What the scholarship covers
             </h3>
-            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+            <ul className="space-y-2">
               {s.facilities.map((facility, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-start gap-2.5 rounded-xl border border-zinc-200/80 bg-zinc-50/50 p-3 text-xs font-medium text-zinc-800"
-                >
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600 mt-0.5" />
+                <li key={idx} className="flex items-start gap-2 text-sm text-zinc-700">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                   <span>{facility}</span>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
           {/* Complete Required Documents Checklist */}
           <div id="drawer-documents" className="scroll-mt-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-1.5">
-                <FileCheck className="h-4 w-4 text-indigo-600" />
+              <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
+                <FileCheck className="h-4 w-4 text-zinc-500" />
                 Required Documents Checklist
               </h3>
               <span className="text-xs font-semibold text-zinc-500">
@@ -646,15 +643,15 @@ export const ScholarshipDrawer: React.FC = () => {
 
           {/* University Overview & Campus Research */}
           <div className="rounded-xl border border-zinc-200 bg-white p-4">
-            <h3 className="text-sm font-bold text-zinc-900 mb-2">
-              University Overview &amp; Academic Prestige
+            <h3 className="text-sm font-semibold text-zinc-900 mb-2">
+              About this program
             </h3>
             <p className="text-xs leading-relaxed text-zinc-600">{s.overview}</p>
           </div>
 
           {/* City Life & Expat Experience */}
           <div className="rounded-xl border border-zinc-200 bg-white p-4">
-            <h3 className="text-sm font-bold text-zinc-900 mb-2 flex items-center gap-1.5">
+            <h3 className="text-sm font-semibold text-zinc-900 mb-2 flex items-center gap-1.5">
               <MapPin className="h-4 w-4 text-indigo-500" />
               Living in {s.city}, {s.country}
             </h3>

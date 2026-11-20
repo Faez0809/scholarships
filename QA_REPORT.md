@@ -21,7 +21,7 @@ Severity: **High** = wrong information or blocks some users. **Medium** = confus
 | 8 | Medium | Contrast | Filter-chip counts and "(expected)" use light grey text at 2.6:1 (needs 4.5:1). | Fixed |
 | 9 | Medium | Touch targets | "Find supervisors" on cards (16px tall) and the footer refresh link are below the 24px minimum. | Fixed |
 | 10 | Medium | Keyboard | Card focus is only an underline on the title; hard to see which card is focused. | Fixed |
-| 11 | Medium | Visual density | Detail panel: every benefit sits in its own bordered box, monospaced labels ("Frugal (-$300)"), marketing headings ("Full Scholarship Facilities & Perks", "University Overview & Academic Prestige"). Feels busy. | Open |
+| 11 | Medium | Visual density | Detail panel: every benefit sits in its own bordered box, monospaced labels ("Frugal (-$300)"), marketing headings ("Full Scholarship Facilities & Perks", "University Overview & Academic Prestige"). Feels busy. | Fixed |
 | 12 | Medium | Admin | The add/edit form still uses the old style (indigo blocks, "Flag Emoji" field, jargon) and cannot edit the new deadline and stipend notes. | Open |
 | 13 | Low | Wayfinding | "Admin" sits next to "Sign in" for every visitor and competes with it, especially on phones. | Open |
 | 14 | Low | Phone | The footer (data sources, refresh) is hidden on phones. | Open |

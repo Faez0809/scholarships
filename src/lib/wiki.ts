@@ -8,8 +8,10 @@ const WIKI = "https://en.wikipedia.org";
 
 export interface UniversityPhoto {
   title: string;
+  /** About 330px wide, for the strip. */
   thumbUrl: string;
-  fullUrl: string;
+  /** About 1280px wide, for the viewer. Never the original file, which can be huge. */
+  largeUrl: string;
   width: number;
   height: number;
   author: string;
@@ -70,7 +72,7 @@ async function loadInfo(name: string): Promise<UniversityInfo | null> {
 
   // 3. Photos used on the page (Commons or local), with licence and author
   const imgRes = await fetch(
-    `${WIKI}/w/api.php?action=query&titles=${encodeURIComponent(title)}&generator=images&gimlimit=50&prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=640&format=json&origin=*`
+    `${WIKI}/w/api.php?action=query&titles=${encodeURIComponent(title)}&generator=images&gimlimit=50&prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=1280&format=json&origin=*`
   );
   let photos: UniversityPhoto[] = [];
   if (imgRes.ok) {
@@ -87,14 +89,15 @@ async function loadInfo(name: string): Promise<UniversityInfo | null> {
       }[];
     }[];
     photos = pages
-      .filter((p) => /\.(jpe?g)$/i.test(p.title) && !SKIP.test(p.title) && p.imageinfo?.[0])
+      .filter((p) => /\.(jpe?g|png|webp)$/i.test(p.title) && !SKIP.test(p.title) && p.imageinfo?.[0])
       .map((p) => {
         const info = p.imageinfo![0];
         const meta = info.extmetadata || {};
         return {
           title: p.title.replace(/^File:/, "").replace(/\.[a-z]+$/i, "").replace(/_/g, " "),
-          thumbUrl: info.thumburl,
-          fullUrl: info.url,
+          // Wikimedia only serves standard thumbnail widths (330, 960, 1280, ...); other widths fail.
+          thumbUrl: info.width > 330 ? info.thumburl.replace(/\/\d+px-/, "/330px-") : info.thumburl,
+          largeUrl: info.thumburl,
           width: info.width,
           height: info.height,
           author: stripHtml(meta.Artist?.value) || "Unknown author",

@@ -7,14 +7,7 @@ import { useGuide } from "../context/GuideContext";
 import { MediumOfInstruction, UserProfile } from "../types/scholarship";
 import { NATIONALITIES } from "../data/nationality";
 import { InfoTip, JARGON, useDialog } from "./ui";
-
-export const FIELD_OPTIONS: { value: string; label: string }[] = [
-  { value: "All", label: "Any field" },
-  { value: "Computer Science & AI", label: "Computer Science & AI" },
-  { value: "Engineering", label: "Engineering & Technology" },
-  { value: "Life Sciences", label: "Life & Bio Sciences" },
-  { value: "Business & Social Sciences", label: "Business & Social Sciences" },
-];
+import { FieldPicker } from "./FieldPicker";
 
 export const selectClass =
   "w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700";
@@ -100,16 +93,18 @@ export const ProfileFields: React.FC<{ compact?: boolean }> = ({ compact }) => {
         onChange={(v) => updateProfileField("targetDegree", v as UserProfile["targetDegree"])}
       />
 
-      <label className="block">
+      <div>
         <span className="mb-1.5 block text-sm font-medium text-stone-700">My field</span>
-        <select className={selectClass} value={profile.majorCategory} onChange={(e) => updateProfileField("majorCategory", e.target.value)}>
-          {FIELD_OPTIONS.map((f) => (
-            <option key={f.value} value={f.value}>
-              {f.label}
-            </option>
-          ))}
-        </select>
-      </label>
+        <FieldPicker
+          category={profile.majorCategory}
+          text={profile.majorText}
+          onChange={(category, text) => {
+            updateProfileField("majorCategory", category);
+            updateProfileField("majorText", text);
+          }}
+        />
+        <p className="mt-1 text-xs text-stone-500">Type your department, its short form or a topic. Results show programs open to your field.</p>
+      </div>
 
       <div className="grid grid-cols-2 gap-3">
         <label className="block">

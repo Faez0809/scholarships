@@ -7,6 +7,7 @@ import {
 } from "../types/scholarship";
 import { nationalityLabel, nationalityStatus } from "../data/nationality";
 import { ageAtDeadline, ageLimitFor } from "../data/rules";
+import { bestFieldCategory } from "./fieldMatch";
 
 export function calculateDaysRemaining(deadlineStr: string): {
   days: number;
@@ -209,6 +210,11 @@ export function filterScholarships(
     );
   }
 
+  // 3b. Field chosen in the profile: programs in that field or open to all fields
+  if (profile.majorCategory && profile.majorCategory !== "All" && profile.majorCategory !== "All Fields") {
+    list = list.filter((s) => s.field === "All Fields" || s.field === profile.majorCategory);
+  }
+
   // 4. Classification Pills
   if (activePill === "masters") {
     list = list.filter((s) => s.degrees.includes("Master's"));
@@ -230,26 +236,30 @@ export function filterScholarships(
     list = list.filter((s) => checkEligibility(s, profile).isEligible);
   }
 
-  // 6. Search query (search title, university, country, partner unis, field)
+  // 6. Search query. Names and places first; if nothing matches by name or place and the
+  // text reads as a subject ("EEE", "thermodynamics"), show programs open to that field.
   if (searchQuery.trim()) {
     const q = searchQuery.toLowerCase().trim();
+    const byNameOrPlace = (s: Scholarship) =>
+      s.name.toLowerCase().includes(q) ||
+      s.university.toLowerCase().includes(q) ||
+      s.city.toLowerCase().includes(q) ||
+      s.country.toLowerCase().includes(q) ||
+      s.region.toLowerCase().includes(q) ||
+      s.fundingType.toLowerCase().includes(q) ||
+      Boolean(
+        s.partnerUniversities?.some(
+          (p) => p.name.toLowerCase().includes(q) || p.city.toLowerCase().includes(q) || p.country.toLowerCase().includes(q)
+        )
+      );
+    const bySubjectText = (s: Scholarship) =>
+      s.field.toLowerCase().includes(q) || Boolean(s.fieldSpecifics && s.fieldSpecifics.toLowerCase().includes(q));
+    const fieldCat = list.some(byNameOrPlace) ? null : bestFieldCategory(searchQuery);
     list = list.filter(
       (s) =>
-        s.name.toLowerCase().includes(q) ||
-        s.university.toLowerCase().includes(q) ||
-        s.city.toLowerCase().includes(q) ||
-        s.country.toLowerCase().includes(q) ||
-        s.region.toLowerCase().includes(q) ||
-        s.fundingType.toLowerCase().includes(q) ||
-        s.field.toLowerCase().includes(q) ||
-        (s.fieldSpecifics && s.fieldSpecifics.toLowerCase().includes(q)) ||
-        (s.partnerUniversities &&
-          s.partnerUniversities.some(
-            (p) =>
-              p.name.toLowerCase().includes(q) ||
-              p.city.toLowerCase().includes(q) ||
-              p.country.toLowerCase().includes(q)
-          ))
+        byNameOrPlace(s) ||
+        bySubjectText(s) ||
+        (fieldCat !== null && (s.field === fieldCat || s.field === "All Fields"))
     );
   }
 

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "node --max-old-space-size=4096 ./node_modules/typescript/bin/tsc --noEmit && node --max-old-space-size=4096 ./node_modules/next/dist/bin/next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:fields": "node scripts/check-field-match.mts"
   },
   "dependencies": {
     "@google/genai": "^2.31.0",

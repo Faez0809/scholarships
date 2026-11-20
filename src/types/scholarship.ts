@@ -87,6 +87,8 @@ export interface Scholarship {
 export interface UserProfile {
   targetDegree: "Master's" | "PhD" | "Both";
   majorCategory: string; // "All" or FieldCategory
+  /** What the student chose or typed for their subject, e.g. "Electrical & Electronic Engineering". */
+  majorText?: string;
   cgpa: number;
   ielts: number;
   mediumPreference: MediumOfInstruction;

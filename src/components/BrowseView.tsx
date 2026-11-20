@@ -132,7 +132,7 @@ export const BrowseView: React.FC = () => {
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by name or country"
+              placeholder="Search name, country or subject"
               aria-label="Search scholarships"
               className="w-full rounded-lg border border-stone-300 bg-white py-2 pl-9 pr-9 text-sm placeholder:text-stone-400 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
             />
@@ -190,6 +190,25 @@ export const BrowseView: React.FC = () => {
             ))}
           </div>
         </div>
+
+        {profile.majorCategory && profile.majorCategory !== "All" && profile.majorCategory !== "All Fields" && (
+          <p className="mt-3 flex items-center gap-1.5 text-sm text-stone-600">
+            <span className="min-w-0 truncate">
+              Field: <span className="font-medium text-stone-900">{profile.majorText || profile.majorCategory}</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                updateProfileField("majorCategory", "All");
+                updateProfileField("majorText", "");
+              }}
+              className="shrink-0 rounded p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-700"
+              aria-label="Show programs for any field"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </p>
+        )}
 
         <div className="mb-3 mt-4 flex items-center justify-between gap-2 text-sm">
           <p className="text-stone-600" aria-live="polite">

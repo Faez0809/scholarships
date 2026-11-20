@@ -21,7 +21,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
         flag: "🇨🇳",
         estimatedLivingCost: 380,
         monthlyStipend: 440,
-        rankingOrNote: "Top #1 in Asia • World #12 in Engineering & AI",
+        rankingOrNote: "Strong in engineering and computer science",
         website: "https://www.tsinghua.edu.cn/en/",
       },
       {
@@ -31,7 +31,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
         flag: "🇨🇳",
         estimatedLivingCost: 380,
         monthlyStipend: 440,
-        rankingOrNote: "World Top 15 • Global leader in Mathematics & Sciences",
+        rankingOrNote: "Strong in mathematics and the natural sciences",
         website: "https://english.pku.edu.cn/",
       },
       {
@@ -41,7 +41,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
         flag: "🇨🇳",
         estimatedLivingCost: 330,
         monthlyStipend: 440,
-        rankingOrNote: "China Silicon Valley Hub • Top 50 Global University",
+        rankingOrNote: "Large research university in a tech-industry city",
         website: "https://www.zju.edu.cn/english/",
       },
       {
@@ -51,7 +51,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
         flag: "🇨🇳",
         estimatedLivingCost: 400,
         monthlyStipend: 440,
-        rankingOrNote: "World Top 45 • Heavyweights in Robotics & Mechanical Eng",
+        rankingOrNote: "Strong in robotics and mechanical engineering",
         website: "https://en.sjtu.edu.cn/",
       },
       {
@@ -61,7 +61,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
         flag: "🇨🇳",
         estimatedLivingCost: 300,
         monthlyStipend: 440,
-        rankingOrNote: "Highest Net Savings • World leader in Quantum Computing",
+        rankingOrNote: "Lowest living costs of the group; known for physics and quantum research",
         website: "https://en.ustc.edu.cn/",
       },
     ],
@@ -103,9 +103,9 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
       "Pre-admission Letter or Professor Acceptance Letter (Optional but boosts chances by 90%)"
     ],
     overview:
-      "The Chinese Government Scholarship (CSC) High-Level Graduate Program is China's premier global scholarship scheme. Awarded by the Ministry of Education, it provides full financial coverage across China's elite 'C9 League' and Double First-Class institutions. With free on-campus single/double accommodation guaranteed, the stipend covers modest day-to-day costs; it is not designed for large savings.",
+      "The Chinese Government Scholarship is awarded by China's Ministry of Education through the China Scholarship Council. It covers tuition, campus housing, medical insurance and a monthly allowance at participating Chinese universities. You apply either through the Chinese embassy in your country or directly to a university.",
     cityLifeOverview:
-      "Living in Chinese tech metropolises (Beijing, Shanghai, Hangzhou) offers unmatched high-speed rail connectivity, hyper-convenient digital infrastructure (WeChat/Alipay cashless ecosystem), low living costs inside subsidized university campuses, and exceptional safety at all hours.",
+      "Living in Chinese tech metropolises (Beijing, Shanghai, Hangzhou) offers fast high-speed rail connections, hyper-convenient digital infrastructure (WeChat/Alipay cashless ecosystem), low living costs inside subsidized university campuses, and exceptional safety at all hours.",
     officialWebsiteUrl: "https://www.campuschina.org/",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -130,7 +130,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
         flag: "🇫🇷",
         estimatedLivingCost: 1100,
         monthlyStipend: 1550,
-        rankingOrNote: "Semester 1 Hub • World-leading AI & Data Science labs",
+        rankingOrNote: "Example first-semester host; AI and data science labs",
         website: "https://www.sorbonne-universite.fr/en",
       },
       {
@@ -140,7 +140,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
         flag: "🇩🇪",
         estimatedLivingCost: 1150,
         monthlyStipend: 1550,
-        rankingOrNote: "Semester 2 Hub • Germany's #1 Ranked University",
+        rankingOrNote: "Example second-semester host; technical university",
         website: "https://www.tum.de/en/",
       },
       {
@@ -150,7 +150,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
         flag: "🇪🇸",
         estimatedLivingCost: 850,
         monthlyStipend: 1550,
-        rankingOrNote: "Semester 3 Hub • Barcelona Supercomputing Center (BSC)",
+        rankingOrNote: "Example third-semester host; near the Barcelona Supercomputing Center",
         website: "https://www.upc.edu/en",
       },
       {
@@ -160,7 +160,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
         flag: "🇮🇹",
         estimatedLivingCost: 800,
         monthlyStipend: 1550,
-        rankingOrNote: "Semester 4 Hub • Europe's Oldest University",
+        rankingOrNote: "Example fourth-semester host; one of Europe's oldest universities",
         website: "https://www.unibo.it/en",
       },
     ],
@@ -175,6 +175,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     deadlineNote:
       "Each Erasmus Mundus programme sets its own deadline, usually between December 2026 and February 2027.",
     lastVerified: "2026-11-20",
+    dataVersion: 2,
     monthlyStipendUSD: 1550,
     estimatedLivingCostUSD: 950,
     tuitionCovered: true,
@@ -199,7 +200,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
       "Proof of Residence Certificate"
     ],
     overview:
-      "The Erasmus Mundus Joint Master Degree (EMJM) is the European Union's premier multilateral scholarship program. Selected scholars study across at least two different European countries, earning prestigious dual or joint Master's degrees while receiving a tax-free monthly subsistence allowance of €1,400 plus generous installation and travel stipends.",
+      "Erasmus Mundus Joint Masters are degrees run by groups of European universities and funded by the European Union. Scholarship holders study in at least two countries, with tuition, travel and a monthly allowance covered. Each programme has its own application and deadline.",
     cityLifeOverview:
       "Students experience the best of Europe, rotating semesters through vibrant academic hubs like Paris, Munich, Barcelona, and Bologna. Exceptional cultural immersion, student Schengen travel freedom, high safety, and extensive European university alumni networks.",
     officialWebsiteUrl: "https://www.eacea.ec.europa.eu/scholarships/erasmus-mundus-catalogue_en",
@@ -226,7 +227,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
         flag: "🇩🇪",
         estimatedLivingCost: 1100,
         monthlyStipend: 1090,
-        rankingOrNote: "German Excellence University • Silicon Valley of Europe",
+        rankingOrNote: "Technical university in a high-cost city",
         website: "https://www.tum.de/en/",
       },
       {
@@ -236,7 +237,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
         flag: "🇩🇪",
         estimatedLivingCost: 850,
         monthlyStipend: 1090,
-        rankingOrNote: "World top engineering research cluster • Low living cost",
+        rankingOrNote: "Large engineering university; lower living costs",
         website: "https://www.rwth-aachen.de/cms/~a/root/lidx/1/",
       },
       {
@@ -246,7 +247,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
         flag: "🇩🇪",
         estimatedLivingCost: 880,
         monthlyStipend: 1090,
-        rankingOrNote: "The Research University in the Helmholtz Association",
+        rankingOrNote: "Research university linked to national research centres",
         website: "https://www.kit.edu/english/",
       },
       {
@@ -256,7 +257,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
         flag: "🇩🇪",
         estimatedLivingCost: 920,
         monthlyStipend: 1090,
-        rankingOrNote: "Automotive, Aerospace & Embedded Systems capital",
+        rankingOrNote: "Strong in automotive, aerospace and embedded systems",
         website: "https://www.uni-stuttgart.de/en/",
       },
     ],
@@ -298,9 +299,9 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
       "IELTS Academic Band 6.5+ or TOEFL iBT Certificate"
     ],
     overview:
-      "The DAAD (German Academic Exchange Service) EPOS program is Germany's flagship fully funded scholarship for graduate scholars. It covers world-class Master's and PhD programs across the TU9 technical universities, ensuring zero tuition fees, health insurance, airfare, and a reliable monthly living allowance.",
+      "DAAD EPOS funds selected development-related Master's and PhD courses at German universities for professionals from developing countries. It pays a monthly allowance, health insurance and travel, and you apply directly to the course.",
     cityLifeOverview:
-      "Germany offers an unparalleled quality of life, efficient public transport (the €49 Deutschlandticket allows nationwide regional rail travel), rich historical culture, clean environment, and outstanding post-study work visa rights (18-month job seeker visa for graduates).",
+      "Germany offers a high quality of life, efficient public transport (the €49 Deutschlandticket allows nationwide regional rail travel), rich historical culture, clean environment, and outstanding post-study work visa rights (18-month job seeker visa for graduates).",
     officialWebsiteUrl: "https://www.daad.de/en/information-services-for-higher-education-institutions/further-information-on-daad-programmes/epos/",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -330,6 +331,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     deadlineNote:
       "Cheriton School of Computer Science deadline for Fall 2027 entry; other departments differ. Confirm on the program page.",
     lastVerified: "2026-11-20",
+    dataVersion: 2,
     monthlyStipendUSD: 2100,
     estimatedLivingCostUSD: 1400,
     tuitionCovered: true,
@@ -354,7 +356,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
       "IELTS Academic Band 7.0 or TOEFL iBT 95+ (Writing 24+)"
     ],
     overview:
-      "The University of Waterloo is Canada's #1 university for computer science and engineering, boasting the David R. Cheriton School of Computer Science and the Perimeter Institute for Theoretical Physics nearby. Every admitted research Master's (MMath/MASc) and PhD student receives guaranteed full financial support through RA and TA appointments funded by faculty grants.",
+      "Research Master's and PhD students at the University of Waterloo are usually funded through a mix of research assistantships paid from a supervisor's grant, teaching assistantships and internal awards. Contacting a potential supervisor early improves your chances.",
     cityLifeOverview:
       "Waterloo is Canada's Silicon Valley, hosting headquarters and major engineering offices for Google, OpenText, and hundreds of AI startups. Highly student-oriented, safe, bike-friendly, with affordable student housing compared to downtown Toronto.",
     officialWebsiteUrl: "https://uwaterloo.ca/graduate-studies-postdoctoral-affairs/",
@@ -386,6 +388,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     deadlineNote:
       "College of Computing PhD deadline for Fall 2027 entry.",
     lastVerified: "2026-11-20",
+    dataVersion: 2,
     monthlyStipendUSD: 2850,
     estimatedLivingCostUSD: 1600,
     tuitionCovered: true,
@@ -408,7 +411,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
       "IELTS Academic Band 7.5+ or TOEFL iBT 100+ score report"
     ],
     overview:
-      "Georgia Tech's College of Computing ranks among the top 5 globally for computer science and artificial intelligence. Admitted research graduate students receive fully funded GRA or GTA appointments that cover all tuition and supply a healthy monthly stipend allowing substantial savings.",
+      "PhD students in Georgia Tech's College of Computing are typically funded as graduate research or teaching assistants, which covers tuition and pays a monthly stipend. Funding normally depends on a faculty member agreeing to supervise you.",
     cityLifeOverview:
       "Atlanta is a major metropolitan tech hub in the American Southeast, known for a lower cost of living compared to New York or San Francisco, vibrant multicultural food scenes, lush tree canopy ('City in a Forest'), and warm climate.",
     officialWebsiteUrl: "https://www.cc.gatech.edu/academics/degree-programs/phd",
@@ -440,6 +443,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     deadlineNote:
       "Round 2 for 2027 commencement. Round 1 closed 31 Oct 2026; Round 3 closes 15 May 2027.",
     lastVerified: "2026-11-20",
+    dataVersion: 2,
     monthlyStipendUSD: 2050,
     estimatedLivingCostUSD: 1450,
     tuitionCovered: true,
@@ -463,9 +467,9 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
       "IELTS Academic Band 7.0 (no band less than 6.5) or TOEFL equivalent"
     ],
     overview:
-      "The University of Melbourne is consistently ranked Australia's #1 university and top 30 globally. Its Graduate Research Scholarships and Australian Government Research Training Program (RTP) awards provide full tuition exemption, single health coverage, relocation grants, and a tax-free living allowance.",
+      "The University of Melbourne's Graduate Research Scholarships include a living allowance, a tuition fee offset and health cover for international research students. You are considered automatically when you apply for a graduate research degree by the round deadline.",
     cityLifeOverview:
-      "Melbourne is frequently voted one of the world's most liveable cities, celebrated for its world-class coffee culture, laneway street art, multicultural culinary diversity, extensive tram network, and safe, vibrant student precincts like Parkville and Carlton.",
+      "Melbourne is frequently voted one of the world's most liveable cities, known for its coffee culture, laneway street art, multicultural culinary diversity, extensive tram network, and safe, vibrant student precincts like Parkville and Carlton.",
     officialWebsiteUrl: "https://scholarships.unimelb.edu.au/awards/graduate-research-scholarships",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -493,6 +497,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     deadlineNote:
       "Fall 2027 MS and PhD admission. Applying for admission also considers you for the fellowship.",
     lastVerified: "2026-11-20",
+    dataVersion: 2,
     monthlyStipendUSD: 2500,
     estimatedLivingCostUSD: 750,
     tuitionCovered: true,
@@ -516,7 +521,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
       "Passport Identification Page"
     ],
     overview:
-      "KAUST is an international graduate research university situated on the Red Sea coast. Ranked among the top institutions globally for citation impact per faculty member, KAUST offers unprecedented lab funding, zero tuition, and an average monthly savings exceeding $1,750 because housing, utilities, and health coverage are 100% provided.",
+      "KAUST, a graduate research university in Saudi Arabia, gives admitted Master's and PhD students a fellowship that covers tuition, housing, health insurance and a monthly stipend. Applying for admission also considers you for the fellowship.",
     cityLifeOverview:
       "Thuwal is a secure, private seaside university community with private beaches, diving centers, golf courses, cycling tracks, and an international community representing over 100 countries. English is the universal language on campus.",
     officialWebsiteUrl: "https://www.kaust.edu.sa/en/study/admissions",
@@ -546,6 +551,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     deadlineNote:
       "International round. Some courses use 6 Jan 2027; check your course's funding deadline.",
     lastVerified: "2026-11-20",
+    dataVersion: 2,
     monthlyStipendUSD: 2400,
     estimatedLivingCostUSD: 1650,
     tuitionCovered: true,
@@ -569,7 +575,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
       "IELTS Academic Band 7.5+ Score Card"
     ],
     overview:
-      "Established through a $210 million donation from the Bill & Melinda Gates Foundation, the Gates Cambridge Scholarship is one of the most prestigious international scholarships in the world. Scholars are selected for outstanding intellectual ability, reasons for choice of course, and a proven commitment to improving the lives of others.",
+      "Gates Cambridge Scholarships, funded by the Bill & Melinda Gates Foundation, cover the full cost of a postgraduate degree at the University of Cambridge for applicants from outside the UK. Selection looks at academic record, leadership and commitment to improving others' lives.",
     cityLifeOverview:
       "Cambridge is a historic collegiate university city famed for its stunning gothic architecture, punting on the River Cam, and bicycle-friendly streets. It is also the focal point of 'Silicon Fen'—the highest concentration of deep-tech and AI startups in Europe.",
     officialWebsiteUrl: "https://www.gatescambridge.org/apply/eligibility-and-criteria/",
@@ -599,6 +605,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     deadlineNote:
       "ESOP is only open in the November window for Autumn 2027 entry.",
     lastVerified: "2026-11-20",
+    dataVersion: 2,
     monthlyStipendUSD: 2690,
     estimatedLivingCostUSD: 1900,
     stipendIsEstimate: true,
@@ -623,9 +630,9 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
       "Motivation Letter (highlighting academic uniqueness)"
     ],
     overview:
-      "ETH Zurich consistently ranks among the top 10 universities globally. The ESOP scholarship is the highest honor ETH confers upon incoming master's students with exceptional undergraduate records, covering living expenses alongside a 100% tuition waiver.",
+      "The ETH Excellence Scholarship & Opportunity Programme (ESOP) supports a small number of incoming Master's students with outstanding undergraduate records. It covers living and study costs and waives tuition. You apply in the same window as your Master's application.",
     cityLifeOverview:
-      "Zurich is a global financial and technological powerhouse nestled by Lake Zurich with stunning Alpine vistas. Known for unmatched public transportation, pristine streets, high safety, and immediate proximity to nature.",
+      "Zurich is a global financial and technological powerhouse nestled by Lake Zurich with stunning Alpine vistas. Known for excellent public transport, pristine streets, high safety, and immediate proximity to nature.",
     officialWebsiteUrl: "https://ethz.ch/students/en/studies/financial/scholarships/excellence-scholarship.html",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -678,9 +685,9 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
       "Certificate of Health from an Accredited Physician"
     ],
     overview:
-      "The Japanese Government (MEXT) University Recommendation scholarship provides full financial backing to pursue graduate research at The University of Tokyo (Todai), Japan's most celebrated institution with over 15 Nobel Laureates.",
+      "The Japanese Government (MEXT) Scholarship funds research students, Master's and PhD students at Japanese universities, covering tuition, travel and a monthly allowance. Most applicants apply through the Japanese embassy in their country; some universities also recommend candidates directly.",
     cityLifeOverview:
-      "Tokyo combines traditional tranquility with breathtaking modern tech infrastructure. Exceptionally safe, convenient 24/7 convenience stores, world-class culinary scenes, and rich cultural immersion.",
+      "Tokyo combines traditional tranquility with breathtaking modern tech infrastructure. Exceptionally safe, convenient 24/7 convenience stores, excellent food, and rich cultural immersion.",
     officialWebsiteUrl: "https://www.u-tokyo.ac.jp/en/prospective-students/mext_scholarship.html",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -733,7 +740,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
       "Financial Declaration Statement"
     ],
     overview:
-      "KAIST is South Korea's premier science and technology research institution, widely referred to as the MIT of Asia. Situated in Daedeok Innopolis, graduate research is conducted in English, with over 80% international graduate courses.",
+      "KAIST is a science and technology university in Daejeon, South Korea, with many courses taught in English. Admitted international students can receive tuition waivers and a monthly stipend; PhD students are usually also paid from their lab's research funding.",
     cityLifeOverview:
       "Daejeon is Korea's Silicon Valley, 50 minutes south of Seoul via KTX bullet train. It boasts low living costs, peaceful green campuses, vibrant student cafe culture, and safe bike paths throughout the research district.",
     officialWebsiteUrl: "https://admission.kaist.ac.kr/intl-graduate/",
@@ -787,7 +794,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
       "Recommendation Letter from Department Chair or Dean"
     ],
     overview:
-      "Funded by the French Ministry for Europe and Foreign Affairs, the Eiffel Scholarship aims to attract the world's top students to French universities for Master's and PhD programs across key scientific and technical domains.",
+      "The France Excellence Eiffel programme, run by Campus France for the French Ministry for Europe and Foreign Affairs, gives a monthly allowance, travel and insurance to international Master's and PhD students. A French university must nominate you; you cannot apply directly.",
     cityLifeOverview:
       "Paris and the surrounding Saclay science cluster offer world-leading laboratories (CNRS, CEA), incredible museums, rich café culture, and student discounts across transport, cinema, and cultural venues.",
     officialWebsiteUrl: "https://www.campusfrance.org/en/the-eiffel-scholarship-program",

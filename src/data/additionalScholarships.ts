@@ -360,7 +360,7 @@ export const ADDITIONAL_SCHOLARSHIPS: Scholarship[] = [
     overview:
       "GKS is the Korean government's main scholarship for international graduate students. You apply either through the Korean embassy in your country or directly through a participating university. Applicants must be under 40 and have a GPA of at least 80% (or 2.64/4.0). Language scores are not mandatory but earn extra points.",
     cityLifeOverview:
-      "Seoul offers world-class transport and a vibrant city life at higher cost; Daejeon and Pohang are quieter research towns where the allowance goes further.",
+      "Seoul offers excellent transport and a vibrant city life at higher cost; Daejeon and Pohang are quieter research towns where the allowance goes further.",
     officialWebsiteUrl: "https://www.studyinkorea.go.kr/",
     createdAt: now(),
     updatedAt: now(),

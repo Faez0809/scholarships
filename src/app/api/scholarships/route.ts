@@ -2,15 +2,10 @@ export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseClient } from "@/lib/supabase";
+import { getSupabaseAdminClient } from "@/lib/supabaseAdmin";
+import { requireAdmin } from "@/lib/adminAuth";
 import { SEED_SCHOLARSHIPS } from "@/data/seedScholarships";
 import { Scholarship } from "@/types/scholarship";
-
-const EXPECTED_PIN = process.env.ADMIN_PIN || "1234";
-
-function verifyAdmin(req: NextRequest): boolean {
-  const pin = req.headers.get("x-admin-pin");
-  return pin === EXPECTED_PIN;
-}
 
 /**
  * GET /api/scholarships
@@ -63,9 +58,10 @@ export async function GET() {
         updated_at: now,
       }));
 
-      const { error: seedError } = await supabase
-        .from("scholarships")
-        .insert(seedInserts);
+      const writer = getSupabaseAdminClient();
+      const { error: seedError } = writer
+        ? await writer.from("scholarships").insert(seedInserts)
+        : { error: { message: "Database writer is not configured." } };
 
       if (seedError) {
         console.error("Auto-seeding error:", seedError.message);
@@ -116,18 +112,19 @@ export async function GET() {
 /**
  * POST /api/scholarships
  * Creates or upserts a scholarship in Supabase.
- * Supports ?action=reset to reset table back to original 12 seed scholarships.
- * Protected by 'x-admin-pin' header.
+ * Supports ?action=reset to reset table back to original 12 seed scholarships,
+ * and ?action=verify to confirm an admin passcode without writing anything.
+ * Protected by the 'x-admin-pin' header (checked against ADMIN_PIN on the server).
  */
 export async function POST(req: NextRequest) {
-  if (!verifyAdmin(req)) {
-    return NextResponse.json(
-      { error: "Unauthorized: Invalid or missing x-admin-pin header." },
-      { status: 401 }
-    );
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+
+  if (new URL(req.url).searchParams.get("action") === "verify") {
+    return NextResponse.json({ success: true });
   }
 
-  const supabase = getSupabaseClient();
+  const supabase = getSupabaseAdminClient();
   if (!supabase) {
     return NextResponse.json(
       { error: "Supabase database client is not configured." },
@@ -204,17 +201,13 @@ export async function POST(req: NextRequest) {
 /**
  * PUT /api/scholarships
  * Updates an existing scholarship in Supabase.
- * Protected by 'x-admin-pin' header.
+ * Protected by the 'x-admin-pin' header (checked against ADMIN_PIN on the server).
  */
 export async function PUT(req: NextRequest) {
-  if (!verifyAdmin(req)) {
-    return NextResponse.json(
-      { error: "Unauthorized: Invalid or missing x-admin-pin header." },
-      { status: 401 }
-    );
-  }
+  const denied = requireAdmin(req);
+  if (denied) return denied;
 
-  const supabase = getSupabaseClient();
+  const supabase = getSupabaseAdminClient();
   if (!supabase) {
     return NextResponse.json(
       { error: "Supabase database client is not configured." },
@@ -271,17 +264,13 @@ export async function PUT(req: NextRequest) {
  * DELETE /api/scholarships
  * Deletes a scholarship from Supabase.
  * Accepts ?id=<id> or { id } in body.
- * Protected by 'x-admin-pin' header.
+ * Protected by the 'x-admin-pin' header (checked against ADMIN_PIN on the server).
  */
 export async function DELETE(req: NextRequest) {
-  if (!verifyAdmin(req)) {
-    return NextResponse.json(
-      { error: "Unauthorized: Invalid or missing x-admin-pin header." },
-      { status: 401 }
-    );
-  }
+  const denied = requireAdmin(req);
+  if (denied) return denied;
 
-  const supabase = getSupabaseClient();
+  const supabase = getSupabaseAdminClient();
   if (!supabase) {
     return NextResponse.json(
       { error: "Supabase database client is not configured." },

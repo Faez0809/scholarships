@@ -13,7 +13,6 @@ import {
 } from "../types/scholarship";
 import {
   X,
-  Sparkles,
   Save,
   Globe2,
   Building2,
@@ -27,6 +26,8 @@ import {
   Landmark,
   Microscope,
   Users,
+  FileText,
+  Download,
 } from "lucide-react";
 
 export const AdminModal: React.FC = () => {
@@ -37,9 +38,10 @@ export const AdminModal: React.FC = () => {
     setEditingScholarship,
     addScholarship,
     updateScholarship,
+    adminPin,
   } = useScholarship();
 
-  // AI Auto-Fill State
+  // URL Auto-Import State
   const [autoFillUrl, setAutoFillUrl] = useState("");
   const [isExtracting, setIsExtracting] = useState(false);
   const [extractError, setExtractError] = useState<string | null>(null);
@@ -194,6 +196,7 @@ export const AdminModal: React.FC = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-admin-pin": adminPin,
         },
         body: JSON.stringify({ url: urlToFetch }),
       });
@@ -206,7 +209,7 @@ export const AdminModal: React.FC = () => {
 
       const s = data.scholarship;
 
-      // Populate form state with AI extracted values
+      // Populate form state with extracted values
       setName(s.name || "");
       setUniversity(s.university || "");
       setCity(s.city || "");
@@ -369,7 +372,7 @@ export const AdminModal: React.FC = () => {
         <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3.5 sm:px-6 sm:py-4">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
-              <Sparkles className="h-4 w-4" />
+              <FileText className="h-4 w-4" />
             </div>
             <div>
               <h2 className="text-base font-bold text-zinc-900">
@@ -395,7 +398,7 @@ export const AdminModal: React.FC = () => {
           <div className="rounded-xl border border-indigo-200 bg-gradient-to-br from-indigo-50/70 to-violet-50/30 p-4">
             <div className="flex items-center justify-between mb-1.5">
               <span className="flex items-center gap-1.5 text-xs font-bold text-indigo-950">
-                <Sparkles className="h-4 w-4 text-indigo-600" />
+                <Link2 className="h-4 w-4 text-indigo-600" />
                 Instant URL Auto-Import
               </span>
               <span className="rounded-full bg-indigo-100 px-2.5 py-0.5 text-[10px] font-semibold text-indigo-800">
@@ -435,7 +438,7 @@ export const AdminModal: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <Sparkles className="h-3.5 w-3.5" />
+                    <Download className="h-3.5 w-3.5" />
                     <span>Extract &amp; Auto-Fill</span>
                   </>
                 )}

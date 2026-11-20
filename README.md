@@ -57,8 +57,9 @@ Set your Supabase credentials, parser key, and admin passcode in `.env.local`:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 GEMINI_API_KEY=your_gemini_api_key
-ADMIN_PIN=1234
+ADMIN_PIN=choose_a_private_passcode
 ```
 
 ### 4. Supabase Database Setup

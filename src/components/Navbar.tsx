@@ -4,7 +4,6 @@ import React from "react";
 import { useScholarship } from "../context/ScholarshipContext";
 import {
   GraduationCap,
-  Sparkles,
   ShieldCheck,
   Lock,
   Plus,
@@ -17,6 +16,7 @@ import {
   Cloud,
   CloudOff,
   Loader2,
+  Tag,
 } from "lucide-react";
 
 export const Navbar: React.FC = () => {
@@ -53,7 +53,7 @@ export const Navbar: React.FC = () => {
                 Scholar<span className="text-indigo-600">Track</span>
               </span>
               <span className="hidden rounded-full bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200 sm:inline-flex items-center gap-1">
-                <Sparkles className="h-2.5 w-2.5" /> v1.0
+                <Tag className="h-2.5 w-2.5" /> v1.0
               </span>
             </div>
             <p className="hidden text-xs text-zinc-500 md:block">

@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
+import { requireAdmin } from "@/lib/adminAuth";
 import {
   FieldCategory,
   FundingType,
@@ -72,6 +73,9 @@ async function scrapeUrl(targetUrl: string): Promise<string> {
 }
 
 export async function POST(req: NextRequest) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const body = await req.json();
     const { url } = body;

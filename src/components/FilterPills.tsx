@@ -4,13 +4,13 @@ import React from "react";
 import { useScholarship } from "../context/ScholarshipContext";
 import { PillFilter, SortOption } from "../types/scholarship";
 import {
-  Sparkles,
   GraduationCap,
   Award,
   CheckCircle,
   TrendingUp,
   Clock,
   ArrowUpDown,
+  LayoutGrid,
 } from "lucide-react";
 import {
   calculateDaysRemaining,
@@ -65,7 +65,7 @@ export const FilterPills: React.FC = () => {
     {
       id: "all",
       label: "All Scholarships",
-      icon: <Sparkles className="h-3.5 w-3.5" />,
+      icon: <LayoutGrid className="h-3.5 w-3.5" />,
       count: pillCounts.all,
     },
     {

@@ -14,7 +14,6 @@ import {
   MapPin,
   Calendar,
   Clock,
-  Sparkles,
   CheckCircle2,
   AlertTriangle,
   GraduationCap,

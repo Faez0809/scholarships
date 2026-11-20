@@ -9,6 +9,7 @@ export const PasscodeModal: React.FC = () => {
     useScholarship();
   const [pin, setPin] = useState("");
   const [error, setError] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -21,9 +22,12 @@ export const PasscodeModal: React.FC = () => {
 
   if (!isPasscodeModalOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = unlockAdmin(pin);
+    if (isChecking) return;
+    setIsChecking(true);
+    const success = await unlockAdmin(pin);
+    setIsChecking(false);
     if (!success) {
       setError(true);
       setPin("");
@@ -86,13 +90,10 @@ export const PasscodeModal: React.FC = () => {
             {error && (
               <p className="mt-2 flex items-center justify-center gap-1 text-xs font-semibold text-red-600">
                 <AlertCircle className="h-3.5 w-3.5" />
-                <span>Incorrect passcode. Default PIN is 1234.</span>
+                <span>Incorrect passcode. Please try again.</span>
               </p>
             )}
 
-            <p className="mt-2 text-center text-[11px] text-zinc-400">
-              Default passcode: <code className="font-mono font-bold text-zinc-600">1234</code>
-            </p>
           </div>
 
           <div className="flex gap-2">
@@ -105,9 +106,10 @@ export const PasscodeModal: React.FC = () => {
             </button>
             <button
               type="submit"
-              className="w-1/2 rounded-xl bg-indigo-600 py-2 text-xs font-semibold text-white shadow-xs hover:bg-indigo-700 transition"
+              disabled={isChecking || !pin.trim()}
+              className="w-1/2 rounded-xl bg-indigo-600 py-2 text-xs font-semibold text-white shadow-xs hover:bg-indigo-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Unlock Admin
+              {isChecking ? "Checking..." : "Unlock Admin"}
             </button>
           </div>
         </form>

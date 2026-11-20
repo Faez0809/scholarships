@@ -6,7 +6,6 @@ import { FundingType, MediumOfInstruction } from "../types/scholarship";
 import {
   User,
   GraduationCap,
-  Sparkles,
   SlidersHorizontal,
   DollarSign,
   Globe2,
@@ -16,6 +15,7 @@ import {
   Landmark,
   UserCheck,
   ChevronDown,
+  BadgeCheck,
 } from "lucide-react";
 
 const FIELD_OPTIONS: { value: string; label: string }[] = [
@@ -109,7 +109,7 @@ export const ProfileSidebar: React.FC = () => {
         <div className="mt-4 rounded-xl border border-indigo-100 bg-gradient-to-br from-indigo-50/70 to-violet-50/40 p-3">
           <div className="flex items-center justify-between text-xs font-semibold">
             <span className="flex items-center gap-1.5 text-indigo-900">
-              <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
+              <BadgeCheck className="h-3.5 w-3.5 text-indigo-600" />
               Eligible Right Now
             </span>
             <span className="text-indigo-600 font-bold">

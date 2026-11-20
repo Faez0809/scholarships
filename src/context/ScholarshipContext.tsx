@@ -48,7 +48,8 @@ interface ScholarshipContextType {
   sortBy: SortOption;
   setSortBy: (sort: SortOption) => void;
   isAdmin: boolean;
-  unlockAdmin: (pin: string) => boolean;
+  adminPin: string;
+  unlockAdmin: (pin: string) => Promise<boolean>;
   lockAdmin: () => void;
   selectedScholarship: Scholarship | null;
   setSelectedScholarship: (scholarship: Scholarship | null) => void;
@@ -101,7 +102,7 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("deadline");
   const [isAdmin, setIsAdmin] = useState(false);
-  const [adminPin, setAdminPin] = useState("1234");
+  const [adminPin, setAdminPin] = useState("");
   const [selectedScholarship, setSelectedScholarship] =
     useState<Scholarship | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -215,15 +216,30 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
       }
 
       // 3. Admin status & PIN
-      const savedAdmin =
-        localStorage.getItem(STORAGE_KEY_ADMIN) ||
-        localStorage.getItem("scholar_track_v1_is_admin");
-      if (savedAdmin === "true") {
-        setIsAdmin(true);
-      }
+      // A saved session is only restored after the server re-confirms the passcode.
+      const savedAdmin = localStorage.getItem(STORAGE_KEY_ADMIN);
       const savedPin = localStorage.getItem(STORAGE_KEY_PIN);
-      if (savedPin) {
-        setAdminPin(savedPin);
+      localStorage.removeItem("scholar_track_v1_is_admin");
+      if (savedAdmin === "true" && savedPin) {
+        fetch("/api/scholarships?action=verify", {
+          method: "POST",
+          headers: { "x-admin-pin": savedPin },
+        })
+          .then((res) => {
+            if (res.ok) {
+              setIsAdmin(true);
+              setAdminPin(savedPin);
+            } else {
+              localStorage.removeItem(STORAGE_KEY_ADMIN);
+              localStorage.removeItem(STORAGE_KEY_PIN);
+            }
+          })
+          .catch(() => {
+            // Offline: stay locked; the user can unlock again later.
+          });
+      } else {
+        localStorage.removeItem(STORAGE_KEY_ADMIN);
+        localStorage.removeItem(STORAGE_KEY_PIN);
       }
 
       // 4. Document checklist
@@ -305,20 +321,32 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
     setProfile(DEFAULT_PROFILE);
   };
 
-  const unlockAdmin = (pin: string): boolean => {
-    if (pin.trim() === "1234") {
-      setIsAdmin(true);
-      setAdminPin(pin.trim());
-      localStorage.setItem(STORAGE_KEY_ADMIN, "true");
-      localStorage.setItem(STORAGE_KEY_PIN, pin.trim());
-      setIsPasscodeModalOpen(false);
-      return true;
+  const unlockAdmin = async (pin: string): Promise<boolean> => {
+    const candidate = pin.trim();
+    if (!candidate) return false;
+
+    // The passcode is only ever checked on the server.
+    try {
+      const res = await fetch("/api/scholarships?action=verify", {
+        method: "POST",
+        headers: { "x-admin-pin": candidate },
+      });
+      if (!res.ok) return false;
+    } catch {
+      return false;
     }
-    return false;
+
+    setIsAdmin(true);
+    setAdminPin(candidate);
+    localStorage.setItem(STORAGE_KEY_ADMIN, "true");
+    localStorage.setItem(STORAGE_KEY_PIN, candidate);
+    setIsPasscodeModalOpen(false);
+    return true;
   };
 
   const lockAdmin = () => {
     setIsAdmin(false);
+    setAdminPin("");
     localStorage.removeItem(STORAGE_KEY_ADMIN);
     localStorage.removeItem(STORAGE_KEY_PIN);
   };
@@ -354,7 +382,7 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-pin": adminPin || "1234",
+          "x-admin-pin": adminPin,
         },
         body: JSON.stringify(newScholarship),
       });
@@ -397,7 +425,7 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-pin": adminPin || "1234",
+          "x-admin-pin": adminPin,
         },
         body: JSON.stringify({ id, ...updated }),
       });
@@ -429,7 +457,7 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
         {
           method: "DELETE",
           headers: {
-            "x-admin-pin": adminPin || "1234",
+            "x-admin-pin": adminPin,
           },
         }
       );
@@ -459,7 +487,7 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
       const res = await fetch("/api/scholarships?action=reset", {
         method: "POST",
         headers: {
-          "x-admin-pin": adminPin || "1234",
+          "x-admin-pin": adminPin,
         },
       });
 
@@ -543,6 +571,7 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
         sortBy,
         setSortBy,
         isAdmin,
+        adminPin,
         unlockAdmin,
         lockAdmin,
         selectedScholarship,

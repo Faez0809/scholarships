@@ -13,7 +13,6 @@ import { AdminModal } from "./AdminModal";
 import { PasscodeModal } from "./PasscodeModal";
 import {
   GraduationCap,
-  Sparkles,
   SearchX,
   RotateCcw,
   Plus,
@@ -184,7 +183,6 @@ export const ScholarshipApp: React.FC = () => {
             <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-mono font-medium text-zinc-600">
               Scholarship Discovery &amp; Management • v1.0
             </span>
-            <span className="text-zinc-400">Default Admin PIN: 1234</span>
           </div>
         </div>
       </footer>

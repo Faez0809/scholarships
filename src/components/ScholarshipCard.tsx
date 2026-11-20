@@ -59,7 +59,7 @@ export const ScholarshipCard: React.FC<{ scholarship: Scholarship }> = ({ schola
   const open = () => setSelectedScholarship(s);
 
   return (
-    <article className="group relative flex h-full flex-col rounded-xl border border-zinc-200 bg-white transition hover:border-zinc-300 hover:shadow-sm">
+    <article className="group relative flex h-full flex-col rounded-xl border border-zinc-200 bg-white transition hover:border-zinc-300 hover:shadow-sm has-[h3_button:focus-visible]:border-indigo-500 has-[h3_button:focus-visible]:ring-2 has-[h3_button:focus-visible]:ring-indigo-500/40">
       <div className="flex flex-1 flex-col p-4">
         {/* Type + save */}
         <div className="flex items-start justify-between gap-3">

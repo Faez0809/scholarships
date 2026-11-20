@@ -16,6 +16,7 @@ const serif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://scholartrack-olive.vercel.app"),
   title: "ScholarTrack — Discover Fully Funded Master's & PhD Scholarships",
   description:
     "Discover, filter, and manage fully funded Master's and PhD scholarships worldwide. Match against your CGPA, IELTS, target degree, and calculate net monthly living savings.",

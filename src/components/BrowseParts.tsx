@@ -4,32 +4,12 @@ import React, { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { useScholarship } from "../context/ScholarshipContext";
 import { useGuide } from "../context/GuideContext";
-import { FundingType, Region, Scholarship, SortOption, UserProfile } from "../types/scholarship";
-import { calculateDaysRemaining } from "../utils/scholarshipUtils";
+import { FundingType, Region, SortOption, UserProfile } from "../types/scholarship";
 import { selectClass } from "./ProfilePanel";
 import { FUNDING_LABELS, useDialog } from "./ui";
 
-/* ------------------------------------------------------------------ */
-/* Deadline status: quiet text, not badges                             */
-/* ------------------------------------------------------------------ */
-
-export type ListingStatus = "open" | "soon" | "closed";
-
-export function listingStatus(s: Scholarship): { status: ListingStatus; text: string; className: string } {
-  const { days, isExpired, isClosingSoon, formattedDate } = calculateDaysRemaining(s.deadline);
-  const expected = s.deadlineIsEstimate ? " (expected)" : "";
-  if (isExpired) {
-    return { status: "closed", text: "Closed for this round", className: "text-stone-500" };
-  }
-  if (isClosingSoon) {
-    return {
-      status: "soon",
-      text: `Closes in ${days} day${days === 1 ? "" : "s"}${expected}`,
-      className: "text-amber-800",
-    };
-  }
-  return { status: "open", text: `Open · closes ${formattedDate}${expected}`, className: "text-emerald-800" };
-}
+export { listingStatus } from "../utils/listing";
+export type { ListingStatus } from "../utils/listing";
 
 /* ------------------------------------------------------------------ */
 /* Quick start: three questions, then results                          */

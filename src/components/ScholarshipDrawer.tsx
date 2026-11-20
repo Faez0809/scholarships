@@ -35,6 +35,7 @@ import {
   Landmark,
   Microscope,
   Check,
+  Share2,
 } from "lucide-react";
 
 export const ScholarshipDrawer: React.FC = () => {
@@ -133,6 +134,9 @@ export const ScholarshipDrawer: React.FC = () => {
         {/* Drawer Header */}
         <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3.5 sm:px-6 sm:py-4">
           <p className={`text-sm ${listingStatus(s).className}`}>{listingStatus(s).text}</p>
+          <div className="ml-auto mr-1">
+            <ShareButton id={s.id} name={s.name} />
+          </div>
 
           <div className="flex items-center gap-2">
             {isAdmin && (
@@ -743,3 +747,30 @@ const NextStep: React.FC<{
     <div className="shrink-0 pt-0.5">{action}</div>
   </li>
 );
+
+const ShareButton: React.FC<{ id: string; name: string }> = ({ id, name }) => {
+  const [copied, setCopied] = useState(false);
+  const share = async () => {
+    const url = `${window.location.origin}/scholarship/${id}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: name, url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Share sheet dismissed or clipboard unavailable; nothing to do.
+    }
+  };
+  return (
+    <button
+      type="button"
+      onClick={share}
+      className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-sm text-stone-600 hover:bg-stone-100 hover:text-stone-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+    >
+      <Share2 className="h-4 w-4" /> {copied ? "Link copied" : "Share"}
+    </button>
+  );
+};

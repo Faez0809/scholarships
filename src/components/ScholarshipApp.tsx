@@ -14,13 +14,18 @@ import { AuthDialog } from "./AuthDialog";
 import { ProfilePanel } from "./ProfilePanel";
 
 export const ScholarshipApp: React.FC = () => {
-  const { activeView, isAdmin, setIsPasscodeModalOpen } = useScholarship();
+  const { activeView, isAdmin, setIsPasscodeModalOpen, scholarships, setSelectedScholarship } = useScholarship();
 
   // Admin mode is reached by URL only (…/?admin), not from the public interface.
   useEffect(() => {
-    if (!isAdmin && new URLSearchParams(window.location.search).has("admin")) {
+    const params = new URLSearchParams(window.location.search);
+    if (!isAdmin && params.has("admin")) {
       setIsPasscodeModalOpen(true);
     }
+    // Shared links (/?s=<id>) open that scholarship directly.
+    const shared = params.get("s");
+    const match = shared ? scholarships.find((x) => x.id === shared) : null;
+    if (match) setSelectedScholarship(match);
     // Only on first load.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -22,6 +22,9 @@ import {
   SupervisorSearchResult,
 } from "../lib/openalex";
 import { SupervisorSaveButton } from "./SupervisorSaveButton";
+import { useGuide } from "../context/GuideContext";
+import { useOutreach } from "../context/OutreachContext";
+import { PageHeader, btn } from "./ui";
 
 const YEAR_OPTIONS = [
   { value: 3, label: "Last 3 years" },
@@ -30,7 +33,9 @@ const YEAR_OPTIONS = [
 ];
 
 export const SupervisorFinder: React.FC = () => {
-  const { supervisorPrefill, scholarships } = useScholarship();
+  const { supervisorPrefill, scholarships, setActiveView } = useScholarship();
+  const { markStep } = useGuide();
+  const { contacts } = useOutreach();
 
   const [universityQuery, setUniversityQuery] = useState("");
   const [selectedInstitution, setSelectedInstitution] =
@@ -125,6 +130,7 @@ export const SupervisorFinder: React.FC = () => {
         signal: controller.signal,
       });
       setResult(data);
+      markStep("supervisor");
     } catch (err) {
       if ((err as Error)?.name === "AbortError") return;
       setError((err as Error)?.message || "Search failed. Please try again.");
@@ -156,21 +162,23 @@ export const SupervisorFinder: React.FC = () => {
   };
 
   return (
-    <section aria-labelledby="supervisor-finder-title" className="space-y-5">
-      <header>
-        <h1 id="supervisor-finder-title" className="text-lg font-semibold tracking-tight text-zinc-900">
-          Find Supervisors
-        </h1>
-        <p className="mt-1 max-w-2xl text-sm text-zinc-600">
-          Search a university for researchers who have recently published on your topic. Results come
-          from the open OpenAlex research database and show publication activity, not job titles, so
-          check each profile before you write.
-        </p>
-      </header>
+    <section aria-labelledby="supervisor-finder-title" className="">
+      <PageHeader
+        id="supervisor-finder-title"
+        title="Find supervisors"
+        description="Choose a university and your research topic. We list researchers there who recently published on it, so you know whom to email. Results show publication activity, not job titles, so check each profile before you write."
+        actions={
+          contacts.length > 0 ? (
+            <button type="button" className={btn.secondary} onClick={() => setActiveView("outreach")}>
+              My outreach ({contacts.length})
+            </button>
+          ) : undefined
+        }
+      />
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-xl border border-zinc-200 bg-white p-4 sm:p-5"
+        className="mb-5 rounded-xl border border-zinc-200 bg-white p-4 sm:p-5"
       >
         <div className="grid gap-3 md:grid-cols-[1.2fr_1fr_auto]">
           {/* University */}
@@ -194,7 +202,7 @@ export const SupervisorFinder: React.FC = () => {
                 onFocus={() => setShowSuggestions(true)}
                 onBlur={() => window.setTimeout(() => setShowSuggestions(false), 150)}
                 placeholder="e.g. University of Waterloo"
-                className="w-full rounded-lg border border-zinc-300 bg-white py-2 pl-9 pr-8 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                className="w-full rounded-lg border border-zinc-300 bg-white py-2 pl-9 pr-8 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-600 focus:outline-none focus:ring-1 focus:ring-indigo-600"
                 role="combobox"
                 aria-autocomplete="list"
                 aria-controls="sf-university-list"
@@ -242,7 +250,7 @@ export const SupervisorFinder: React.FC = () => {
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 placeholder="e.g. reinforcement learning"
-                className="w-full rounded-lg border border-zinc-300 bg-white py-2 pl-9 pr-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                className="w-full rounded-lg border border-zinc-300 bg-white py-2 pl-9 pr-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-600 focus:outline-none focus:ring-1 focus:ring-indigo-600"
               />
             </div>
           </div>
@@ -351,13 +359,19 @@ export const SupervisorFinder: React.FC = () => {
                 </p>
               </div>
             ) : (
-              <ul className="grid gap-3 lg:grid-cols-2">
+              <>
+              <p className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-600">
+                Next step: press <span className="font-medium text-zinc-900">Save</span> on anyone who fits. They will
+                appear in <button type="button" onClick={() => setActiveView("outreach")} className="font-medium text-indigo-700 hover:underline">My outreach</button>, where you can draft and track your email.
+              </p>
+              <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
                 {result.candidates.map((c) => (
-                  <li key={c.id}>
+                  <li key={c.id} className="min-w-0">
                     <CandidateCard candidate={c} topic={topic.trim()} />
                   </li>
                 ))}
               </ul>
+              </>
             )}
           </div>
         )}

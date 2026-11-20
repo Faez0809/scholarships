@@ -1,0 +1,133 @@
+"use client";
+
+import React, { useEffect, useId, useRef, useState } from "react";
+import { Info } from "lucide-react";
+import { FundingType, SupervisorRequirement } from "../types/scholarship";
+
+/* ------------------------------------------------------------------ */
+/* Plain-language labels                                               */
+/* ------------------------------------------------------------------ */
+
+export const FUNDING_LABELS: Record<FundingType, string> = {
+  "Gov / Multi-Uni": "Government program",
+  "University Direct": "University scholarship",
+  "Supervisor / RA-TA": "Professor-funded (RA/TA)",
+};
+
+export const FUNDING_HELP: Record<FundingType, string> = {
+  "Gov / Multi-Uni":
+    "Paid by a government or a group of universities. You usually apply once to the program and can study at one of several partner universities.",
+  "University Direct":
+    "Offered by one university. Applying for admission usually considers you for the scholarship too.",
+  "Supervisor / RA-TA":
+    "Funded from a professor's research grant as a Research Assistant (RA) or by the department as a Teaching Assistant (TA). Finding a willing supervisor is the key step.",
+};
+
+export const SUPERVISOR_LABELS: Record<SupervisorRequirement, string> = {
+  "Mandatory Before Applying": "Supervisor required first",
+  "Optional / Recommended": "Supervisor recommended",
+  "Not Required (Central Admission)": "No supervisor needed",
+};
+
+export const JARGON = {
+  leftEachMonth:
+    "Stipend minus the estimated cost of living in that city. A positive number is roughly what you could save each month.",
+  estimated:
+    "The organisers have not announced this date yet. It is based on last year's calendar.",
+  eligible:
+    "Based on your profile: CGPA, IELTS, degree level and the minimum savings you set. Always confirm on the official site.",
+};
+
+/* ------------------------------------------------------------------ */
+/* InfoTip: accessible click/hover explanation                         */
+/* ------------------------------------------------------------------ */
+
+export const InfoTip: React.FC<{ text: string; label?: string; className?: string }> = ({
+  text,
+  label = "What does this mean?",
+  className = "",
+}) => {
+  const [open, setOpen] = useState(false);
+  const id = useId();
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent | KeyboardEvent) => {
+      if (e instanceof KeyboardEvent) {
+        if (e.key === "Escape") setOpen(false);
+        return;
+      }
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", close);
+    document.addEventListener("keydown", close);
+    return () => {
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", close);
+    };
+  }, [open]);
+
+  return (
+    <span ref={ref} className={`relative inline-flex align-middle ${className}`}>
+      <button
+        type="button"
+        aria-label={label}
+        aria-expanded={open}
+        aria-describedby={open ? id : undefined}
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen((v) => !v);
+        }}
+        className="inline-flex h-4 w-4 items-center justify-center rounded-full text-zinc-400 hover:text-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+      >
+        <Info className="h-3.5 w-3.5" />
+      </button>
+      {open && (
+        <span
+          id={id}
+          role="tooltip"
+          onClick={(e) => e.stopPropagation()}
+          className="absolute left-1/2 top-6 z-40 w-60 -translate-x-1/2 rounded-lg border border-zinc-200 bg-white p-2.5 text-left text-xs font-normal normal-case leading-relaxed tracking-normal text-zinc-700 shadow-lg"
+        >
+          {text}
+        </span>
+      )}
+    </span>
+  );
+};
+
+/* ------------------------------------------------------------------ */
+/* PageHeader: where am I, what is this, what next                     */
+/* ------------------------------------------------------------------ */
+
+export const PageHeader: React.FC<{
+  title: string;
+  description: React.ReactNode;
+  actions?: React.ReactNode;
+  id?: string;
+}> = ({ title, description, actions, id }) => (
+  <header className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div className="min-w-0">
+      <h1 id={id} className="text-xl font-semibold tracking-tight text-zinc-900 sm:text-2xl">
+        {title}
+      </h1>
+      <p className="mt-1 max-w-2xl text-sm leading-relaxed text-zinc-600">{description}</p>
+    </div>
+    {actions && <div className="flex shrink-0 flex-wrap gap-2">{actions}</div>}
+  </header>
+);
+
+/* ------------------------------------------------------------------ */
+/* Buttons                                                             */
+/* ------------------------------------------------------------------ */
+
+const base =
+  "inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed";
+
+export const btn = {
+  primary: `${base} bg-zinc-900 px-3.5 py-2 text-white hover:bg-zinc-800`,
+  secondary: `${base} border border-zinc-300 bg-white px-3.5 py-2 text-zinc-800 hover:bg-zinc-50`,
+  ghost: `${base} px-2.5 py-1.5 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900`,
+  link: "inline-flex items-center gap-1 text-sm font-medium text-indigo-700 hover:text-indigo-900 underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded",
+};

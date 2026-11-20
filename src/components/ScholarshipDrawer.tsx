@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { useScholarship } from "../context/ScholarshipContext";
 import { PartnerUniversity } from "../types/scholarship";
+import { useGuide } from "../context/GuideContext";
+import { FUNDING_HELP, FUNDING_LABELS, InfoTip, JARGON, SUPERVISOR_LABELS } from "./ui";
+import { Bookmark, BookmarkCheck } from "lucide-react";
 import {
   calculateDaysRemaining,
   formatSignedUSD,
@@ -29,7 +32,6 @@ import {
   Landmark,
   Microscope,
   Check,
-  Search,
 } from "lucide-react";
 
 export const ScholarshipDrawer: React.FC = () => {
@@ -45,6 +47,7 @@ export const ScholarshipDrawer: React.FC = () => {
     toggleDocumentCheck,
     openSupervisorFinder,
   } = useScholarship();
+  const { isSavedScholarship, toggleSavedScholarship } = useGuide();
 
   // Local state for personal budget adjustment in interactive calculator
   const [personalExpenseAdjustment, setPersonalExpenseAdjustment] = useState<number>(0);
@@ -74,6 +77,7 @@ export const ScholarshipDrawer: React.FC = () => {
 
   const s = selectedScholarship;
   const eligibility = checkEligibility(s, profile);
+  const docsReady = s.requiredDocuments.filter((d) => documentChecklist[`${s.id}::${d}`]).length;
 
   // If a partner uni is selected, use its numbers for the interactive breakdown; otherwise use scholarship baseline
   const activeStipend = selectedPartnerUni
@@ -122,22 +126,19 @@ export const ScholarshipDrawer: React.FC = () => {
       <div className="relative z-10 flex h-full w-full max-w-2xl flex-col bg-white shadow-2xl transition-transform animate-in slide-in-from-right duration-250 ease-out">
         {/* Drawer Header */}
         <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3.5 sm:px-6 sm:py-4">
-          <div className="flex items-center gap-2">
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                  {s.city}, {s.country}
-                </span>
-                <span className="rounded-sm bg-zinc-100 px-1.5 py-0.2 text-[10px] text-zinc-600 font-medium">
-                  {s.region}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 text-xs text-zinc-600">
-                <Building2 className="h-3.5 w-3.5 text-zinc-400" />
-                <span className="font-medium text-zinc-800">{s.university}</span>
-              </div>
-            </div>
-          </div>
+          <button
+            type="button"
+            onClick={() => toggleSavedScholarship(s.id)}
+            aria-pressed={isSavedScholarship(s.id)}
+            className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+              isSavedScholarship(s.id)
+                ? "border-zinc-200 bg-zinc-50 text-zinc-800"
+                : "border-zinc-300 bg-white text-zinc-800 hover:bg-zinc-50"
+            }`}
+          >
+            {isSavedScholarship(s.id) ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
+            {isSavedScholarship(s.id) ? "Saved" : "Save to shortlist"}
+          </button>
 
           <div className="flex items-center gap-2">
             {isAdmin && (
@@ -161,8 +162,8 @@ export const ScholarshipDrawer: React.FC = () => {
 
             <button
               onClick={() => setSelectedScholarship(null)}
-              className="rounded-lg p-1.5 text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-700"
-              title="Close drawer"
+              className="rounded-lg p-1.5 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              aria-label="Close details"
             >
               <X className="h-5 w-5" />
             </button>
@@ -175,16 +176,17 @@ export const ScholarshipDrawer: React.FC = () => {
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-2">
               {/* Funding Type Badge */}
-              <span className="rounded-md bg-purple-50 px-2.5 py-0.5 text-xs font-semibold text-purple-800 border border-purple-200/60 flex items-center gap-1">
+              <span className="flex items-center gap-1 rounded-md border border-zinc-200 px-2 py-0.5 text-xs font-medium text-zinc-700">
                 {s.fundingType === "Gov / Multi-Uni" && <Landmark className="h-3 w-3" />}
                 {s.fundingType === "Supervisor / RA-TA" && <Microscope className="h-3 w-3" />}
                 {s.fundingType === "University Direct" && <GraduationCap className="h-3 w-3" />}
-                <span>{s.fundingType}</span>
+                <span>{FUNDING_LABELS[s.fundingType]}</span>
+                <InfoTip text={FUNDING_HELP[s.fundingType]} />
               </span>
 
               {/* Supervisor Requirement Badge */}
-              <span className="rounded-md bg-zinc-100 px-2.5 py-0.5 text-xs font-semibold text-zinc-700">
-                {s.supervisorRequired}
+              <span className="rounded-md border border-zinc-200 px-2 py-0.5 text-xs font-medium text-zinc-700">
+                {SUPERVISOR_LABELS[s.supervisorRequired]}
               </span>
 
               {s.degrees.map((deg) => (
@@ -195,7 +197,7 @@ export const ScholarshipDrawer: React.FC = () => {
                   {deg}
                 </span>
               ))}
-              <span className="rounded-md bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
+              <span className="rounded-md bg-zinc-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
                 {s.field}
               </span>
 
@@ -220,7 +222,14 @@ export const ScholarshipDrawer: React.FC = () => {
               </span>
             </div>
 
-            <h2 className="text-xl font-bold text-zinc-950">{s.name}</h2>
+            <h2 className="text-xl font-semibold tracking-tight text-zinc-950">{s.name}</h2>
+            <p className="mt-1 flex items-center gap-1.5 text-sm text-zinc-700">
+              <Building2 className="h-4 w-4 shrink-0 text-zinc-400" />
+              {s.university}
+            </p>
+            <p className="mt-0.5 pl-[22px] text-xs text-zinc-500">
+              {s.city}, {s.country} · {s.region}
+            </p>
             {s.fieldSpecifics && (
               <p className="mt-1 text-xs text-zinc-500">
                 Specializations: <span className="text-zinc-700">{s.fieldSpecifics}</span>
@@ -254,19 +263,84 @@ export const ScholarshipDrawer: React.FC = () => {
             )}
           </div>
 
+          {/* What to do next */}
+          <section aria-labelledby="next-steps-title" className="rounded-xl border border-zinc-200">
+            <h3 id="next-steps-title" className="border-b border-zinc-100 px-4 py-2.5 text-sm font-semibold text-zinc-900">
+              What to do next
+            </h3>
+            <ol className="divide-y divide-zinc-100 text-sm">
+              <NextStep
+                n={1}
+                done={eligibility.isEligible}
+                title={eligibility.isEligible ? "You meet the requirements" : "Check the requirements"}
+                detail={
+                  eligibility.isEligible
+                    ? `Minimum CGPA ${s.minCGPA.toFixed(2)}, IELTS ${s.minIELTS > 0 ? s.minIELTS.toFixed(1) : "not required"}.`
+                    : eligibility.reasons[0] || "Some requirements are not met yet."
+                }
+                action={
+                  <a href="#drawer-eligibility" className="text-xs font-medium text-indigo-700 hover:underline">
+                    See details
+                  </a>
+                }
+              />
+              <NextStep
+                n={2}
+                done={docsReady === s.requiredDocuments.length && s.requiredDocuments.length > 0}
+                title="Prepare your documents"
+                detail={`${docsReady} of ${s.requiredDocuments.length} ready. Tick them off as you go.`}
+                action={
+                  <a href="#drawer-documents" className="text-xs font-medium text-indigo-700 hover:underline">
+                    Checklist
+                  </a>
+                }
+              />
+              {s.supervisorRequired !== "Not Required (Central Admission)" && (
+                <NextStep
+                  n={3}
+                  done={false}
+                  title={s.supervisorRequired === "Mandatory Before Applying" ? "Find a supervisor first" : "Contact a supervisor"}
+                  detail={`Look for professors at ${selectedPartnerUni?.name || s.university} who work on your topic.`}
+                  action={
+                    <button
+                      type="button"
+                      onClick={() =>
+                        openSupervisorFinder(selectedPartnerUni?.name || s.university, (s.fieldSpecifics || "").split(",")[0]?.trim() || "")
+                      }
+                      className="text-xs font-medium text-indigo-700 hover:underline"
+                    >
+                      Find supervisors
+                    </button>
+                  }
+                />
+              )}
+              <NextStep
+                n={s.supervisorRequired !== "Not Required (Central Admission)" ? 4 : 3}
+                done={false}
+                title="Apply on the official website"
+                detail={isExpired ? "This round has closed. Check the site for the next one." : `Deadline ${formattedDate}${s.deadlineIsEstimate ? " (expected)" : ""}.`}
+                action={
+                  <a href={s.officialWebsiteUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-medium text-indigo-700 hover:underline">
+                    Open site <ExternalLink className="h-3 w-3" />
+                  </a>
+                }
+              />
+            </ol>
+          </section>
+
           {/* Interactive Multi-University & City Savings Selector (If Partner Unis Exist) */}
           {s.partnerUniversities && s.partnerUniversities.length > 0 && (
-            <div className="rounded-2xl border border-indigo-200/90 bg-zinc-50 p-4 shadow-2xs">
+            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 shadow-2xs">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-xs font-bold text-indigo-950 flex items-center gap-1.5">
+                <h3 className="text-xs font-bold text-zinc-900 flex items-center gap-1.5">
                   <Landmark className="h-4 w-4 text-indigo-600" />
                   Participating Universities &amp; City-by-City Savings
                 </h3>
-                <span className="text-[10px] font-semibold text-indigo-700 bg-white px-2 py-0.5 rounded-md border border-indigo-200">
+                <span className="text-[10px] font-semibold text-indigo-700 bg-white px-2 py-0.5 rounded-md border border-zinc-200">
                   {s.partnerUniversities.length} Institutions Available
                 </span>
               </div>
-              <p className="text-xs text-indigo-900/80 mb-3">
+              <p className="text-xs text-zinc-900/80 mb-3">
                 Click any participating university below to view its specific city living cost and net monthly savings:
               </p>
 
@@ -316,58 +390,30 @@ export const ScholarshipDrawer: React.FC = () => {
 
           {/* Supervisor & Lab Funding Guide (For Supervisor / RA-TA tracks) */}
           {s.fundingType === "Supervisor / RA-TA" && (
-            <div className="rounded-2xl border border-blue-200 bg-blue-50/70 p-4">
-              <div className="flex items-center gap-2 font-bold text-xs text-blue-950 mb-1.5">
-                <Microscope className="h-4 w-4 text-blue-600" />
+            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+              <div className="flex items-center gap-2 font-bold text-xs text-zinc-900 mb-1.5">
+                <Microscope className="h-4 w-4 text-zinc-700" />
                 <span>Supervisor &amp; Lab Funding Match Guide</span>
               </div>
-              <p className="text-xs text-blue-900 leading-relaxed mb-3">
+              <p className="text-xs text-zinc-900 leading-relaxed mb-3">
                 {s.supervisorFundingGuide ||
                   "This program provides guaranteed financial coverage via Professor Research Assistantships (RA) or Department Teaching Assistantships (TA). Securing a supervisor match before submitting your application confirms your multi-year stipend and tuition waiver."}
               </p>
               <div className="flex flex-wrap gap-2 text-[11px]">
-                <span className="rounded-md bg-white px-2 py-1 font-medium text-blue-800 border border-blue-200">
+                <span className="rounded-md bg-white px-2 py-1 font-medium text-zinc-700 border border-zinc-200">
                   Tip: Attach CV &amp; 1-page research pitch
                 </span>
-                <span className="rounded-md bg-white px-2 py-1 font-medium text-blue-800 border border-blue-200">
+                <span className="rounded-md bg-white px-2 py-1 font-medium text-zinc-700 border border-zinc-200">
                   Cite 2 recent papers from the professor&apos;s lab
                 </span>
               </div>
             </div>
           )}
 
-          {/* Supervisor search shortcut */}
-          {s.supervisorRequired !== "Not Required (Central Admission)" && (
-            <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm font-semibold text-zinc-900">
-                  {s.supervisorRequired === "Mandatory Before Applying"
-                    ? "A supervisor is required for this program"
-                    : "Contacting a supervisor helps here"}
-                </p>
-                <p className="mt-0.5 text-xs text-zinc-600">
-                  Search researchers at {selectedPartnerUni?.name || s.university} who publish in your field.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() =>
-                  openSupervisorFinder(
-                    selectedPartnerUni?.name || s.university,
-                    (s.fieldSpecifics || "").split(",")[0]?.trim() || ""
-                  )
-                }
-                className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-zinc-900 px-3.5 py-2 text-xs font-medium text-white hover:bg-zinc-800"
-              >
-                <Search className="h-3.5 w-3.5" />
-                Find supervisors
-              </button>
-            </div>
-          )}
-
           {/* Dynamic Eligibility Comparison Banner */}
           <div
-            className={`rounded-2xl border p-4 ${
+            id="drawer-eligibility"
+            className={`rounded-xl border p-4 ${
               eligibility.isEligible
                 ? "border-emerald-200 bg-emerald-50/70 text-emerald-950"
                 : "border-amber-200 bg-amber-50/70 text-amber-950"
@@ -452,11 +498,12 @@ export const ScholarshipDrawer: React.FC = () => {
           </div>
 
           {/* Interactive Financial Calculator & Breakdown */}
-          <div className="rounded-2xl border border-zinc-200 bg-zinc-50/60 p-4">
+          <div className="rounded-xl border border-zinc-200 bg-zinc-50/60 p-4">
             <div className="flex items-center justify-between pb-3 border-b border-zinc-200">
               <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-1.5">
                 <DollarSign className="h-4 w-4 text-emerald-600" />
-                Financial Breakdown &amp; Living Cost Calculator
+                Money each month
+                <InfoTip text={JARGON.leftEachMonth} />
               </h3>
               <span
                 className={`text-[11px] font-semibold px-2 py-0.5 rounded-md border ${
@@ -556,7 +603,7 @@ export const ScholarshipDrawer: React.FC = () => {
           </div>
 
           {/* Complete Required Documents Checklist */}
-          <div>
+          <div id="drawer-documents" className="scroll-mt-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-1.5">
                 <FileCheck className="h-4 w-4 text-indigo-600" />
@@ -595,7 +642,7 @@ export const ScholarshipDrawer: React.FC = () => {
           </div>
 
           {/* University Overview & Campus Research */}
-          <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+          <div className="rounded-xl border border-zinc-200 bg-white p-4">
             <h3 className="text-sm font-bold text-zinc-900 mb-2">
               University Overview &amp; Academic Prestige
             </h3>
@@ -603,7 +650,7 @@ export const ScholarshipDrawer: React.FC = () => {
           </div>
 
           {/* City Life & Expat Experience */}
-          <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+          <div className="rounded-xl border border-zinc-200 bg-white p-4">
             <h3 className="text-sm font-bold text-zinc-900 mb-2 flex items-center gap-1.5">
               <MapPin className="h-4 w-4 text-indigo-500" />
               Living in {s.city}, {s.country}
@@ -626,7 +673,7 @@ export const ScholarshipDrawer: React.FC = () => {
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 w-full sm:w-auto"
           >
-            <span>Visit Official Application Portal</span>
+            <span>Apply on the official site</span>
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>
@@ -634,3 +681,30 @@ export const ScholarshipDrawer: React.FC = () => {
     </div>
   );
 };
+
+const NextStep: React.FC<{
+  n: number;
+  done: boolean;
+  title: string;
+  detail: string;
+  action: React.ReactNode;
+}> = ({ n, done, title, detail, action }) => (
+  <li className="flex items-start gap-3 px-4 py-3">
+    <span
+      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[11px] font-semibold ${
+        done ? "border-emerald-600 bg-emerald-600 text-white" : "border-zinc-300 text-zinc-600"
+      }`}
+      aria-hidden="true"
+    >
+      {done ? <Check className="h-3 w-3" /> : n}
+    </span>
+    <div className="min-w-0 flex-1">
+      <p className="font-medium text-zinc-900">
+        {title}
+        {done && <span className="sr-only"> (done)</span>}
+      </p>
+      <p className="text-xs text-zinc-500">{detail}</p>
+    </div>
+    <div className="shrink-0 pt-0.5">{action}</div>
+  </li>
+);

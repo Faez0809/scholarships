@@ -23,6 +23,7 @@ import {
 import { useScholarship } from "../context/ScholarshipContext";
 import { ContactEditor } from "./ContactEditor";
 import { formatVerifiedDate } from "../utils/scholarshipUtils";
+import { PageHeader, btn } from "./ui";
 
 export const STATUS_STYLES: Record<OutreachStatus, string> = {
   Drafting: "border-zinc-300 bg-zinc-50 text-zinc-700",
@@ -96,24 +97,21 @@ export const OutreachTracker: React.FC = () => {
 
   return (
     <section aria-labelledby="outreach-title" className="space-y-5">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 id="outreach-title" className="text-lg font-semibold tracking-tight text-zinc-900">
-            My Outreach
-          </h1>
-          <p className="mt-1 max-w-2xl text-sm text-zinc-600">
-            Track the professors you contact, draft emails from your profile, and see which follow-ups
-            are due. Everything here is saved in this browser only.
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setIsCreating(true)}
-          className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-zinc-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-zinc-800"
-        >
-          <Plus className="h-4 w-4" /> Add contact
-        </button>
-      </header>
+      <PageHeader
+        id="outreach-title"
+        title="My outreach"
+        description="Every professor you plan to email, in one place. Open a contact to draft the email, mark it as sent, and we will remind you to follow up after 10 days."
+        actions={
+          <>
+            <button type="button" className={btn.secondary} onClick={() => setActiveView("supervisors")}>
+              Find supervisors
+            </button>
+            <button type="button" className={btn.primary} onClick={() => setIsCreating(true)}>
+              <Plus className="h-4 w-4" /> Add contact
+            </button>
+          </>
+        }
+      />
 
       {/* Summary */}
       <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-zinc-200 bg-zinc-200 sm:grid-cols-4">

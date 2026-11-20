@@ -19,7 +19,7 @@ ScholarTrack is a clean, modern web application designed to discover, filter, an
 - **25-Program Catalog with Checked Deadlines**: Government and national schemes (Stipendium Hungaricum, Türkiye Bursları, Fulbright, GKS, Commonwealth, Swedish Institute, Swiss Government Excellence, Australia Awards, VLIR-UOS, Taiwan, SINGA and more). Deadlines that are not announced yet are marked as expected, and local-currency stipends are shown in the detail panel.
 - **Sync Programs (Admin)**: Adds newly bundled programs to an existing database and refreshes dated deadline facts, without deleting custom entries.
 - **Find Supervisors**: Search a university and topic using the free OpenAlex research database to see active researchers, their h-index, recent papers and profile links. Prefills from supervisor-funded programs.
-- **Optional Accounts**: Sign in with email and password or an email link to keep your profile, shortlist and outreach on every device. Run `supabase/migrations/20261120_user_accounts.sql` once to enable account storage.
+- **Optional Accounts**: Sign up with just an email and password (no confirmation email) to keep your profile, shortlist and outreach on every device. Run `supabase/migrations/20261120_user_accounts.sql` once to enable account storage.
 - **My Outreach**: Track professors through Drafting, Email Sent, Follow-up Due, Replied / Interview and Declined, with notes, follow-up reminders and email drafts built from your profile. Stored in the browser.
 
 ---

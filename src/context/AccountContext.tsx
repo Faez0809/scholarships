@@ -26,8 +26,7 @@ interface AccountContextType {
   status: CloudStatus;
   isAuthAvailable: boolean;
   signInWithPassword: (email: string, password: string) => Promise<string | null>;
-  signUp: (email: string, password: string) => Promise<{ error: string | null; needsConfirmation: boolean }>;
-  sendMagicLink: (email: string) => Promise<string | null>;
+  signUp: (email: string, password: string) => Promise<string | null>;
   signInWithGoogle: () => Promise<string | null>;
   signOut: () => Promise<void>;
   isAuthOpen: boolean;
@@ -48,7 +47,7 @@ const AccountContext = createContext<AccountContextType | undefined>(undefined);
 
 function friendly(message: string | undefined): string {
   const m = (message || "").toLowerCase();
-  if (m.includes("invalid login")) return "That email and password don't match. Try again or use an email link.";
+  if (m.includes("invalid login")) return "That email and password don't match. Try again, or create an account.";
   if (m.includes("email not confirmed")) return "Please confirm your email first. Check your inbox for the link.";
   if (m.includes("already registered")) return "An account with this email already exists. Sign in instead.";
   if (m.includes("password")) return "Use a password with at least 6 characters.";
@@ -166,21 +165,19 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       return error ? friendly(error.message) : null;
     },
     signUp: async (email, password) => {
-      if (!supabase) return { error: "Sign-in is not available right now.", needsConfirmation: false };
-      const { data, error } = await supabase.auth.signUp({
-        email: email.trim(),
-        password,
-        options: { emailRedirectTo: window.location.origin },
-      });
-      if (error) return { error: friendly(error.message), needsConfirmation: false };
-      return { error: null, needsConfirmation: !data.session };
-    },
-    sendMagicLink: async (email) => {
-      if (!supabase) return "Sign-in is not available right now.";
-      const { error } = await supabase.auth.signInWithOtp({
-        email: email.trim(),
-        options: { emailRedirectTo: window.location.origin },
-      });
+      if (!supabase) return "Sign-up is not available right now.";
+      try {
+        const res = await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: email.trim(), password }),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) return json.error || "Could not create the account. Please try again.";
+      } catch {
+        return "Network error. Please try again.";
+      }
+      const { error } = await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
       return error ? friendly(error.message) : null;
     },
     signInWithGoogle: async () => {

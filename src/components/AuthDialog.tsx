@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { X, Mail, Loader2, CheckCircle2, LogOut, Cloud, CloudOff, UserRound } from "lucide-react";
+import { X, Loader2, LogOut, Cloud, CloudOff, UserRound } from "lucide-react";
 import { useAccount } from "../context/AccountContext";
 import { btn } from "./ui";
 
-type Mode = "signin" | "signup" | "link";
+type Mode = "signin" | "signup";
 
 const GOOGLE_ENABLED = process.env.NEXT_PUBLIC_ENABLE_GOOGLE_SIGNIN === "true";
 
@@ -93,13 +93,12 @@ export const AccountButton: React.FC = () => {
 
 /** Sign-in / create account dialog. */
 export const AuthDialog: React.FC = () => {
-  const { isAuthOpen, setIsAuthOpen, session, signInWithPassword, signUp, sendMagicLink, signInWithGoogle } = useAccount();
+  const { isAuthOpen, setIsAuthOpen, session, signInWithPassword, signUp, signInWithGoogle } = useAccount();
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [info, setInfo] = useState<string | null>(null);
   const emailRef = useRef<HTMLInputElement>(null);
 
   // Close once signed in
@@ -121,38 +120,22 @@ export const AuthDialog: React.FC = () => {
   const switchMode = (m: Mode) => {
     setMode(m);
     setError(null);
-    setInfo(null);
   };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setInfo(null);
-    if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
-      setError("Enter a valid email address.");
-      return;
-    }
-    if (mode !== "link" && password.length < 6) {
-      setError("Use a password with at least 6 characters.");
+    if (!email.trim() || !password) {
+      setError("Please enter your email and a password.");
       return;
     }
     setBusy(true);
-    if (mode === "signin") {
-      const err = await signInWithPassword(email, password);
-      if (err) setError(err);
-    } else if (mode === "signup") {
-      const r = await signUp(email, password);
-      if (r.error) setError(r.error);
-      else if (r.needsConfirmation) setInfo("Check your inbox and click the link to confirm your account. Then you're signed in.");
-    } else {
-      const err = await sendMagicLink(email);
-      if (err) setError(err);
-      else setInfo("We sent a sign-in link to your email. Open it on this device.");
-    }
+    const err = mode === "signin" ? await signInWithPassword(email, password) : await signUp(email, password);
+    if (err) setError(err);
     setBusy(false);
   };
 
-  const title = mode === "signup" ? "Create your account" : mode === "link" ? "Get a sign-in link" : "Sign in";
+  const title = mode === "signup" ? "Create your account" : "Sign in";
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-labelledby="auth-title">
@@ -175,19 +158,11 @@ export const AuthDialog: React.FC = () => {
           </button>
         </div>
 
-        {info ? (
-          <div className="mt-5 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900">
-            <p className="flex items-start gap-2">
-              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" /> {info}
-            </p>
-          </div>
-        ) : (
-          <form onSubmit={submit} className="mt-5 space-y-3" noValidate>
+        <form onSubmit={submit} className="mt-5 space-y-3" noValidate>
             <label className="block">
               <span className="mb-1 block text-xs font-medium text-zinc-700">Email</span>
               <input ref={emailRef} type="email" autoComplete="email" className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
             </label>
-            {mode !== "link" && (
               <label className="block">
                 <span className="mb-1 block text-xs font-medium text-zinc-700">Password</span>
                 <input
@@ -196,10 +171,9 @@ export const AuthDialog: React.FC = () => {
                   className={inputClass}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder={mode === "signup" ? "At least 6 characters" : "Your password"}
+                  placeholder={mode === "signup" ? "Choose a password" : "Your password"}
                 />
               </label>
-            )}
             {error && (
               <p role="alert" className="text-sm text-red-700">
                 {error}
@@ -207,13 +181,10 @@ export const AuthDialog: React.FC = () => {
             )}
             <button type="submit" disabled={busy} className={`${btn.primary} w-full`}>
               {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-              {mode === "signup" ? "Create account" : mode === "link" ? "Email me a link" : "Sign in"}
+              {mode === "signup" ? "Create account" : "Sign in"}
             </button>
           </form>
-        )}
 
-        {!info && (
-          <>
             {GOOGLE_ENABLED && (
               <>
                 <div className="my-4 flex items-center gap-3 text-xs text-zinc-400">
@@ -232,13 +203,6 @@ export const AuthDialog: React.FC = () => {
               </>
             )}
             <div className="mt-4 space-y-1.5 text-center text-xs text-zinc-600">
-              {mode !== "link" && (
-                <p>
-                  <button type="button" onClick={() => switchMode("link")} className="inline-flex items-center gap-1 font-medium text-indigo-700 hover:underline">
-                    <Mail className="h-3.5 w-3.5" /> Sign in with an email link instead
-                  </button>
-                </p>
-              )}
               {mode === "signup" ? (
                 <p>
                   Already have an account?{" "}
@@ -255,10 +219,8 @@ export const AuthDialog: React.FC = () => {
                 </p>
               )}
             </div>
-          </>
-        )}
         <p className="mt-4 text-center text-[11px] text-zinc-400">
-          Browsing works without an account. Signing in copies what you&apos;ve saved in this browser to your account.
+          Browsing works without an account. When you sign in, what you&apos;ve saved in this browser is copied to your account.
         </p>
       </div>
     </div>

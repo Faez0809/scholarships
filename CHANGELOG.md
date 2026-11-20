@@ -9,7 +9,7 @@
 - Admin actions grouped in one menu. Plan and audit in `docs/UX_REDESIGN.md`.
 
 ### Accounts
-- Optional sign-in with email and password or an email link (Google button appears when `NEXT_PUBLIC_ENABLE_GOOGLE_SIGNIN=true`).
+- Simple sign-up and sign-in with email and password only. New accounts are created already confirmed (no confirmation email) through `/api/auth/signup`, then signed in straight away. Google button appears when `NEXT_PUBLIC_ENABLE_GOOGLE_SIGNIN=true`.
 - Signed-in users get their profile, document checklist, shortlist, outreach contacts, sender details and guide progress saved to their own row in `user_state` (Row-Level Security: only the owner can read or write it).
 - On first sign-in the data already in this browser is copied into the account. Guests keep using browser storage.
 - If the `user_state` table has not been created yet, the app keeps working and says so in the account menu.

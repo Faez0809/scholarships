@@ -16,8 +16,8 @@ Severity: **High** = wrong information or blocks some users. **Medium** = confus
 | 3 | High | Accessibility | Dialogs (detail panel, profile sheet, contact editor, sign-in) don't move focus inside, don't keep Tab inside, and don't return focus when closed. The detail panel doesn't stop the page behind it from scrolling on phones. | Fixed |
 | 4 | Medium | UX, phone | On a first visit the Get started guide fills the whole first screen; no scholarship is visible without scrolling. | Fixed |
 | 5 | Medium | Layout, tablet | At 768–1023px the header labels wrap onto two lines ("Browse / scholarships"). | Fixed |
-| 6 | Medium | Function | Sort "Name A–Z" sorts by university, so "Singapore International Graduate Award" appears first (its host is "A*STAR"). | Open |
-| 7 | Medium | Function | Sort "Most left over" uses the program average, so ranges like "+$550 to +$1,050" sort below "+$1,250" inconsistently with what the card shows. | Open |
+| 6 | Medium | Function | Sort "Name A–Z" sorts by university, so "Singapore International Graduate Award" appears first (its host is "A*STAR"). | Fixed |
+| 7 | Medium | Function | Sort "Most left over" uses the program average, so ranges like "+$550 to +$1,050" sort below "+$1,250" inconsistently with what the card shows. | Not a bug: re-checked, the sort already uses the best option shown on the card |
 | 8 | Medium | Contrast | Filter-chip counts and "(expected)" use light grey text at 2.6:1 (needs 4.5:1). | Open |
 | 9 | Medium | Touch targets | "Find supervisors" on cards (16px tall) and the footer refresh link are below the 24px minimum. | Open |
 | 10 | Medium | Keyboard | Card focus is only an underline on the title; hard to see which card is focused. | Open |

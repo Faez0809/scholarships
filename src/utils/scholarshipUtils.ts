@@ -252,7 +252,7 @@ export function filterScholarships(
       return a.minCGPA - b.minCGPA;
     }
     if (sortBy === "name_asc") {
-      return a.university.localeCompare(b.university);
+      return a.name.localeCompare(b.name);
     }
     return 0;
   });

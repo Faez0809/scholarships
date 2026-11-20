@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useScholarship } from "../context/ScholarshipContext";
+import { useDialog } from "./ui";
 import {
   DegreeLevel,
   FieldCategory,
@@ -161,6 +162,9 @@ export const AdminModal: React.FC = () => {
     setExtractSuccess(false);
   }, [editingScholarship, isAddModalOpen]);
   /* eslint-enable react-hooks/set-state-in-effect */
+
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useDialog(isAddModalOpen, dialogRef);
 
   if (!isAddModalOpen) return null;
 
@@ -369,7 +373,7 @@ export const AdminModal: React.FC = () => {
       />
 
       {/* Modal Dialog */}
-      <div className="relative z-10 flex max-h-[94vh] sm:max-h-[90vh] w-full max-w-3xl flex-col rounded-2xl bg-white shadow-2xl animate-in zoom-in-95 duration-200">
+      <div ref={dialogRef} className="relative z-10 flex max-h-[94vh] sm:max-h-[90vh] w-full max-w-3xl flex-col rounded-2xl bg-white shadow-2xl animate-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3.5 sm:px-6 sm:py-4">
           <div className="flex items-center gap-2">

@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { X, RotateCcw, UserRound, Pencil } from "lucide-react";
 import { useScholarship } from "../context/ScholarshipContext";
 import { useGuide } from "../context/GuideContext";
 import { FundingType, MediumOfInstruction, UserProfile } from "../types/scholarship";
-import { FUNDING_HELP, FUNDING_LABELS, InfoTip, JARGON } from "./ui";
+import { FUNDING_HELP, FUNDING_LABELS, InfoTip, JARGON, useDialog } from "./ui";
 
 const FIELD_OPTIONS: { value: string; label: string }[] = [
   { value: "All", label: "Any field" },
@@ -52,18 +52,22 @@ export const ProfilePanel: React.FC = () => {
   const { isProfileOpen, setIsProfileOpen, markStep } = useGuide();
   const { stats } = useScholarship();
 
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const [isSmall, setIsSmall] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const update = () => setIsSmall(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  useDialog(isProfileOpen && isSmall, sheetRef);
+
   useEffect(() => {
     if (!isProfileOpen) return;
-    const isSheet = window.innerWidth < 1024;
-    if (!isSheet) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setIsProfileOpen(false);
     window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
+    return () => window.removeEventListener("keydown", onKey);
   }, [isProfileOpen, setIsProfileOpen]);
 
   const done = () => {
@@ -84,7 +88,7 @@ export const ProfilePanel: React.FC = () => {
       {isProfileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden" role="dialog" aria-modal="true" aria-labelledby="profile-title-sheet">
           <div className="absolute inset-0 bg-black/40" onClick={() => setIsProfileOpen(false)} />
-          <div className="absolute inset-x-0 bottom-0 flex max-h-[90vh] flex-col rounded-t-2xl bg-white shadow-xl">
+          <div ref={sheetRef} className="absolute inset-x-0 bottom-0 flex max-h-[90vh] flex-col rounded-t-2xl bg-white shadow-xl">
             <div className="mx-auto mt-2 h-1 w-10 rounded-full bg-zinc-300" aria-hidden="true" />
             <div className="flex items-center justify-end px-3 pt-1">
               <button

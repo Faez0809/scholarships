@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useScholarship } from "../context/ScholarshipContext";
 import { PartnerUniversity } from "../types/scholarship";
 import { useGuide } from "../context/GuideContext";
-import { FUNDING_HELP, FUNDING_LABELS, InfoTip, JARGON, SUPERVISOR_LABELS } from "./ui";
+import { FUNDING_HELP, FUNDING_LABELS, InfoTip, JARGON, SUPERVISOR_LABELS, useDialog } from "./ui";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import {
   calculateDaysRemaining,
@@ -73,6 +73,9 @@ export const ScholarshipDrawer: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [setSelectedScholarship]);
 
+  const panelRef = useRef<HTMLDivElement>(null);
+  useDialog(!!selectedScholarship, panelRef);
+
   if (!selectedScholarship) return null;
 
   const s = selectedScholarship;
@@ -123,7 +126,7 @@ export const ScholarshipDrawer: React.FC = () => {
       />
 
       {/* Drawer Container */}
-      <div className="relative z-10 flex h-full w-full max-w-2xl flex-col bg-white shadow-2xl transition-transform animate-in slide-in-from-right duration-250 ease-out">
+      <div ref={panelRef} tabIndex={-1} className="relative z-10 flex h-full w-full max-w-2xl flex-col bg-white outline-none shadow-2xl transition-transform animate-in slide-in-from-right duration-250 ease-out">
         {/* Drawer Header */}
         <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3.5 sm:px-6 sm:py-4">
           <button

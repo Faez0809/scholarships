@@ -131,3 +131,53 @@ export const btn = {
   ghost: `${base} px-2.5 py-1.5 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900`,
   link: "inline-flex items-center gap-1 text-sm font-medium text-indigo-700 hover:text-indigo-900 underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded",
 };
+
+/* ------------------------------------------------------------------ */
+/* useDialog: focus in, keep Tab inside, lock scroll, restore focus    */
+/* ------------------------------------------------------------------ */
+
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+export function useDialog(open: boolean, ref: React.RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.activeElement as HTMLElement | null;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const focusFirst = () => {
+      const root = ref.current;
+      if (!root) return;
+      if (root.contains(document.activeElement)) return;
+      const first = root.querySelector<HTMLElement>("[data-autofocus]") || root.querySelector<HTMLElement>(FOCUSABLE);
+      (first || root).focus();
+    };
+    const t = window.setTimeout(focusFirst, 30);
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || !ref.current) return;
+      const items = Array.from(ref.current.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
+        (el) => el.offsetParent !== null
+      );
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+
+    return () => {
+      window.clearTimeout(t);
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+      if (previous && document.contains(previous)) previous.focus();
+    };
+  }, [open, ref]);
+}

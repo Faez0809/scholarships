@@ -13,7 +13,7 @@ Severity: **High** = wrong information or blocks some users. **Medium** = confus
 |---|----------|------|---------|--------|
 | 1 | High | Data | Stipends in the original 12 programs are wrong. CSC shows $880 (real: RMB 3,000–3,500 ≈ $440–515), KAIST $1,050 (real: KRW 1,000,000 Master's ≈ $740, KRW 300,000 PhD), MEXT $1,100 (¥143,000 ≈ $890), Eiffel $1,650 and "tuition covered" (real: €1,200 Master's / €2,100 PhD, tuition not covered), DAAD EPOS $1,400 (€992 Master's ≈ $1,090 / €1,400 PhD). Savings and eligibility are calculated from these. | Fixed |
 | 2 | High | Data | Partner-university notes make unverifiable ranking claims ("Top #1 in Asia", "World #12 in Engineering & AI"). | Fixed |
-| 3 | High | Accessibility | Dialogs (detail panel, profile sheet, contact editor, sign-in) don't move focus inside, don't keep Tab inside, and don't return focus when closed. The detail panel doesn't stop the page behind it from scrolling on phones. | Open |
+| 3 | High | Accessibility | Dialogs (detail panel, profile sheet, contact editor, sign-in) don't move focus inside, don't keep Tab inside, and don't return focus when closed. The detail panel doesn't stop the page behind it from scrolling on phones. | Fixed |
 | 4 | Medium | UX, phone | On a first visit the Get started guide fills the whole first screen; no scholarship is visible without scrolling. | Open |
 | 5 | Medium | Layout, tablet | At 768–1023px the header labels wrap onto two lines ("Browse / scholarships"). | Open |
 | 6 | Medium | Function | Sort "Name A–Z" sorts by university, so "Singapore International Graduate Award" appears first (its host is "A*STAR"). | Open |

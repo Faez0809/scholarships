@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { X, Loader2, LogOut, Cloud, CloudOff, UserRound } from "lucide-react";
 import { useAccount } from "../context/AccountContext";
-import { btn } from "./ui";
+import { btn, useDialog } from "./ui";
 
 type Mode = "signin" | "signup";
 
@@ -100,6 +100,8 @@ export const AuthDialog: React.FC = () => {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const emailRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useDialog(isAuthOpen, dialogRef);
 
   // Close once signed in
   if (isAuthOpen && session) setIsAuthOpen(false);
@@ -140,7 +142,7 @@ export const AuthDialog: React.FC = () => {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-labelledby="auth-title">
       <div className="absolute inset-0 bg-black/40" onClick={() => setIsAuthOpen(false)} />
-      <div className="relative w-full max-w-sm rounded-t-2xl bg-white p-5 shadow-xl sm:rounded-2xl">
+      <div ref={dialogRef} className="relative w-full max-w-sm rounded-t-2xl bg-white p-5 shadow-xl sm:rounded-2xl">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-100 text-zinc-600">

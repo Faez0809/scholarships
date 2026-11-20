@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useScholarship } from "../context/ScholarshipContext";
+import { useDialog } from "./ui";
 import { X, KeyRound, AlertCircle } from "lucide-react";
 
 export const PasscodeModal: React.FC = () => {
@@ -27,6 +28,9 @@ export const PasscodeModal: React.FC = () => {
     return () => window.clearTimeout(t);
   }, [isPasscodeModalOpen]);
 
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useDialog(isPasscodeModalOpen, dialogRef);
+
   if (!isPasscodeModalOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,7 +55,7 @@ export const PasscodeModal: React.FC = () => {
       />
 
       {/* Modal Dialog */}
-      <div className="relative z-10 w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-150">
+      <div ref={dialogRef} className="relative z-10 w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-150">
         <div className="flex items-start justify-between">
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
             <KeyRound className="h-5 w-5" />

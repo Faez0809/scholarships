@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { X, Trash2, Copy, Check, Mail, ExternalLink } from "lucide-react";
 import {
   OUTREACH_STATUSES,
@@ -12,6 +12,7 @@ import {
 import { useScholarship } from "../context/ScholarshipContext";
 import { buildEmail, TEMPLATE_LABELS, TemplateKind } from "../utils/outreachTemplates";
 import { formatVerifiedDate } from "../utils/scholarshipUtils";
+import { useDialog } from "./ui";
 
 type Tab = "details" | "email" | "history";
 
@@ -26,6 +27,8 @@ export const ContactEditor: React.FC<{
   const { addContact, updateContact, setStatus, removeContact } = useOutreach();
   const isNew = !contact;
   const [tab, setTab] = useState<Tab>("details");
+  const panelRef = useRef<HTMLDivElement>(null);
+  useDialog(true, panelRef);
 
   // Draft fields (details tab)
   const [name, setName] = useState(contact?.name || "");
@@ -41,12 +44,7 @@ export const ContactEditor: React.FC<{
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
-    };
+    return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
   const handleSave = () => {
@@ -81,7 +79,7 @@ export const ContactEditor: React.FC<{
   return (
     <div className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true" aria-labelledby="contact-editor-title">
       <div className="fixed inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative z-10 flex h-full w-full max-w-xl flex-col bg-white shadow-xl">
+      <div ref={panelRef} className="relative z-10 flex h-full w-full max-w-xl flex-col bg-white shadow-xl">
         <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 sm:px-6">
           <h2 id="contact-editor-title" className="truncate text-base font-semibold text-zinc-900">
             {isNew ? "Add contact" : contact.name}

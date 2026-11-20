@@ -164,11 +164,25 @@ export async function POST(req: NextRequest) {
       const refreshed = SEED_SCHOLARSHIPS.filter((item) => {
         const stored = existing.get(item.id);
         if (!stored || !item.lastVerified) return false;
-        return !stored.lastVerified || stored.lastVerified < item.lastVerified;
+        const newerFacts = !stored.lastVerified || stored.lastVerified < item.lastVerified;
+        const correctedMoney = (item.dataVersion || 1) > (stored.dataVersion || 1);
+        return newerFacts || correctedMoney;
       }).map((item) => {
         const stored = existing.get(item.id)!;
+        const correctedMoney = (item.dataVersion || 1) > (stored.dataVersion || 1);
         const merged: Partial<Scholarship> = {
           ...stored,
+          ...(correctedMoney
+            ? {
+                monthlyStipendUSD: item.monthlyStipendUSD,
+                estimatedLivingCostUSD: item.estimatedLivingCostUSD,
+                tuitionCovered: item.tuitionCovered,
+                facilities: item.facilities,
+                partnerUniversities: item.partnerUniversities,
+                overview: item.overview,
+                dataVersion: item.dataVersion,
+              }
+            : {}),
           deadline: item.deadline,
           deadlineIsEstimate: item.deadlineIsEstimate,
           deadlineNote: item.deadlineNote,

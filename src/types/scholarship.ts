@@ -78,6 +78,8 @@ export interface Scholarship {
   stipendNote?: string;
   /** Date (YYYY-MM-DD) the figures were last checked against public sources. */
   lastVerified?: string;
+  /** Bumped when curated money or deadline facts are corrected; Sync refreshes older rows. */
+  dataVersion?: number;
   createdAt: string;
   updatedAt: string;
 }

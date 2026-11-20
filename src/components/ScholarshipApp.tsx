@@ -13,6 +13,8 @@ import { AdminModal } from "./AdminModal";
 import { PasscodeModal } from "./PasscodeModal";
 import { ViewTabs } from "./ViewTabs";
 import { SupervisorFinder } from "./SupervisorFinder";
+import { OutreachTracker } from "./OutreachTracker";
+import { isFollowUpOverdue, useOutreach } from "../context/OutreachContext";
 import {
   GraduationCap,
   SearchX,
@@ -38,6 +40,8 @@ export const ScholarshipApp: React.FC = () => {
     resetProfile,
     activeView,
   } = useScholarship();
+  const { contacts } = useOutreach();
+  const followUpsDue = contacts.filter(isFollowUpOverdue).length;
 
   // Filter & sort scholarships
   const filteredScholarships = React.useMemo(() => {
@@ -73,9 +77,10 @@ export const ScholarshipApp: React.FC = () => {
 
       {/* Main Container */}
       <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-3.5 py-4 sm:px-6 sm:py-5">
-        <ViewTabs />
+        <ViewTabs badges={{ outreach: followUpsDue }} />
 
         {activeView === "supervisors" && <SupervisorFinder />}
+        {activeView === "outreach" && <OutreachTracker />}
 
         {activeView === "scholarships" && (
         <>

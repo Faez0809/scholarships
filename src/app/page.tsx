@@ -1,10 +1,13 @@
 import { ScholarshipProvider } from "../context/ScholarshipContext";
 import { ScholarshipApp } from "../components/ScholarshipApp";
+import { OutreachProvider } from "../context/OutreachContext";
 
 export default function Home() {
   return (
     <ScholarshipProvider>
-      <ScholarshipApp />
+      <OutreachProvider>
+        <ScholarshipApp />
+      </OutreachProvider>
     </ScholarshipProvider>
   );
 }

@@ -170,7 +170,7 @@ export const SupervisorFinder: React.FC = () => {
         actions={
           contacts.length > 0 ? (
             <button type="button" className={btn.secondary} onClick={() => setActiveView("outreach")}>
-              My outreach ({contacts.length})
+              My applications ({contacts.length})
             </button>
           ) : undefined
         }
@@ -362,7 +362,7 @@ export const SupervisorFinder: React.FC = () => {
               <>
               <p className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-600">
                 Next step: press <span className="font-medium text-stone-900">Save</span> on anyone who fits. They will
-                appear in <button type="button" onClick={() => setActiveView("outreach")} className="font-medium text-blue-800 hover:underline">My outreach</button>, where you can draft and track your email.
+                appear in <button type="button" onClick={() => setActiveView("outreach")} className="font-medium text-blue-800 hover:underline">My applications → Professors</button>, where you can draft and track your email.
               </p>
               <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
                 {result.candidates.map((c) => (

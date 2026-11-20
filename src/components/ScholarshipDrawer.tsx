@@ -4,7 +4,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { useScholarship } from "../context/ScholarshipContext";
 import { PartnerUniversity } from "../types/scholarship";
 import { useGuide } from "../context/GuideContext";
-import { FUNDING_HELP, FUNDING_LABELS, InfoTip, JARGON, SUPERVISOR_LABELS, useDialog } from "./ui";
+import { FUNDING_HELP, FUNDING_LABELS, InfoTip, JARGON, SUPERVISOR_LABELS, coverageItems, fundingLevel, useDialog } from "./ui";
+import { nationalityLabel, nationalityNote, nationalityStatus } from "../data/nationality";
+import { UniversityGallery } from "./UniversityGallery";
+import { listingStatus } from "./BrowseParts";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import {
   calculateDaysRemaining,
@@ -129,19 +132,7 @@ export const ScholarshipDrawer: React.FC = () => {
       <div ref={panelRef} tabIndex={-1} className="relative z-10 flex h-full w-full max-w-2xl flex-col bg-white outline-none shadow-2xl transition-transform animate-in slide-in-from-right duration-250 ease-out">
         {/* Drawer Header */}
         <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3.5 sm:px-6 sm:py-4">
-          <button
-            type="button"
-            onClick={() => toggleSavedScholarship(s.id)}
-            aria-pressed={isSavedScholarship(s.id)}
-            className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
-              isSavedScholarship(s.id)
-                ? "border-stone-200 bg-stone-50 text-stone-800"
-                : "border-stone-300 bg-white text-stone-800 hover:bg-stone-50"
-            }`}
-          >
-            {isSavedScholarship(s.id) ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
-            {isSavedScholarship(s.id) ? "Saved" : "Save to shortlist"}
-          </button>
+          <p className={`text-sm ${listingStatus(s).className}`}>{listingStatus(s).text}</p>
 
           <div className="flex items-center gap-2">
             {isAdmin && (
@@ -232,6 +223,12 @@ export const ScholarshipDrawer: React.FC = () => {
             </p>
             <p className="mt-0.5 pl-[22px] text-xs text-stone-500">
               {s.city}, {s.country} · {s.region}
+            </p>
+            <p className="mt-2 text-xs text-stone-500">
+              {s.lastVerified ? `Checked on ${formatVerifiedDate(s.lastVerified)}` : "Not yet checked"} ·{" "}
+              <a href={s.officialWebsiteUrl} target="_blank" rel="noopener noreferrer" className="text-blue-800 hover:underline">
+                Official page
+              </a>
             </p>
             {s.fieldSpecifics && (
               <p className="mt-1 text-xs text-stone-500">
@@ -586,12 +583,36 @@ export const ScholarshipDrawer: React.FC = () => {
             </div>
           </div>
 
-          {/* All Scholarship Facilities & Benefits */}
+          {/* What the funding covers */}
           <div>
-            <h3 className="text-sm font-semibold text-stone-900 flex items-center gap-1.5 mb-3">
+            <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-900">
               <Award className="h-4 w-4 text-stone-500" />
-              What the scholarship covers
+              What the funding covers
+              <span className={`text-xs font-medium ${fundingLevel(s) === "Fully funded" ? "text-emerald-800" : "text-amber-800"}`}>
+                {fundingLevel(s)}
+              </span>
             </h3>
+            <ul className="mb-4 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm sm:grid-cols-3">
+              {coverageItems(s).map((c) => (
+                <li key={c.label} className={`flex items-center gap-1.5 ${c.covered ? "text-stone-800" : "text-stone-500"}`}>
+                  {c.covered ? <Check className="h-4 w-4 text-emerald-700" /> : <X className="h-4 w-4 text-stone-400" />}
+                  {c.label}
+                  <span className="sr-only">{c.covered ? " covered" : " not covered"}</span>
+                </li>
+              ))}
+            </ul>
+            {profile.nationality && profile.nationality !== "OTHER" && (
+              <p className="mb-4 text-sm text-stone-700">
+                <span className="font-medium">{nationalityLabel(profile.nationality)} passport: </span>
+                {nationalityStatus(s.id, profile.nationality) === "yes"
+                  ? "eligible to apply."
+                  : nationalityStatus(s.id, profile.nationality) === "no"
+                  ? "not eligible for this program."
+                  : "check the official country list."}
+                {nationalityNote(s.id) && <span className="text-stone-500"> {nationalityNote(s.id)}</span>}
+              </p>
+            )}
+            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-stone-500">In detail</p>
             <ul className="space-y-2">
               {s.facilities.map((facility, idx) => (
                 <li key={idx} className="flex items-start gap-2 text-sm text-stone-700">
@@ -641,6 +662,16 @@ export const ScholarshipDrawer: React.FC = () => {
             </div>
           </div>
 
+          {/* Campus photos and intro */}
+          {!(s.fundingType === "Gov / Multi-Uni" && !(s.partnerUniversities && s.partnerUniversities.length)) && (
+            <section aria-labelledby="campus-title">
+              <h3 id="campus-title" className="mb-2 text-sm font-semibold text-stone-900">
+                Campus: {selectedPartnerUni?.name || s.university}
+              </h3>
+              <UniversityGallery name={selectedPartnerUni?.name || s.university} compact />
+            </section>
+          )}
+
           {/* University Overview & Campus Research */}
           <div className="rounded-xl border border-stone-200 bg-white p-4">
             <h3 className="text-sm font-semibold text-stone-900 mb-2">
@@ -662,19 +693,23 @@ export const ScholarshipDrawer: React.FC = () => {
         </div>
 
         {/* Drawer Footer with Official Website Link */}
-        <div className="border-t border-stone-200 bg-white px-4 py-3.5 sm:px-6 sm:py-4 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
-          <div className="text-center sm:text-left text-xs text-stone-500">
-            {s.lastVerified ? `Last checked ${formatVerifiedDate(s.lastVerified)}` : "Confirm details on the official site"}
-          </div>
-
+        <div className="grid grid-cols-2 gap-2 border-t border-stone-200 bg-white px-4 py-3 sm:px-6">
+          <button
+            type="button"
+            onClick={() => toggleSavedScholarship(s.id)}
+            aria-pressed={isSavedScholarship(s.id)}
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-stone-300 bg-white px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+          >
+            {isSavedScholarship(s.id) ? <BookmarkCheck className="h-4 w-4 text-blue-800" /> : <Bookmark className="h-4 w-4" />}
+            {isSavedScholarship(s.id) ? "On shortlist" : "Add to shortlist"}
+          </button>
           <a
             href={s.officialWebsiteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 rounded-xl bg-stone-900 px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-900 w-full sm:w-auto"
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-stone-900 px-3 py-2.5 text-sm font-medium text-white hover:bg-stone-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2"
           >
-            <span>Apply on the official site</span>
-            <ExternalLink className="h-3.5 w-3.5" />
+            Official page <ExternalLink className="h-4 w-4" />
           </a>
         </div>
       </div>

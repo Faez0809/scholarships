@@ -29,7 +29,7 @@ const STEP_COPY: Record<GuideStep, { title: string; hint: string; cta: string }>
   outreach: {
     title: "Track your outreach",
     hint: "Save professors you email and get follow-up reminders.",
-    cta: "Open outreach",
+    cta: "My applications",
   },
 };
 

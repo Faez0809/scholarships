@@ -4,7 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   GraduationCap,
   Users,
-  Mail,
+  Landmark,
+  ClipboardList,
   ShieldCheck,
   Plus,
   RefreshCw,
@@ -19,13 +20,15 @@ import { isFollowUpOverdue, useOutreach } from "../context/OutreachContext";
 import { AccountButton } from "./AuthDialog";
 
 export const NAV_ITEMS: { id: AppView; label: string; short: string; Icon: React.ElementType }[] = [
-  { id: "scholarships", label: "Browse scholarships", short: "Browse", Icon: GraduationCap },
-  { id: "supervisors", label: "Find supervisors", short: "Supervisors", Icon: Users },
-  { id: "outreach", label: "My outreach", short: "Outreach", Icon: Mail },
+  { id: "scholarships", label: "Scholarships", short: "Browse", Icon: GraduationCap },
+  { id: "universities", label: "Universities", short: "Universities", Icon: Landmark },
+  { id: "supervisors", label: "Supervisors", short: "Supervisors", Icon: Users },
+  { id: "outreach", label: "My applications", short: "Applied", Icon: ClipboardList },
 ];
 
 export const AppHeader: React.FC = () => {
   const { activeView, setActiveView } = useScholarship();
+  const { setIsProfileOpen } = useGuide();
   const { contacts } = useOutreach();
   const due = contacts.filter(isFollowUpOverdue).length;
 
@@ -59,8 +62,7 @@ export const AppHeader: React.FC = () => {
                     }`}
                   >
                     <Icon className="h-4 w-4" />
-                    <span className="whitespace-nowrap lg:hidden">{NAV_ITEMS.find((n) => n.id === id)?.short}</span>
-                    <span className="hidden whitespace-nowrap lg:inline">{label}</span>
+                    <span className="whitespace-nowrap">{label}</span>
                     {id === "outreach" && due > 0 && (
                       <span className="rounded-full bg-amber-100 px-1.5 text-[11px] font-semibold text-amber-800">
                         {due}
@@ -76,6 +78,13 @@ export const AppHeader: React.FC = () => {
 
         <div className="ml-auto flex items-center gap-2">
           <AdminMenu />
+          <button
+            type="button"
+            onClick={() => setIsProfileOpen(true)}
+            className="hidden items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-stone-600 hover:bg-stone-100 hover:text-stone-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 md:inline-flex"
+          >
+            <UserRound className="h-4 w-4" /> Profile
+          </button>
           <AccountButton />
         </div>
       </div>
@@ -95,7 +104,7 @@ export const MobileTabBar: React.FC = () => {
       aria-label="Main"
       className="fixed inset-x-0 bottom-0 z-30 border-t border-stone-200 bg-white pb-[env(safe-area-inset-bottom)] md:hidden"
     >
-      <ul className="grid grid-cols-4">
+      <ul className="grid grid-cols-5">
         {NAV_ITEMS.map(({ id, short, Icon }) => {
           const active = activeView === id && !isProfileOpen;
           return (

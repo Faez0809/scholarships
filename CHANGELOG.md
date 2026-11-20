@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-20 (night): research round
+
+- Results first: the page opens on real programs (no "0 of 0"), a one-line prompt offers three quick profile questions, filters live in a sheet, and sort is cut to three options. 8 controls before the first result on a phone.
+- No pre-filled CGPA: "you qualify" only appears after you answer.
+- Every listing shows open / closing soon / closed in plain text; closed programs move to a "Closed for this round" group. The detail panel shows "Checked on" and links the official page.
+- "What the funding covers": tuition, stipend, flights, insurance and housing ticks, with an honest "Partial funding" label where tuition or stipend is missing.
+- Passport eligibility for Bangladesh, India, Pakistan, Nepal and Sri Lanka (yes / no / check the official list).
+- My applications: the shortlist becomes a tracker (Planning, Preparing, Submitted, Interview, Result) with referees, notes, outcome, a "due within 30 days" notice and calendar (.ics) reminders 2 weeks and 3 days before each deadline. Professor outreach sits alongside it.
+- Universities: look up any university for a Wikipedia intro and freely licensed campus photos (lightbox, attribution), its scholarships and a shortcut to find supervisors. Each scholarship shows its campus too.
+- Removed: desktop profile sidebar, "Save profile" button, money-left slider (now a sort), duplicate "Edit profile", public Admin link and refresh (admin at /?admin). "Saved" is now "Shortlist". Footer carries a short scam-safety note.
+
 ## 2026-11-20 (evening)
 
 ### Interface redesign

@@ -51,7 +51,7 @@ const SHORT_LABELS: Record<OutreachStatus, string> = {
   Declined: "Declined",
 };
 
-export const OutreachTracker: React.FC = () => {
+export const OutreachTracker: React.FC<{ embedded?: boolean }> = ({ embedded }) => {
   const { contacts, isLoaded } = useOutreach();
   const { setActiveView } = useScholarship();
   const [filter, setFilter] = useState<Filter>("All");
@@ -97,6 +97,14 @@ export const OutreachTracker: React.FC = () => {
 
   return (
     <section aria-labelledby="outreach-title" className="space-y-5">
+      {embedded ? (
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 id="outreach-title" className="text-sm text-stone-600">Professors you plan to email. Marking an email as sent reminds you to follow up after 10 days.</h2>
+          <button type="button" className={btn.primary} onClick={() => setIsCreating(true)}>
+            <Plus className="h-4 w-4" /> Add contact
+          </button>
+        </div>
+      ) : (
       <PageHeader
         id="outreach-title"
         title="My outreach"
@@ -112,6 +120,7 @@ export const OutreachTracker: React.FC = () => {
           </>
         }
       />
+      )}
 
       {/* Summary */}
       <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-stone-200 bg-stone-200 sm:grid-cols-4">

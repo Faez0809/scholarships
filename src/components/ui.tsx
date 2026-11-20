@@ -181,3 +181,28 @@ export function useDialog(open: boolean, ref: React.RefObject<HTMLElement | null
     };
   }, [open, ref]);
 }
+
+/* ------------------------------------------------------------------ */
+/* What the funding covers                                             */
+/* ------------------------------------------------------------------ */
+
+export function coverageItems(s: {
+  tuitionCovered: boolean;
+  monthlyStipendUSD: number;
+  relocationAirfareCovered: boolean;
+  healthInsuranceCovered: boolean;
+  housingProvided: boolean;
+}): { label: string; covered: boolean }[] {
+  return [
+    { label: "Tuition", covered: s.tuitionCovered },
+    { label: "Monthly stipend", covered: s.monthlyStipendUSD > 0 },
+    { label: "Flights", covered: s.relocationAirfareCovered },
+    { label: "Health insurance", covered: s.healthInsuranceCovered },
+    { label: "Housing", covered: s.housingProvided },
+  ];
+}
+
+/** Honest label: "Fully funded" only when tuition and a living stipend are both covered. */
+export function fundingLevel(s: { tuitionCovered: boolean; monthlyStipendUSD: number }): "Fully funded" | "Partial funding" {
+  return s.tuitionCovered && s.monthlyStipendUSD > 0 ? "Fully funded" : "Partial funding";
+}

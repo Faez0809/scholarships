@@ -24,7 +24,7 @@ import {
 
 export type SyncStatus = "idle" | "syncing" | "synced" | "fallback" | "offline";
 
-export type AppView = "scholarships" | "supervisors" | "outreach";
+export type AppView = "scholarships" | "universities" | "supervisors" | "outreach";
 
 export interface SupervisorPrefill {
   university: string;
@@ -91,11 +91,13 @@ const DEFAULT_PROFILE: UserProfile = {
   cgpa: 3.5,
   ielts: 7.0,
   mediumPreference: "English Only",
-  minSavingsDesired: 300,
+  minSavingsDesired: 0,
   onlyEligible: false,
   selectedRegion: "All",
   fundingTypePreference: "All",
   supervisorPreference: "All",
+  nationality: "",
+  isSet: false,
 };
 
 const STORAGE_KEY_SCHOLARSHIPS = "scholar_track_v2_scholarships";
@@ -109,7 +111,8 @@ const ScholarshipContext = createContext<ScholarshipContextType | undefined>(
 );
 
 export function ScholarshipProvider({ children }: { children: ReactNode }) {
-  const [scholarships, setScholarships] = useState<Scholarship[]>([]);
+  // Start from the bundled catalog so the first paint already shows real programs.
+  const [scholarships, setScholarships] = useState<Scholarship[]>(SEED_SCHOLARSHIPS);
   const [profile, setProfile] = useState<UserProfile>(DEFAULT_PROFILE);
   const [activePill, setActivePill] = useState<PillFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");

@@ -95,6 +95,10 @@ export interface UserProfile {
   selectedRegion: "All" | Region;
   fundingTypePreference: "All" | FundingType;
   supervisorPreference: "All" | "No Supervisor Needed" | "Supervisor Allowed";
+  /** Passport country code (see data/nationality.ts); empty when not given. */
+  nationality?: string;
+  /** True once the visitor has answered the profile questions. */
+  isSet?: boolean;
 }
 
 export type PillFilter =
@@ -120,5 +124,6 @@ export interface EligibilityResult {
   savingsPass: boolean;
   mediumPass: boolean;
   fieldPass: boolean;
+  nationalityPass: boolean;
   reasons: string[];
 }

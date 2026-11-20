@@ -5,6 +5,7 @@ import {
   SortOption,
   UserProfile,
 } from "../types/scholarship";
+import { nationalityLabel, nationalityStatus } from "../data/nationality";
 
 export function calculateDaysRemaining(deadlineStr: string): {
   days: number;
@@ -77,6 +78,13 @@ export function checkEligibility(
 ): EligibilityResult {
   const reasons: string[] = [];
 
+  // Nationality check (only a confirmed "no" counts against you)
+  const natStatus = nationalityStatus(scholarship.id, profile.nationality);
+  const nationalityPass = natStatus !== "no";
+  if (!nationalityPass) {
+    reasons.push(`Not open to citizens of ${nationalityLabel(profile.nationality)}`);
+  }
+
   // Degree check
   let degreePass = true;
   if (profile.targetDegree !== "Both") {
@@ -128,13 +136,8 @@ export function checkEligibility(
   }
 
   // Desired savings check (accounts for multi-uni maximum potential)
-  const { maxSavings } = getSavingsRange(scholarship);
-  const savingsPass = maxSavings >= profile.minSavingsDesired;
-  if (!savingsPass) {
-    reasons.push(
-      `Net savings ($${maxSavings}/mo) below your target of $${profile.minSavingsDesired}/mo`
-    );
-  }
+  // Money left is now a sort order, not a requirement, so it never blocks eligibility.
+  const savingsPass = true;
 
   const isEligible =
     degreePass &&
@@ -142,10 +145,12 @@ export function checkEligibility(
     ieltsPass &&
     mediumPass &&
     fieldPass &&
-    savingsPass;
+    savingsPass &&
+    nationalityPass;
 
   return {
     isEligible,
+    nationalityPass,
     degreePass,
     cgpaPass,
     ieltsPass,

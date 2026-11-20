@@ -19,11 +19,25 @@ import { useOutreach } from "./OutreachContext";
 
 export type GuideStep = "profile" | "open" | "save" | "supervisor" | "outreach";
 
+export const APPLICATION_STAGES = ["Planning", "Preparing", "Submitted", "Interview", "Result"] as const;
+export type ApplicationStage = (typeof APPLICATION_STAGES)[number];
+
+export interface ApplicationEntry {
+  stage: ApplicationStage;
+  notes: string;
+  referees: string;
+  result?: "Accepted" | "Rejected" | "Waitlisted" | "";
+  updatedAt: string;
+}
+
 export interface GuideState {
   profileConfirmed: boolean;
   openedScholarship: boolean;
   searchedSupervisors: boolean;
   dismissed: boolean;
+  quickStartDismissed?: boolean;
+  /** Application tracker entries, keyed by scholarship id (saved with the account). */
+  applications?: Record<string, ApplicationEntry>;
 }
 
 interface GuideContextType {
@@ -40,6 +54,11 @@ interface GuideContextType {
   setIsProfileOpen: (open: boolean) => void;
   guideState: GuideState;
   replaceGuide: (savedIds: string[], guide: Partial<GuideState>) => void;
+  isQuickStartDismissed: boolean;
+  dismissQuickStart: () => void;
+  applications: Record<string, ApplicationEntry>;
+  getApplication: (id: string) => ApplicationEntry;
+  updateApplication: (id: string, changes: Partial<ApplicationEntry>) => void;
 }
 
 const STORAGE_SAVED = "scholar_track_v2_saved_scholarships";
@@ -101,6 +120,25 @@ export function GuideProvider({ children }: { children: ReactNode }) {
     setGuide({ ...guide, openedScholarship: true });
   }
 
+  const applications = guide.applications || {};
+  const getApplication = useCallback(
+    (id: string): ApplicationEntry =>
+      (guide.applications || {})[id] || { stage: "Planning", notes: "", referees: "", result: "", updatedAt: "" },
+    [guide.applications]
+  );
+  const updateApplication = useCallback((id: string, changes: Partial<ApplicationEntry>) => {
+    setGuide((g) => {
+      const current = (g.applications || {})[id] || { stage: "Planning", notes: "", referees: "", result: "", updatedAt: "" };
+      return {
+        ...g,
+        applications: {
+          ...(g.applications || {}),
+          [id]: { ...current, ...changes, updatedAt: new Date().toISOString() },
+        },
+      };
+    });
+  }, []);
+
   const toggleSavedScholarship = useCallback((id: string) => {
     setSavedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [id, ...prev]));
   }, []);
@@ -144,6 +182,11 @@ export function GuideProvider({ children }: { children: ReactNode }) {
     isProfileOpen,
     setIsProfileOpen,
     guideState: guide,
+    isQuickStartDismissed: !!guide.quickStartDismissed,
+    dismissQuickStart: () => setGuide((g) => ({ ...g, quickStartDismissed: true })),
+    applications,
+    getApplication,
+    updateApplication,
     replaceGuide: (ids: string[], g: Partial<GuideState>) => {
       setSavedIds(Array.isArray(ids) ? ids : []);
       setGuide({ ...EMPTY_GUIDE, ...g });

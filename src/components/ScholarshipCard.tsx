@@ -40,6 +40,7 @@ export const ScholarshipCard: React.FC<ScholarshipCardProps> = ({
     setEditingScholarship,
     setIsAddModalOpen,
     deleteScholarship,
+    openSupervisorFinder,
   } = useScholarship();
 
   const eligibility = checkEligibility(scholarship, profile);
@@ -310,10 +311,27 @@ export const ScholarshipCard: React.FC<ScholarshipCardProps> = ({
               </button>
             </div>
           ) : (
-            <span className="flex items-center gap-1 text-xs font-semibold text-indigo-600 group-hover:translate-x-0.5 transition-transform">
-              <span>View</span>
-              <ArrowRight className="h-3 w-3" />
-            </span>
+            <div className="flex items-center gap-3">
+              {scholarship.fundingType === "Supervisor / RA-TA" && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openSupervisorFinder(
+                      scholarship.university,
+                      (scholarship.fieldSpecifics || "").split(",")[0]?.trim() || ""
+                    );
+                  }}
+                  className="text-xs font-medium text-zinc-600 underline decoration-zinc-300 underline-offset-2 hover:text-zinc-900"
+                >
+                  Find supervisors
+                </button>
+              )}
+              <span className="flex items-center gap-1 text-xs font-semibold text-indigo-600 group-hover:translate-x-0.5 transition-transform">
+                <span>View</span>
+                <ArrowRight className="h-3 w-3" />
+              </span>
+            </div>
           )}
         </div>
       </div>

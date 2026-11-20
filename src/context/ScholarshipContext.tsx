@@ -26,6 +26,15 @@ import {
 
 export type SyncStatus = "idle" | "syncing" | "synced" | "fallback" | "offline";
 
+export type AppView = "scholarships" | "supervisors" | "outreach";
+
+export interface SupervisorPrefill {
+  university: string;
+  topic: string;
+  /** Changes on every request so the finder re-applies the same values. */
+  nonce: number;
+}
+
 interface Stats {
   total: number;
   eligibleCount: number;
@@ -71,6 +80,10 @@ interface ScholarshipContextType {
   stats: Stats;
   syncStatus: SyncStatus;
   refreshFromCloud: () => Promise<void>;
+  activeView: AppView;
+  setActiveView: (view: AppView) => void;
+  supervisorPrefill: SupervisorPrefill | null;
+  openSupervisorFinder: (university: string, topic?: string) => void;
 }
 
 const DEFAULT_PROFILE: UserProfile = {
@@ -110,6 +123,25 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
   const [editingScholarship, setEditingScholarship] =
     useState<Scholarship | null>(null);
   const [isPasscodeModalOpen, setIsPasscodeModalOpen] = useState(false);
+  const [activeView, setActiveViewState] = useState<AppView>("scholarships");
+  const [supervisorPrefill, setSupervisorPrefill] =
+    useState<SupervisorPrefill | null>(null);
+
+  const setActiveView = useCallback((view: AppView) => {
+    setActiveViewState(view);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, []);
+
+  const openSupervisorFinder = useCallback(
+    (university: string, topic = "") => {
+      setSupervisorPrefill({ university, topic, nonce: Date.now() });
+      setSelectedScholarship(null);
+      setActiveView("supervisors");
+    },
+    [setActiveView]
+  );
   const [documentChecklist, setDocumentChecklist] = useState<
     Record<string, boolean>
   >({});
@@ -619,6 +651,10 @@ export function ScholarshipProvider({ children }: { children: ReactNode }) {
         stats,
         syncStatus,
         refreshFromCloud,
+        activeView,
+        setActiveView,
+        supervisorPrefill,
+        openSupervisorFinder,
       }}
     >
       {children}

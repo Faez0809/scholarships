@@ -35,6 +35,7 @@ import {
   HelpCircle,
   Mail,
   Check,
+  Search,
 } from "lucide-react";
 
 export const ScholarshipDrawer: React.FC = () => {
@@ -48,6 +49,7 @@ export const ScholarshipDrawer: React.FC = () => {
     deleteScholarship,
     documentChecklist,
     toggleDocumentCheck,
+    openSupervisorFinder,
   } = useScholarship();
 
   // Local state for personal budget adjustment in interactive calculator
@@ -339,6 +341,35 @@ export const ScholarshipDrawer: React.FC = () => {
                   Cite 2 recent papers from the professor&apos;s lab
                 </span>
               </div>
+            </div>
+          )}
+
+          {/* Supervisor search shortcut */}
+          {s.supervisorRequired !== "Not Required (Central Admission)" && (
+            <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold text-zinc-900">
+                  {s.supervisorRequired === "Mandatory Before Applying"
+                    ? "A supervisor is required for this program"
+                    : "Contacting a supervisor helps here"}
+                </p>
+                <p className="mt-0.5 text-xs text-zinc-600">
+                  Search researchers at {selectedPartnerUni?.name || s.university} who publish in your field.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() =>
+                  openSupervisorFinder(
+                    selectedPartnerUni?.name || s.university,
+                    (s.fieldSpecifics || "").split(",")[0]?.trim() || ""
+                  )
+                }
+                className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-zinc-900 px-3.5 py-2 text-xs font-medium text-white hover:bg-zinc-800"
+              >
+                <Search className="h-3.5 w-3.5" />
+                Find supervisors
+              </button>
             </div>
           )}
 

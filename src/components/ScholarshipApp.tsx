@@ -11,6 +11,8 @@ import { ScholarshipCard } from "./ScholarshipCard";
 import { ScholarshipDrawer } from "./ScholarshipDrawer";
 import { AdminModal } from "./AdminModal";
 import { PasscodeModal } from "./PasscodeModal";
+import { ViewTabs } from "./ViewTabs";
+import { SupervisorFinder } from "./SupervisorFinder";
 import {
   GraduationCap,
   SearchX,
@@ -34,6 +36,7 @@ export const ScholarshipApp: React.FC = () => {
     setIsAddModalOpen,
     setEditingScholarship,
     resetProfile,
+    activeView,
   } = useScholarship();
 
   // Filter & sort scholarships
@@ -70,6 +73,12 @@ export const ScholarshipApp: React.FC = () => {
 
       {/* Main Container */}
       <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-3.5 py-4 sm:px-6 sm:py-5">
+        <ViewTabs />
+
+        {activeView === "supervisors" && <SupervisorFinder />}
+
+        {activeView === "scholarships" && (
+        <>
         {/* World Region Selector */}
         <div className="mb-3">
           <WorldRegionBar />
@@ -169,6 +178,8 @@ export const ScholarshipApp: React.FC = () => {
             )}
           </section>
         </div>
+        </>
+        )}
       </main>
 
       {/* Footer */}
@@ -180,9 +191,7 @@ export const ScholarshipApp: React.FC = () => {
             <span>Fully Funded Master&apos;s &amp; PhD Scholarship Discovery</span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-mono font-medium text-zinc-600">
-              Scholarship Discovery &amp; Management • v1.0
-            </span>
+            <span>Data from official program pages and OpenAlex. Always confirm details before applying.</span>
           </div>
         </div>
       </footer>

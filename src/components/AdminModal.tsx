@@ -400,16 +400,16 @@ export const AdminModal: React.FC = () => {
       {/* Modal Dialog */}
       <div ref={dialogRef} className="relative z-10 flex max-h-[94vh] sm:max-h-[90vh] w-full max-w-3xl flex-col rounded-2xl bg-white shadow-2xl animate-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3.5 sm:px-6 sm:py-4">
+        <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3.5 sm:px-6 sm:py-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
               <FileText className="h-4 w-4" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-zinc-900">
+              <h2 className="text-base font-bold text-stone-900">
                 {editingScholarship ? "Edit Scholarship Details" : "Add New Scholarship"}
               </h2>
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-stone-500">
                 Changes are saved to the shared database and appear for everyone right away
               </p>
             </div>
@@ -417,7 +417,7 @@ export const AdminModal: React.FC = () => {
 
           <button
             onClick={handleClose}
-            className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
+            className="rounded-lg p-1.5 text-stone-500 hover:bg-stone-100 hover:text-stone-800"
           >
             <X className="h-5 w-5" />
           </button>
@@ -426,20 +426,20 @@ export const AdminModal: React.FC = () => {
         {/* Scrollable Form Body */}
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5 space-y-5">
           {/* Instant Auto-Fill from URL Section */}
-          <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+          <div className="rounded-xl border border-stone-200 bg-stone-50 p-4">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="flex items-center gap-1.5 text-sm font-semibold text-zinc-900">
-                <Link2 className="h-4 w-4 text-zinc-500" />
+              <span className="flex items-center gap-1.5 text-sm font-semibold text-stone-900">
+                <Link2 className="h-4 w-4 text-stone-500" />
                 Fill the form from a web page
               </span>
             </div>
-            <p className="text-xs text-zinc-600 mb-3">
+            <p className="text-xs text-stone-600 mb-3">
               Paste the official scholarship page. We read it and fill in the fields below for you to check before saving.
             </p>
 
             <div className="flex flex-col gap-2 sm:flex-row">
               <div className="relative flex-1">
-                <Link2 className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
+                <Link2 className="absolute left-3 top-2.5 h-4 w-4 text-stone-400" />
                 <input
                   type="url"
                   value={autoFillUrl}
@@ -450,14 +450,14 @@ export const AdminModal: React.FC = () => {
                     if (extractSuccess) setExtractSuccess(false);
                   }}
                   placeholder="https://www.campuschina.org or https://uwaterloo.ca/graduate-studies"
-                  className="w-full rounded-lg border border-indigo-200 bg-white py-2 pl-9 pr-3 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none disabled:bg-zinc-100"
+                  className="w-full rounded-lg border border-blue-200 bg-white py-2 pl-9 pr-3 text-xs text-stone-900 placeholder:text-stone-400 focus:border-blue-600 focus:outline-none disabled:bg-stone-100"
                 />
               </div>
               <button
                 type="button"
                 onClick={handleAutoFillClick}
                 disabled={isExtracting || !autoFillUrl.trim()}
-                className="flex items-center justify-center gap-1.5 shrink-0 rounded-lg bg-zinc-900 px-4 py-2 text-xs font-semibold text-white shadow-2xs hover:bg-zinc-800 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                className="flex items-center justify-center gap-1.5 shrink-0 rounded-lg bg-stone-900 px-4 py-2 text-xs font-semibold text-white shadow-2xs hover:bg-stone-800 transition disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isExtracting ? (
                   <>
@@ -475,8 +475,8 @@ export const AdminModal: React.FC = () => {
 
             {/* Loading Indicator */}
             {isExtracting && (
-              <div className="mt-3 flex items-center gap-2 rounded-lg bg-white/90 p-2.5 text-xs text-indigo-900 border border-indigo-200">
-                <Loader2 className="h-4 w-4 animate-spin text-indigo-600 shrink-0" />
+              <div className="mt-3 flex items-center gap-2 rounded-lg bg-white/90 p-2.5 text-xs text-blue-950 border border-blue-200">
+                <Loader2 className="h-4 w-4 animate-spin text-blue-700 shrink-0" />
                 <span className="font-medium">
                   Reading webpage, detecting funding model &amp; parsing university data...
                 </span>
@@ -509,7 +509,7 @@ export const AdminModal: React.FC = () => {
             {/* Title & University */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
                   Scholarship Title *
                 </label>
                 <input
@@ -517,7 +517,7 @@ export const AdminModal: React.FC = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Chinese Government Scholarship (CSC)"
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 />
                 {errors.name && (
                   <p className="mt-1 text-[11px] text-red-600">{errors.name}</p>
@@ -525,7 +525,7 @@ export const AdminModal: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
                   University / Consortium Host *
                 </label>
                 <input
@@ -533,7 +533,7 @@ export const AdminModal: React.FC = () => {
                   value={university}
                   onChange={(e) => setUniversity(e.target.value)}
                   placeholder="e.g. China Scholarship Council (Consortium of 280+ Universities)"
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 />
                 {errors.university && (
                   <p className="mt-1 text-[11px] text-red-600">{errors.university}</p>
@@ -544,7 +544,7 @@ export const AdminModal: React.FC = () => {
             {/* City, Country, Flag, Region */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
                   City *
                 </label>
                 <input
@@ -552,7 +552,7 @@ export const AdminModal: React.FC = () => {
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   placeholder="e.g. Beijing"
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 />
                 {errors.city && (
                   <p className="mt-1 text-[11px] text-red-600">{errors.city}</p>
@@ -560,7 +560,7 @@ export const AdminModal: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
                   Country *
                 </label>
                 <input
@@ -568,7 +568,7 @@ export const AdminModal: React.FC = () => {
                   value={country}
                   onChange={(e) => setCountry(e.target.value)}
                   placeholder="e.g. China"
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 />
                 {errors.country && (
                   <p className="mt-1 text-[11px] text-red-600">{errors.country}</p>
@@ -577,13 +577,13 @@ export const AdminModal: React.FC = () => {
 
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
                   World Region *
                 </label>
                 <select
                   value={region}
                   onChange={(e) => setRegion(e.target.value as Region)}
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 >
                   <option value="Europe">Europe</option>
                   <option value="Asia">Asia</option>
@@ -596,16 +596,16 @@ export const AdminModal: React.FC = () => {
             </div>
 
             {/* Funding Model & Supervisor Requirement */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 rounded-xl border border-zinc-200 bg-zinc-50/70 p-3.5">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 rounded-xl border border-stone-200 bg-stone-50/70 p-3.5">
               <div>
-                <label className="block text-xs font-semibold text-zinc-800 mb-1 flex items-center gap-1.5">
-                  <Landmark className="h-3.5 w-3.5 text-zinc-600" />
+                <label className="block text-xs font-semibold text-stone-800 mb-1 flex items-center gap-1.5">
+                  <Landmark className="h-3.5 w-3.5 text-stone-600" />
                   Funding Model Track *
                 </label>
                 <select
                   value={fundingType}
                   onChange={(e) => setFundingType(e.target.value as FundingType)}
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none font-medium"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none font-medium"
                 >
                   <option value="Gov / Multi-Uni">
                     Gov / Multi-Uni (CSC, Erasmus, DAAD)
@@ -620,8 +620,8 @@ export const AdminModal: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-800 mb-1 flex items-center gap-1.5">
-                  <Microscope className="h-3.5 w-3.5 text-zinc-600" />
+                <label className="block text-xs font-semibold text-stone-800 mb-1 flex items-center gap-1.5">
+                  <Microscope className="h-3.5 w-3.5 text-stone-600" />
                   Supervisor Requirement *
                 </label>
                 <select
@@ -629,7 +629,7 @@ export const AdminModal: React.FC = () => {
                   onChange={(e) =>
                     setSupervisorRequired(e.target.value as SupervisorRequirement)
                   }
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none font-medium"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none font-medium"
                 >
                   <option value="Not Required (Central Admission)">
                     Not Required (Central Admission)
@@ -647,11 +647,11 @@ export const AdminModal: React.FC = () => {
             {/* Partner Universities Editor (For Umbrella Programs) */}
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
-                  <Users className="h-3.5 w-3.5 text-indigo-600" />
+                <label className="text-xs font-semibold text-stone-700 flex items-center gap-1.5">
+                  <Users className="h-3.5 w-3.5 text-blue-700" />
                   Participating Partner Universities (One per line)
                 </label>
-                <span className="text-[10px] text-zinc-500">
+                <span className="text-[10px] text-stone-500">
                   Format: Name | City | Country | Flag | LivingCost | Stipend | Note
                 </span>
               </div>
@@ -660,13 +660,13 @@ export const AdminModal: React.FC = () => {
                 value={partnerUnisText}
                 onChange={(e) => setPartnerUnisText(e.target.value)}
                 placeholder="Tsinghua University | Beijing | China | 🇨🇳 | 550 | 900 | World #12 in Engineering&#10;Zhejiang University | Hangzhou | China | 🇨🇳 | 450 | 850 | China Silicon Valley Hub"
-                className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none font-mono"
+                className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none font-mono"
               />
             </div>
 
             {/* Supervisor Funding Guide (Optional) */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 mb-1">
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
                 Supervisor &amp; Lab Funding Guide (For RA/TA programs)
               </label>
               <textarea
@@ -674,32 +674,32 @@ export const AdminModal: React.FC = () => {
                 value={supervisorFundingGuide}
                 onChange={(e) => setSupervisorFundingGuide(e.target.value)}
                 placeholder="How to approach professors at this university, cold email pitch tips, lab directories..."
-                className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
               />
             </div>
 
             {/* Degree Levels & Field */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
                   Target Degree Levels
                 </label>
                 <div className="flex gap-4 pt-1">
-                  <label className="flex items-center gap-2 text-xs font-medium text-zinc-800 cursor-pointer">
+                  <label className="flex items-center gap-2 text-xs font-medium text-stone-800 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={degrees.includes("Master's")}
                       onChange={() => handleDegreeToggle("Master's")}
-                      className="rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500"
+                      className="rounded border-stone-300 text-blue-700 focus:ring-blue-600"
                     />
                     <span>Master&apos;s</span>
                   </label>
-                  <label className="flex items-center gap-2 text-xs font-medium text-zinc-800 cursor-pointer">
+                  <label className="flex items-center gap-2 text-xs font-medium text-stone-800 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={degrees.includes("PhD")}
                       onChange={() => handleDegreeToggle("PhD")}
-                      className="rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500"
+                      className="rounded border-stone-300 text-blue-700 focus:ring-blue-600"
                     />
                     <span>PhD</span>
                   </label>
@@ -707,13 +707,13 @@ export const AdminModal: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
                   Major / Field Category
                 </label>
                 <select
                   value={field}
                   onChange={(e) => setField(e.target.value as FieldCategory)}
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 >
                   <option value="Computer Science & AI">Computer Science & AI</option>
                   <option value="Engineering">Engineering</option>
@@ -726,7 +726,7 @@ export const AdminModal: React.FC = () => {
 
             {/* Field Specifics */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 mb-1">
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
                 Field Specifics / Keywords
               </label>
               <input
@@ -734,14 +734,14 @@ export const AdminModal: React.FC = () => {
                 value={fieldSpecifics}
                 onChange={(e) => setFieldSpecifics(e.target.value)}
                 placeholder="e.g. AI & Machine Learning, Robotics, Cyber Security"
-                className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
               />
             </div>
 
             {/* Requirements: Min CGPA, Min IELTS, Medium, Deadline */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
                   Min CGPA (4.0)
                 </label>
                 <input
@@ -751,12 +751,12 @@ export const AdminModal: React.FC = () => {
                   max="4.0"
                   value={minCGPA}
                   onChange={(e) => setMinCGPA(parseFloat(e.target.value))}
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
                   Min IELTS Band
                 </label>
                 <input
@@ -766,18 +766,18 @@ export const AdminModal: React.FC = () => {
                   max="9.0"
                   value={minIELTS}
                   onChange={(e) => setMinIELTS(parseFloat(e.target.value))}
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
                   Medium
                 </label>
                 <select
                   value={medium}
                   onChange={(e) => setMedium(e.target.value as MediumOfInstruction)}
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 >
                   <option value="English Only">English Only</option>
                   <option value="Any">Any</option>
@@ -785,14 +785,14 @@ export const AdminModal: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
                   Deadline *
                 </label>
                 <input
                   type="date"
                   value={deadline}
                   onChange={(e) => setDeadline(e.target.value)}
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 />
                 {errors.deadline && (
                   <p className="mt-1 text-[11px] text-red-600">{errors.deadline}</p>
@@ -801,10 +801,10 @@ export const AdminModal: React.FC = () => {
             </div>
 
             {/* Finances: Stipend & Living Cost */}
-            <div className="grid grid-cols-2 gap-4 rounded-xl border border-zinc-200 bg-zinc-50/70 p-3">
+            <div className="grid grid-cols-2 gap-4 rounded-xl border border-stone-200 bg-stone-50/70 p-3">
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1 flex items-center gap-1">
-                  <DollarSign className="h-3.5 w-3.5 text-zinc-500" />
+                <label className="block text-xs font-semibold text-stone-700 mb-1 flex items-center gap-1">
+                  <DollarSign className="h-3.5 w-3.5 text-stone-500" />
                   Monthly Stipend ($ USD)
                 </label>
                 <input
@@ -813,13 +813,13 @@ export const AdminModal: React.FC = () => {
                   min="0"
                   value={monthlyStipendUSD}
                   onChange={(e) => setMonthlyStipendUSD(parseInt(e.target.value, 10))}
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1 flex items-center gap-1">
-                  <DollarSign className="h-3.5 w-3.5 text-zinc-500" />
+                <label className="block text-xs font-semibold text-stone-700 mb-1 flex items-center gap-1">
+                  <DollarSign className="h-3.5 w-3.5 text-stone-500" />
                   Est. City Living Cost ($ USD)
                 </label>
                 <input
@@ -828,14 +828,14 @@ export const AdminModal: React.FC = () => {
                   min="0"
                   value={estimatedLivingCostUSD}
                   onChange={(e) => setEstimatedLivingCostUSD(parseInt(e.target.value, 10))}
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 />
               </div>
             </div>
 
             {/* Facilities Tags (One per line) */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 mb-1">
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
                 Scholarship Facilities &amp; Benefits (One benefit per line)
               </label>
               <textarea
@@ -843,13 +843,13 @@ export const AdminModal: React.FC = () => {
                 value={facilitiesText}
                 onChange={(e) => setFacilitiesText(e.target.value)}
                 placeholder="100% Full Tuition Waiver&#10;Free Furnished Housing&#10;Annual Flight Home"
-                className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none font-mono"
+                className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none font-mono"
               />
             </div>
 
             {/* Required Documents (One per line) */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 mb-1">
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
                 Required Documents Checklist (One document per line)
               </label>
               <textarea
@@ -857,13 +857,13 @@ export const AdminModal: React.FC = () => {
                 value={documentsText}
                 onChange={(e) => setDocumentsText(e.target.value)}
                 placeholder="Statement of Purpose (SOP)&#10;Official Transcripts&#10;Two Letters of Recommendation"
-                className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none font-mono"
+                className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none font-mono"
               />
             </div>
 
             {/* University Overview */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 mb-1">
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
                 University &amp; Academic Overview
               </label>
               <textarea
@@ -871,13 +871,13 @@ export const AdminModal: React.FC = () => {
                 value={overview}
                 onChange={(e) => setOverview(e.target.value)}
                 placeholder="Brief summary of research prestige, faculties, and programs..."
-                className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
               />
             </div>
 
             {/* City Life Overview */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 mb-1">
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
                 City Life &amp; Expat Experience
               </label>
               <textarea
@@ -885,13 +885,13 @@ export const AdminModal: React.FC = () => {
                 value={cityLifeOverview}
                 onChange={(e) => setCityLifeOverview(e.target.value)}
                 placeholder="Cost of living, safety, transit, student community..."
-                className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
               />
             </div>
 
             {/* Official Website URL */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 mb-1">
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
                 Official Scholarship Application URL *
               </label>
               <input
@@ -899,7 +899,7 @@ export const AdminModal: React.FC = () => {
                 value={officialWebsiteUrl}
                 onChange={(e) => setOfficialWebsiteUrl(e.target.value)}
                 placeholder="https://..."
-                className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
               />
               {errors.officialWebsiteUrl && (
                 <p className="mt-1 text-[11px] text-red-600">{errors.officialWebsiteUrl}</p>
@@ -909,54 +909,54 @@ export const AdminModal: React.FC = () => {
             {/* Notes shown in the detail panel */}
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">Deadline note (optional)</label>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">Deadline note (optional)</label>
                 <input
                   type="text"
                   value={deadlineNote}
                   onChange={(e) => setDeadlineNote(e.target.value)}
                   placeholder="e.g. Varies by country; check your embassy"
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 />
-                <label className="mt-2 flex items-center gap-2 text-xs text-zinc-700">
-                  <input type="checkbox" checked={deadlineIsEstimate} onChange={(e) => setDeadlineIsEstimate(e.target.checked)} className="h-4 w-4 accent-indigo-600" />
+                <label className="mt-2 flex items-center gap-2 text-xs text-stone-700">
+                  <input type="checkbox" checked={deadlineIsEstimate} onChange={(e) => setDeadlineIsEstimate(e.target.checked)} className="h-4 w-4 accent-blue-700" />
                   The date is expected, not announced yet
                 </label>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">Stipend in local currency (optional)</label>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">Stipend in local currency (optional)</label>
                 <input
                   type="text"
                   value={stipendNote}
                   onChange={(e) => setStipendNote(e.target.value)}
                   placeholder="e.g. €1,200/month for Master's"
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-900 focus:border-blue-600 focus:outline-none"
                 />
               </div>
             </div>
 
             <fieldset>
-              <legend className="block text-xs font-semibold text-zinc-700 mb-1.5">What is covered</legend>
-              <div className="grid grid-cols-2 gap-2 text-xs text-zinc-700 sm:grid-cols-4">
-                <label className="flex items-center gap-2"><input type="checkbox" checked={tuitionCovered} onChange={(e) => setTuitionCovered(e.target.checked)} className="h-4 w-4 accent-indigo-600" /> Tuition</label>
-                <label className="flex items-center gap-2"><input type="checkbox" checked={healthCovered} onChange={(e) => setHealthCovered(e.target.checked)} className="h-4 w-4 accent-indigo-600" /> Health insurance</label>
-                <label className="flex items-center gap-2"><input type="checkbox" checked={airfareCovered} onChange={(e) => setAirfareCovered(e.target.checked)} className="h-4 w-4 accent-indigo-600" /> Flights</label>
-                <label className="flex items-center gap-2"><input type="checkbox" checked={housingIncluded} onChange={(e) => setHousingIncluded(e.target.checked)} className="h-4 w-4 accent-indigo-600" /> Housing</label>
+              <legend className="block text-xs font-semibold text-stone-700 mb-1.5">What is covered</legend>
+              <div className="grid grid-cols-2 gap-2 text-xs text-stone-700 sm:grid-cols-4">
+                <label className="flex items-center gap-2"><input type="checkbox" checked={tuitionCovered} onChange={(e) => setTuitionCovered(e.target.checked)} className="h-4 w-4 accent-blue-700" /> Tuition</label>
+                <label className="flex items-center gap-2"><input type="checkbox" checked={healthCovered} onChange={(e) => setHealthCovered(e.target.checked)} className="h-4 w-4 accent-blue-700" /> Health insurance</label>
+                <label className="flex items-center gap-2"><input type="checkbox" checked={airfareCovered} onChange={(e) => setAirfareCovered(e.target.checked)} className="h-4 w-4 accent-blue-700" /> Flights</label>
+                <label className="flex items-center gap-2"><input type="checkbox" checked={housingIncluded} onChange={(e) => setHousingIncluded(e.target.checked)} className="h-4 w-4 accent-blue-700" /> Housing</label>
               </div>
             </fieldset>
           </div>
 
           {/* Form Actions */}
-          <div className="flex items-center justify-end gap-3 border-t border-zinc-200 pt-4">
+          <div className="flex items-center justify-end gap-3 border-t border-stone-200 pt-4">
             <button
               type="button"
               onClick={handleClose}
-              className="rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 transition"
+              className="rounded-xl border border-stone-200 bg-white px-4 py-2 text-xs font-semibold text-stone-700 hover:bg-stone-50 transition"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex items-center gap-1.5 rounded-lg bg-zinc-900 px-5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-zinc-800 transition"
+              className="flex items-center gap-1.5 rounded-lg bg-stone-900 px-5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-stone-800 transition"
             >
               <Save className="h-3.5 w-3.5" />
               <span>{editingScholarship ? "Save Changes" : "Create Scholarship"}</span>

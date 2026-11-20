@@ -26,11 +26,11 @@ import { formatVerifiedDate } from "../utils/scholarshipUtils";
 import { PageHeader, btn } from "./ui";
 
 export const STATUS_STYLES: Record<OutreachStatus, string> = {
-  Drafting: "border-zinc-300 bg-zinc-50 text-zinc-700",
+  Drafting: "border-stone-300 bg-stone-50 text-stone-700",
   "Email Sent": "border-sky-200 bg-sky-50 text-sky-800",
   "Follow-up Due": "border-amber-200 bg-amber-50 text-amber-800",
   "Replied / Interview": "border-emerald-200 bg-emerald-50 text-emerald-800",
-  Declined: "border-zinc-200 bg-white text-zinc-500",
+  Declined: "border-stone-200 bg-white text-stone-500",
 };
 
 const STATUS_ICONS: Record<OutreachStatus, React.ReactNode> = {
@@ -114,7 +114,7 @@ export const OutreachTracker: React.FC = () => {
       />
 
       {/* Summary */}
-      <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-zinc-200 bg-zinc-200 sm:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-stone-200 bg-stone-200 sm:grid-cols-4">
         <SummaryCell label="Contacts" value={stats.total} />
         <SummaryCell label="Emails sent" value={stats.contacted} />
         <SummaryCell label="Response rate" value={`${stats.responseRate}%`} hint={`${stats.replied} replied`} />
@@ -126,8 +126,8 @@ export const OutreachTracker: React.FC = () => {
       </dl>
 
       {/* Pipeline */}
-      <div className="rounded-xl border border-zinc-200 bg-white p-3 sm:p-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">Pipeline</p>
+      <div className="rounded-xl border border-stone-200 bg-white p-3 sm:p-4">
+        <p className="text-xs font-medium uppercase tracking-wide text-stone-500">Pipeline</p>
         <div className="mt-2 grid grid-cols-5 gap-1.5">
           {OUTREACH_STATUSES.map((s) => {
             const count = stats.byStatus[s];
@@ -138,15 +138,15 @@ export const OutreachTracker: React.FC = () => {
                 type="button"
                 onClick={() => setFilter(filter === s ? "All" : s)}
                 className={`rounded-lg border p-2 text-left transition ${
-                  filter === s ? "border-zinc-900" : "border-zinc-200 hover:border-zinc-300"
+                  filter === s ? "border-stone-900" : "border-stone-200 hover:border-stone-300"
                 }`}
                 aria-pressed={filter === s}
               >
-                <span className="block font-mono text-base font-semibold text-zinc-900">{count}</span>
-                <span className="block truncate text-[10px] leading-tight text-zinc-500 sm:hidden">{SHORT_LABELS[s]}</span>
-                <span className="hidden truncate text-[11px] leading-tight text-zinc-500 sm:block">{s}</span>
-                <span className="mt-1.5 block h-1 rounded-full bg-zinc-100">
-                  <span className="block h-1 rounded-full bg-zinc-800" style={{ width: `${pct}%` }} />
+                <span className="block font-mono text-base font-semibold text-stone-900">{count}</span>
+                <span className="block truncate text-[10px] leading-tight text-stone-500 sm:hidden">{SHORT_LABELS[s]}</span>
+                <span className="hidden truncate text-[11px] leading-tight text-stone-500 sm:block">{s}</span>
+                <span className="mt-1.5 block h-1 rounded-full bg-stone-100">
+                  <span className="block h-1 rounded-full bg-stone-800" style={{ width: `${pct}%` }} />
                 </span>
               </button>
             );
@@ -165,8 +165,8 @@ export const OutreachTracker: React.FC = () => {
               aria-pressed={filter === f}
               className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium transition ${
                 filter === f
-                  ? "border-zinc-900 bg-zinc-900 text-white"
-                  : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300"
+                  ? "border-stone-900 bg-stone-900 text-white"
+                  : "border-stone-200 bg-white text-stone-600 hover:border-stone-300"
               }`}
             >
               {f}
@@ -174,51 +174,51 @@ export const OutreachTracker: React.FC = () => {
           ))}
         </div>
         <div className="relative sm:w-64">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search contacts"
             aria-label="Search contacts"
-            className="w-full rounded-lg border border-zinc-300 bg-white py-1.5 pl-9 pr-3 text-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+            className="w-full rounded-lg border border-stone-300 bg-white py-1.5 pl-9 pr-3 text-sm focus:border-stone-900 focus:outline-none focus:ring-1 focus:ring-stone-900"
           />
         </div>
       </div>
 
       {/* List */}
       {!isLoaded ? (
-        <div className="h-24 animate-pulse rounded-xl border border-zinc-200 bg-white" aria-hidden="true" />
+        <div className="h-24 animate-pulse rounded-xl border border-stone-200 bg-white" aria-hidden="true" />
       ) : contacts.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-zinc-300 bg-white p-8 text-center">
-          <Mail className="mx-auto h-6 w-6 text-zinc-400" />
-          <p className="mt-2 text-sm font-medium text-zinc-800">No contacts yet</p>
-          <p className="mx-auto mt-1 max-w-sm text-xs text-zinc-500">
+        <div className="rounded-xl border border-dashed border-stone-300 bg-white p-8 text-center">
+          <Mail className="mx-auto h-6 w-6 text-stone-400" />
+          <p className="mt-2 text-sm font-medium text-stone-800">No contacts yet</p>
+          <p className="mx-auto mt-1 max-w-sm text-xs text-stone-500">
             Save researchers from Find Supervisors, or add a professor you already know about.
           </p>
           <div className="mt-4 flex flex-col justify-center gap-2 sm:flex-row">
             <button
               type="button"
               onClick={() => setActiveView("supervisors")}
-              className="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs font-medium text-zinc-800 hover:bg-zinc-50"
+              className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-800 hover:bg-stone-50"
             >
               Find supervisors
             </button>
             <button
               type="button"
               onClick={() => setIsCreating(true)}
-              className="rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-zinc-800"
+              className="rounded-lg bg-stone-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-stone-800"
             >
               Add contact
             </button>
           </div>
         </div>
       ) : visible.length === 0 ? (
-        <p className="rounded-xl border border-zinc-200 bg-white p-6 text-center text-sm text-zinc-500">
+        <p className="rounded-xl border border-stone-200 bg-white p-6 text-center text-sm text-stone-500">
           No contacts match this filter.
         </p>
       ) : (
-        <ul className="divide-y divide-zinc-200 overflow-hidden rounded-xl border border-zinc-200 bg-white">
+        <ul className="divide-y divide-stone-200 overflow-hidden rounded-xl border border-stone-200 bg-white">
           {visible.map((c) => (
             <ContactRow key={c.id} contact={c} onOpen={() => setEditingId(c.id)} />
           ))}
@@ -249,11 +249,11 @@ const SummaryCell: React.FC<{
   tone?: "warn";
 }> = ({ label, value, hint, tone }) => (
   <div className="bg-white p-3 sm:p-4">
-    <dt className="text-xs text-zinc-500">{label}</dt>
-    <dd className={`mt-1 font-mono text-xl font-semibold ${tone === "warn" ? "text-amber-700" : "text-zinc-900"}`}>
+    <dt className="text-xs text-stone-500">{label}</dt>
+    <dd className={`mt-1 font-mono text-xl font-semibold ${tone === "warn" ? "text-amber-700" : "text-stone-900"}`}>
       {value}
     </dd>
-    {hint && <p className="text-[11px] text-zinc-500">{hint}</p>}
+    {hint && <p className="text-[11px] text-stone-500">{hint}</p>}
   </div>
 );
 
@@ -264,22 +264,22 @@ const ContactRow: React.FC<{ contact: OutreachContact; onOpen: () => void }> = (
       <button
         type="button"
         onClick={onOpen}
-        className="flex w-full flex-col gap-2 p-3 text-left transition hover:bg-zinc-50 sm:flex-row sm:items-center sm:gap-4 sm:p-4"
+        className="flex w-full flex-col gap-2 p-3 text-left transition hover:bg-stone-50 sm:flex-row sm:items-center sm:gap-4 sm:p-4"
       >
         <div className="flex min-w-0 flex-1 items-start gap-3">
-          <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-zinc-500">
+          <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-stone-100 text-stone-500">
             <UserRound className="h-4 w-4" />
           </span>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-zinc-900">{c.name}</p>
-            <p className="truncate text-xs text-zinc-500">
+            <p className="truncate text-sm font-semibold text-stone-900">{c.name}</p>
+            <p className="truncate text-xs text-stone-500">
               {c.institution}
               {c.researchTopic ? ` · ${c.researchTopic}` : ""}
             </p>
           </div>
         </div>
         <div className="flex items-center justify-between gap-3 pl-11 sm:pl-0">
-          <span className="text-xs text-zinc-500">
+          <span className="text-xs text-stone-500">
             {overdue ? (
               <span className="inline-flex items-center gap-1 font-medium text-amber-700">
                 <AlertCircle className="h-3.5 w-3.5" /> Follow up now

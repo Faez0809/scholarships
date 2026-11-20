@@ -37,7 +37,7 @@ export const BrowseView: React.FC = () => {
     setEditingScholarship,
     stats,
   } = useScholarship();
-  const { savedIds, setIsProfileOpen, completedCount } = useGuide();
+  const { savedIds, setIsProfileOpen, completedCount, isGuideVisible } = useGuide();
   const [showSaved, setShowSaved] = useState(false);
 
   const counts = useMemo(() => {
@@ -66,8 +66,6 @@ export const BrowseView: React.FC = () => {
     { id: "eligible", label: "I qualify", count: counts.eligible },
     { id: "saved", label: "Saved", count: counts.saved },
     { id: "closing_soon", label: "Closing soon", count: counts.closing_soon },
-    { id: "masters", label: "Master's", count: counts.masters },
-    { id: "phd", label: "PhD", count: counts.phd },
     { id: "high_savings", label: "Save $300+/mo", count: counts.high_savings },
   ];
 
@@ -110,15 +108,17 @@ export const BrowseView: React.FC = () => {
         description={
           <>
             {stats.total} fully funded Master&apos;s and PhD programs. Based on your profile you qualify for{" "}
-            <strong className="font-semibold text-zinc-900">{stats.eligibleCount}</strong>.
+            <strong className="font-semibold text-stone-900">{stats.eligibleCount}</strong>.
             <span className="hidden sm:inline"> Open any card to see requirements, money and next steps.</span>
           </>
         }
         actions={
           <>
-            <button type="button" className={`${btn.secondary} hidden sm:inline-flex lg:hidden`} onClick={() => setIsProfileOpen(true)}>
-              <SlidersHorizontal className="h-4 w-4" /> Edit profile
-            </button>
+            <span className="hidden sm:block lg:hidden">
+              <button type="button" className={btn.secondary} onClick={() => setIsProfileOpen(true)}>
+                <SlidersHorizontal className="h-4 w-4" /> Edit profile
+              </button>
+            </span>
             {isAdmin && (
               <button
                 type="button"
@@ -136,7 +136,7 @@ export const BrowseView: React.FC = () => {
       />
 
       <GetStarted />
-      <SaveProgressPrompt visible={completedCount >= 2 || savedIds.length > 0} />
+      <SaveProgressPrompt visible={!isGuideVisible && (completedCount >= 2 || savedIds.length > 0)} />
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         <ProfilePanel />
@@ -148,23 +148,23 @@ export const BrowseView: React.FC = () => {
           <ProfileSummaryBar />
 
           {/* Toolbar */}
-          <div className="rounded-xl border border-zinc-200 bg-white p-3">
+          <div className="rounded-xl border border-stone-200 bg-white p-3">
             <div className="flex flex-col gap-2 sm:flex-row">
               <div className="relative flex-1">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
                 <input
                   type="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by name, university, country or field"
                   aria-label="Search scholarships"
-                  className="w-full rounded-lg border border-zinc-300 bg-white py-2 pl-9 pr-9 text-sm placeholder:text-zinc-400 focus:border-indigo-600 focus:outline-none focus:ring-1 focus:ring-indigo-600"
+                  className="w-full rounded-lg border border-stone-300 bg-white py-2 pl-9 pr-9 text-sm placeholder:text-stone-400 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-zinc-400 hover:text-zinc-700"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-stone-400 hover:text-stone-700"
                     aria-label="Clear search"
                   >
                     <X className="h-4 w-4" />
@@ -179,7 +179,7 @@ export const BrowseView: React.FC = () => {
                   id="region-select"
                   value={profile.selectedRegion}
                   onChange={(e) => updateProfileField("selectedRegion", e.target.value as "All" | Region)}
-                  className="rounded-lg border border-zinc-300 bg-white px-2.5 py-2 text-sm text-zinc-800 focus:border-indigo-600 focus:outline-none focus:ring-1 focus:ring-indigo-600"
+                  className="rounded-lg border border-stone-300 bg-white px-2.5 py-2 text-sm text-stone-800 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                 >
                   {REGIONS.map((r) => (
                     <option key={r} value={r}>
@@ -194,7 +194,7 @@ export const BrowseView: React.FC = () => {
                   id="sort-select"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="rounded-lg border border-zinc-300 bg-white px-2.5 py-2 text-sm text-zinc-800 focus:border-indigo-600 focus:outline-none focus:ring-1 focus:ring-indigo-600"
+                  className="rounded-lg border border-stone-300 bg-white px-2.5 py-2 text-sm text-stone-800 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                 >
                   <option value="deadline">Closing first</option>
                   <option value="savings_high">Most left over</option>
@@ -216,14 +216,14 @@ export const BrowseView: React.FC = () => {
                   type="button"
                   onClick={() => choose(q.id)}
                   aria-pressed={isActive(q.id)}
-                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
                     isActive(q.id)
-                      ? "border-zinc-900 bg-zinc-900 text-white"
-                      : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300"
+                      ? "border-stone-900 bg-stone-900 text-white"
+                      : "border-stone-200 bg-white text-stone-700 hover:border-stone-300"
                   }`}
                 >
                   {q.label}
-                  <span className={isActive(q.id) ? "text-zinc-300" : "text-zinc-500"}>{q.count}</span>
+                  <span className={isActive(q.id) ? "text-stone-300" : "text-stone-500"}>{q.count}</span>
                 </button>
               ))}
             </div>
@@ -231,8 +231,8 @@ export const BrowseView: React.FC = () => {
 
           {/* Result line */}
           <div className="mb-3 mt-4 flex items-center justify-between gap-2 text-sm">
-            <p className="text-zinc-600" aria-live="polite">
-              Showing <strong className="font-semibold text-zinc-900">{results.length}</strong> of {scholarships.length}
+            <p className="text-stone-600" aria-live="polite">
+              Showing <strong className="font-semibold text-stone-900">{results.length}</strong> of {scholarships.length}
             </p>
             {filtersOn && (
               <button type="button" onClick={clearAll} className={btn.link}>
@@ -242,7 +242,7 @@ export const BrowseView: React.FC = () => {
           </div>
 
           {results.length > 0 ? (
-            <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
               {results.map((s) => (
                 <li key={s.id} className="min-w-0">
                   <ScholarshipCard scholarship={s} />
@@ -250,12 +250,12 @@ export const BrowseView: React.FC = () => {
               ))}
             </ul>
           ) : (
-            <div className="rounded-xl border border-dashed border-zinc-300 bg-white px-6 py-10 text-center">
-              <SearchX className="mx-auto h-6 w-6 text-zinc-400" />
-              <p className="mt-2 text-sm font-medium text-zinc-900">
+            <div className="rounded-xl border border-dashed border-stone-300 bg-white px-6 py-10 text-center">
+              <SearchX className="mx-auto h-6 w-6 text-stone-400" />
+              <p className="mt-2 text-sm font-medium text-stone-900">
                 {showSaved ? "You haven't saved any scholarships yet" : "No scholarships match these filters"}
               </p>
-              <p className="mx-auto mt-1 max-w-sm text-xs text-zinc-500">
+              <p className="mx-auto mt-1 max-w-sm text-xs text-stone-500">
                 {showSaved
                   ? "Tap the bookmark on any card to keep it here."
                   : "Try clearing filters, choosing another region, or lowering the minimum money left each month in your profile."}

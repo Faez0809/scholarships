@@ -15,7 +15,7 @@ export const ScholarshipApp: React.FC = () => {
   const { activeView, syncStatus, refreshFromCloud, isAdmin, setIsPasscodeModalOpen } = useScholarship();
 
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-50 text-zinc-900">
+    <div className="flex min-h-screen flex-col bg-stone-50 text-stone-900">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-md focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:shadow"
@@ -30,19 +30,19 @@ export const ScholarshipApp: React.FC = () => {
         {activeView === "outreach" && <OutreachTracker />}
       </main>
 
-      <footer className="border-t border-zinc-200 bg-white pb-20 md:pb-0">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-5 text-xs text-zinc-500 sm:px-6">
+      <footer className="border-t border-stone-200 bg-white pb-20 md:pb-0">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-5 text-xs text-stone-500 sm:px-6">
           <p>
-            <span className="font-medium text-zinc-700">ScholarTrack</span> · Data from official program pages and
+            <span className="font-medium text-stone-700">ScholarTrack</span> · Data from official program pages and
             OpenAlex. Always confirm details before applying.
           </p>
           <div className="flex items-center gap-4">
           {!isAdmin && (
-            <button type="button" onClick={() => setIsPasscodeModalOpen(true)} className="-my-1 rounded px-1 py-1.5 hover:text-zinc-800">
+            <button type="button" onClick={() => setIsPasscodeModalOpen(true)} className="-my-1 rounded px-1 py-1.5 hover:text-stone-800">
               Admin
             </button>
           )}
-          <button type="button" onClick={() => refreshFromCloud()} className="-my-1 rounded px-1 py-1.5 hover:text-zinc-800">
+          <button type="button" onClick={() => refreshFromCloud()} className="-my-1 rounded px-1 py-1.5 hover:text-stone-800">
             {syncStatus === "syncing"
               ? "Updating…"
               : syncStatus === "offline"

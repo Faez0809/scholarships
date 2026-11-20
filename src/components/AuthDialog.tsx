@@ -10,7 +10,7 @@ type Mode = "signin" | "signup";
 const GOOGLE_ENABLED = process.env.NEXT_PUBLIC_ENABLE_GOOGLE_SIGNIN === "true";
 
 const inputClass =
-  "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-600 focus:outline-none focus:ring-1 focus:ring-indigo-600";
+  "w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700";
 
 /** Header button: "Sign in" for guests, account menu when signed in. */
 export const AccountButton: React.FC = () => {
@@ -56,15 +56,15 @@ export const AccountButton: React.FC = () => {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label="Account"
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-xs font-semibold uppercase text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-700 text-xs font-semibold uppercase text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
       >
         {(email || "?").slice(0, 1)}
       </button>
       {open && (
-        <div role="menu" className="absolute right-0 z-40 mt-1.5 w-64 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+        <div role="menu" className="absolute right-0 z-40 mt-1.5 w-64 rounded-lg border border-stone-200 bg-white p-1 shadow-lg">
           <div className="px-2.5 py-2">
-            <p className="truncate text-sm font-medium text-zinc-900">{email}</p>
-            <p className="mt-1 flex items-start gap-1.5 text-xs text-zinc-500">
+            <p className="truncate text-sm font-medium text-stone-900">{email}</p>
+            <p className="mt-1 flex items-start gap-1.5 text-xs text-stone-500">
               {status === "unavailable" || status === "error" ? (
                 <CloudOff className="mt-px h-3.5 w-3.5 shrink-0 text-amber-600" />
               ) : (
@@ -73,7 +73,7 @@ export const AccountButton: React.FC = () => {
               {statusText}
             </p>
           </div>
-          <div className="my-1 border-t border-zinc-100" />
+          <div className="my-1 border-t border-stone-100" />
           <button
             role="menuitem"
             type="button"
@@ -81,9 +81,9 @@ export const AccountButton: React.FC = () => {
               setOpen(false);
               await signOut();
             }}
-            className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-100"
+            className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm text-stone-700 hover:bg-stone-100"
           >
-            <LogOut className="h-4 w-4 text-zinc-500" /> Sign out
+            <LogOut className="h-4 w-4 text-stone-500" /> Sign out
           </button>
         </div>
       )}
@@ -145,28 +145,28 @@ export const AuthDialog: React.FC = () => {
       <div ref={dialogRef} className="relative w-full max-w-sm rounded-t-2xl bg-white p-5 shadow-xl sm:rounded-2xl">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-100 text-zinc-600">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-100 text-stone-600">
               <UserRound className="h-4 w-4" />
             </span>
             <div>
-              <h2 id="auth-title" className="text-base font-semibold text-zinc-900">
+              <h2 id="auth-title" className="text-base font-semibold text-stone-900">
                 {title}
               </h2>
-              <p className="text-xs text-zinc-500">Keep your profile, shortlist and outreach on every device.</p>
+              <p className="text-xs text-stone-500">Keep your profile, shortlist and outreach on every device.</p>
             </div>
           </div>
-          <button type="button" onClick={() => setIsAuthOpen(false)} className="rounded-md p-1 text-zinc-500 hover:bg-zinc-100" aria-label="Close">
+          <button type="button" onClick={() => setIsAuthOpen(false)} className="rounded-md p-1 text-stone-500 hover:bg-stone-100" aria-label="Close">
             <X className="h-5 w-5" />
           </button>
         </div>
 
         <form onSubmit={submit} className="mt-5 space-y-3" noValidate>
             <label className="block">
-              <span className="mb-1 block text-xs font-medium text-zinc-700">Email</span>
+              <span className="mb-1 block text-xs font-medium text-stone-700">Email</span>
               <input ref={emailRef} type="email" autoComplete="email" className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
             </label>
               <label className="block">
-                <span className="mb-1 block text-xs font-medium text-zinc-700">Password</span>
+                <span className="mb-1 block text-xs font-medium text-stone-700">Password</span>
                 <input
                   type="password"
                   autoComplete={mode === "signup" ? "new-password" : "current-password"}
@@ -189,8 +189,8 @@ export const AuthDialog: React.FC = () => {
 
             {GOOGLE_ENABLED && (
               <>
-                <div className="my-4 flex items-center gap-3 text-xs text-zinc-400">
-                  <span className="h-px flex-1 bg-zinc-200" /> or <span className="h-px flex-1 bg-zinc-200" />
+                <div className="my-4 flex items-center gap-3 text-xs text-stone-400">
+                  <span className="h-px flex-1 bg-stone-200" /> or <span className="h-px flex-1 bg-stone-200" />
                 </div>
                 <button
                   type="button"
@@ -204,24 +204,24 @@ export const AuthDialog: React.FC = () => {
                 </button>
               </>
             )}
-            <div className="mt-4 space-y-1.5 text-center text-xs text-zinc-600">
+            <div className="mt-4 space-y-1.5 text-center text-xs text-stone-600">
               {mode === "signup" ? (
                 <p>
                   Already have an account?{" "}
-                  <button type="button" onClick={() => switchMode("signin")} className="font-medium text-indigo-700 hover:underline">
+                  <button type="button" onClick={() => switchMode("signin")} className="font-medium text-blue-800 hover:underline">
                     Sign in
                   </button>
                 </p>
               ) : (
                 <p>
                   New here?{" "}
-                  <button type="button" onClick={() => switchMode("signup")} className="font-medium text-indigo-700 hover:underline">
+                  <button type="button" onClick={() => switchMode("signup")} className="font-medium text-blue-800 hover:underline">
                     Create an account
                   </button>
                 </p>
               )}
             </div>
-        <p className="mt-4 text-center text-[11px] text-zinc-500">
+        <p className="mt-4 text-center text-[11px] text-stone-500">
           Browsing works without an account. When you sign in, what you&apos;ve saved in this browser is copied to your account.
         </p>
       </div>
@@ -235,10 +235,10 @@ export const SaveProgressPrompt: React.FC<{ visible: boolean }> = ({ visible }) 
   const [hidden, setHidden] = useState(false);
   if (session || !visible || hidden) return null;
   return (
-    <div className="mb-6 flex flex-col gap-3 rounded-xl border border-indigo-100 bg-indigo-50/50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mb-6 flex flex-col gap-3 rounded-xl border border-blue-100 bg-blue-50/50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <p className="text-sm font-medium text-zinc-900">Save your progress</p>
-        <p className="text-xs text-zinc-600">Create a free account to keep your profile, shortlist and outreach on any device.</p>
+        <p className="text-sm font-medium text-stone-900">Save your progress</p>
+        <p className="text-xs text-stone-600">Create a free account to keep your profile, shortlist and outreach on any device.</p>
       </div>
       <div className="flex shrink-0 gap-2">
         <button type="button" onClick={() => setHidden(true)} className={`${btn.ghost} text-xs`}>

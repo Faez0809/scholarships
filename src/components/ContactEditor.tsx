@@ -17,7 +17,7 @@ import { useDialog } from "./ui";
 type Tab = "details" | "email" | "history";
 
 const inputClass =
-  "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900";
+  "w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:outline-none focus:ring-1 focus:ring-stone-900";
 
 export const ContactEditor: React.FC<{
   contact: OutreachContact | null;
@@ -80,14 +80,14 @@ export const ContactEditor: React.FC<{
     <div className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true" aria-labelledby="contact-editor-title">
       <div className="fixed inset-0 bg-black/40" onClick={onClose} />
       <div ref={panelRef} className="relative z-10 flex h-full w-full max-w-xl flex-col bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 sm:px-6">
-          <h2 id="contact-editor-title" className="truncate text-base font-semibold text-zinc-900">
+        <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3 sm:px-6">
+          <h2 id="contact-editor-title" className="truncate text-base font-semibold text-stone-900">
             {isNew ? "Add contact" : contact.name}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md p-1 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900"
+            className="rounded-md p-1 text-stone-500 hover:bg-stone-100 hover:text-stone-900"
             aria-label="Close"
           >
             <X className="h-5 w-5" />
@@ -95,7 +95,7 @@ export const ContactEditor: React.FC<{
         </div>
 
         {!isNew && (
-          <div className="border-b border-zinc-200 px-4 sm:px-6">
+          <div className="border-b border-stone-200 px-4 sm:px-6">
             <div className="-mb-px flex gap-5" role="tablist">
               {(["details", "email", "history"] as Tab[]).map((t) => (
                 <button
@@ -105,7 +105,7 @@ export const ContactEditor: React.FC<{
                   aria-selected={tab === t}
                   onClick={() => setTab(t)}
                   className={`border-b-2 py-2.5 text-sm font-medium capitalize ${
-                    tab === t ? "border-zinc-900 text-zinc-900" : "border-transparent text-zinc-500 hover:text-zinc-800"
+                    tab === t ? "border-stone-900 text-stone-900" : "border-transparent text-stone-500 hover:text-stone-800"
                   }`}
                 >
                   {t === "email" ? "Email draft" : t}
@@ -122,7 +122,7 @@ export const ContactEditor: React.FC<{
             <div className="space-y-4">
               {!isNew && (
                 <div>
-                  <p className="mb-1.5 text-xs font-medium text-zinc-700">Status</p>
+                  <p className="mb-1.5 text-xs font-medium text-stone-700">Status</p>
                   <div className="flex flex-wrap gap-1.5">
                     {OUTREACH_STATUSES.map((s) => (
                       <button
@@ -134,15 +134,15 @@ export const ContactEditor: React.FC<{
                         aria-pressed={contact.status === s}
                         className={`rounded-full border px-2.5 py-1 text-xs font-medium ${
                           contact.status === s
-                            ? "border-zinc-900 bg-zinc-900 text-white"
-                            : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300"
+                            ? "border-stone-900 bg-stone-900 text-white"
+                            : "border-stone-200 bg-white text-stone-700 hover:border-stone-300"
                         }`}
                       >
                         {s}
                       </button>
                     ))}
                   </div>
-                  <p className="mt-1.5 text-[11px] text-zinc-500">
+                  <p className="mt-1.5 text-[11px] text-stone-500">
                     Marking an email as sent sets a follow-up reminder 10 days later.
                   </p>
                 </div>
@@ -175,7 +175,7 @@ export const ContactEditor: React.FC<{
                 <textarea className={`${inputClass} min-h-24`} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Lab size, funding, what they replied, next steps..." />
               </Field>
               {profileUrl && /^https?:\/\//.test(profileUrl) && (
-                <a href={profileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-zinc-700 underline underline-offset-2">
+                <a href={profileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-stone-700 underline underline-offset-2">
                   <ExternalLink className="h-3 w-3" /> Open profile
                 </a>
               )}
@@ -185,7 +185,7 @@ export const ContactEditor: React.FC<{
         </div>
 
         {(isNew || tab === "details") && (
-          <div className="flex items-center justify-between gap-2 border-t border-zinc-200 px-4 py-3 sm:px-6">
+          <div className="flex items-center justify-between gap-2 border-t border-stone-200 px-4 py-3 sm:px-6">
             {!isNew ? (
               <button type="button" onClick={handleDelete} className="inline-flex items-center gap-1 text-xs font-medium text-red-700 hover:text-red-800">
                 <Trash2 className="h-3.5 w-3.5" /> Remove
@@ -194,10 +194,10 @@ export const ContactEditor: React.FC<{
               <span />
             )}
             <div className="flex gap-2">
-              <button type="button" onClick={onClose} className="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-50">
+              <button type="button" onClick={onClose} className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm text-stone-700 hover:bg-stone-50">
                 Cancel
               </button>
-              <button type="button" onClick={handleSave} className="rounded-lg bg-zinc-900 px-3.5 py-1.5 text-sm font-medium text-white hover:bg-zinc-800">
+              <button type="button" onClick={handleSave} className="rounded-lg bg-stone-900 px-3.5 py-1.5 text-sm font-medium text-white hover:bg-stone-800">
                 {isNew ? "Add contact" : "Save changes"}
               </button>
             </div>
@@ -210,9 +210,9 @@ export const ContactEditor: React.FC<{
 
 const Field: React.FC<{ label: string; required?: boolean; children: React.ReactNode }> = ({ label, required, children }) => (
   <label className="block">
-    <span className="mb-1 block text-xs font-medium text-zinc-700">
+    <span className="mb-1 block text-xs font-medium text-stone-700">
       {label}
-      {required && <span className="text-zinc-500"> (required)</span>}
+      {required && <span className="text-stone-500"> (required)</span>}
     </span>
     {children}
   </label>
@@ -261,7 +261,7 @@ const EmailPanel: React.FC<{ contact: OutreachContact }> = ({ contact }) => {
       <SenderForm sender={sender} onSave={setSender} open={editingSender} setOpen={setEditingSender} />
 
       <div>
-        <p className="mb-1.5 text-xs font-medium text-zinc-700">Template</p>
+        <p className="mb-1.5 text-xs font-medium text-stone-700">Template</p>
         <div className="flex flex-wrap gap-1.5">
           {(Object.keys(TEMPLATE_LABELS) as TemplateKind[]).map((k) => (
             <button
@@ -270,7 +270,7 @@ const EmailPanel: React.FC<{ contact: OutreachContact }> = ({ contact }) => {
               onClick={() => setKind(k)}
               aria-pressed={kind === k}
               className={`rounded-full border px-2.5 py-1 text-xs font-medium ${
-                kind === k ? "border-zinc-900 bg-zinc-900 text-white" : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300"
+                kind === k ? "border-stone-900 bg-stone-900 text-white" : "border-stone-200 bg-white text-stone-700 hover:border-stone-300"
               }`}
             >
               {TEMPLATE_LABELS[k]}
@@ -280,34 +280,34 @@ const EmailPanel: React.FC<{ contact: OutreachContact }> = ({ contact }) => {
       </div>
 
       <label className="block">
-        <span className="mb-1 block text-xs font-medium text-zinc-700">Subject</span>
+        <span className="mb-1 block text-xs font-medium text-stone-700">Subject</span>
         <input className={inputClass} value={subject} onChange={(e) => setSubject(e.target.value)} />
       </label>
       <label className="block">
-        <span className="mb-1 block text-xs font-medium text-zinc-700">Message</span>
+        <span className="mb-1 block text-xs font-medium text-stone-700">Message</span>
         <textarea className={`${inputClass} min-h-80 font-[inherit] leading-relaxed`} value={body} onChange={(e) => setBody(e.target.value)} />
       </label>
-      <p className="text-[11px] text-zinc-500">
+      <p className="text-[11px] text-stone-500">
         Replace anything in [brackets] and personalise at least one sentence before sending.
       </p>
 
       <div className="flex flex-col gap-2 sm:flex-row">
-        <button type="button" onClick={copy} className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-800 hover:bg-zinc-50">
+        <button type="button" onClick={copy} className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-800 hover:bg-stone-50">
           {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           {copied ? "Copied" : "Copy email"}
         </button>
         {mailto ? (
-          <a href={mailto} className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-800 hover:bg-zinc-50">
+          <a href={mailto} className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-800 hover:bg-stone-50">
             <Mail className="h-4 w-4" /> Open in email app
           </a>
         ) : (
-          <span className="self-center text-xs text-zinc-500">Add an email address in Details to open it in your email app.</span>
+          <span className="self-center text-xs text-stone-500">Add an email address in Details to open it in your email app.</span>
         )}
         {contact.status === "Drafting" && kind === "initial" && (
           <button
             type="button"
             onClick={() => setStatus(contact.id, "Email Sent")}
-            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-2 text-sm font-medium text-white hover:bg-zinc-800 sm:ml-auto"
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-stone-900 px-3 py-2 text-sm font-medium text-white hover:bg-stone-800 sm:ml-auto"
           >
             Mark as sent
           </button>
@@ -332,11 +332,11 @@ const SenderForm: React.FC<{
 
   if (!open) {
     return (
-      <div className="flex items-center justify-between rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-600">
+      <div className="flex items-center justify-between rounded-lg border border-stone-200 bg-stone-50 px-3 py-2 text-xs text-stone-600">
         <span className="truncate">
-          Signing as <span className="font-medium text-zinc-900">{sender.fullName}</span>
+          Signing as <span className="font-medium text-stone-900">{sender.fullName}</span>
         </span>
-        <button type="button" onClick={() => setOpen(true)} className="shrink-0 font-medium text-zinc-800 underline underline-offset-2">
+        <button type="button" onClick={() => setOpen(true)} className="shrink-0 font-medium text-stone-800 underline underline-offset-2">
           Edit my details
         </button>
       </div>
@@ -344,15 +344,15 @@ const SenderForm: React.FC<{
   }
 
   return (
-    <div className="space-y-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-      <p className="text-xs font-medium text-zinc-800">Your details (used in every template, saved in this browser)</p>
+    <div className="space-y-3 rounded-lg border border-stone-200 bg-stone-50 p-3">
+      <p className="text-xs font-medium text-stone-800">Your details (used in every template, saved in this browser)</p>
       <input className={inputClass} placeholder="Full name" value={draft.fullName} onChange={(e) => setDraft({ ...draft, fullName: e.target.value })} />
       <input className={inputClass} placeholder="Current role, e.g. final-year BSc student in CSE at XYZ University" value={draft.currentRole} onChange={(e) => setDraft({ ...draft, currentRole: e.target.value })} />
       <input className={inputClass} placeholder="Research interest, e.g. efficient deep learning for medical imaging" value={draft.researchInterest} onChange={(e) => setDraft({ ...draft, researchInterest: e.target.value })} />
       <textarea className={`${inputClass} min-h-16`} placeholder="One or two highlights, e.g. a publication, thesis result or award" value={draft.highlights} onChange={(e) => setDraft({ ...draft, highlights: e.target.value })} />
       <div className="flex justify-end gap-2">
         {sender.fullName && (
-          <button type="button" onClick={() => setOpen(false)} className="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs text-zinc-700">
+          <button type="button" onClick={() => setOpen(false)} className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-xs text-stone-700">
             Cancel
           </button>
         )}
@@ -362,7 +362,7 @@ const SenderForm: React.FC<{
             onSave(draft);
             setOpen(false);
           }}
-          className="rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white"
+          className="rounded-lg bg-stone-900 px-3 py-1.5 text-xs font-medium text-white"
         >
           Save my details
         </button>
@@ -372,15 +372,15 @@ const SenderForm: React.FC<{
 };
 
 const HistoryPanel: React.FC<{ contact: OutreachContact }> = ({ contact }) => (
-  <ol className="relative space-y-4 border-l border-zinc-200 pl-4">
+  <ol className="relative space-y-4 border-l border-stone-200 pl-4">
     {contact.history
       .slice()
       .reverse()
       .map((h, i) => (
         <li key={`${h.at}-${i}`} className="relative">
-          <span className="absolute -left-[21px] top-1.5 h-2 w-2 rounded-full bg-zinc-400" />
-          <p className="text-sm font-medium text-zinc-900">{h.status}</p>
-          <p className="text-xs text-zinc-500">
+          <span className="absolute -left-[21px] top-1.5 h-2 w-2 rounded-full bg-stone-400" />
+          <p className="text-sm font-medium text-stone-900">{h.status}</p>
+          <p className="text-xs text-stone-500">
             {formatVerifiedDate(h.at.slice(0, 10))}
             {h.note ? ` · ${h.note}` : ""}
           </p>

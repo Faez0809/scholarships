@@ -57,22 +57,22 @@ export const PasscodeModal: React.FC = () => {
       {/* Modal Dialog */}
       <div ref={dialogRef} className="relative z-10 w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-150">
         <div className="flex items-start justify-between">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
             <KeyRound className="h-5 w-5" />
           </div>
           <button
             onClick={() => setIsPasscodeModalOpen(false)}
-            className="rounded-lg p-1 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
+            className="rounded-lg p-1 text-stone-500 hover:bg-stone-100 hover:text-stone-800"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         <div className="mt-4">
-          <h3 className="text-base font-bold text-zinc-900">
+          <h3 className="text-base font-bold text-stone-900">
             Admin Mode Verification
           </h3>
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1 text-xs text-stone-500">
             Enter the admin passcode to unlock CRUD controls (Add, Edit, and Delete scholarships).
           </p>
         </div>
@@ -90,10 +90,10 @@ export const PasscodeModal: React.FC = () => {
                   if (error) setError(false);
                 }}
                 placeholder="Enter PIN..."
-                className={`w-full rounded-xl border py-2.5 px-4 text-center font-mono text-lg tracking-widest text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition ${
+                className={`w-full rounded-xl border py-2.5 px-4 text-center font-mono text-lg tracking-widest text-stone-900 placeholder:text-stone-400 focus:outline-none transition ${
                   error
                     ? "border-red-400 bg-red-50/50 text-red-900 focus:ring-2 focus:ring-red-400"
-                    : "border-zinc-200 bg-zinc-50/70 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20"
+                    : "border-stone-200 bg-stone-50/70 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/20"
                 }`}
               />
             </div>
@@ -111,14 +111,14 @@ export const PasscodeModal: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsPasscodeModalOpen(false)}
-              className="w-1/2 rounded-xl border border-zinc-200 bg-white py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 transition"
+              className="w-1/2 rounded-xl border border-stone-200 bg-white py-2 text-xs font-semibold text-stone-700 hover:bg-stone-50 transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isChecking || !pin.trim()}
-              className="w-1/2 rounded-xl bg-indigo-600 py-2 text-xs font-semibold text-white shadow-xs hover:bg-indigo-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-1/2 rounded-xl bg-blue-700 py-2 text-xs font-semibold text-white shadow-xs hover:bg-blue-800 transition disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isChecking ? "Checking..." : "Unlock Admin"}
             </button>

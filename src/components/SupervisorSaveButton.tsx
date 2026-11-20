@@ -32,7 +32,7 @@ export const SupervisorSaveButton: React.FC<{
       className={`inline-flex shrink-0 items-center gap-1 rounded-md border px-2 py-1 text-xs font-medium transition ${
         saved
           ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-          : "border-zinc-300 bg-white text-zinc-700 hover:border-zinc-400 hover:text-zinc-900"
+          : "border-stone-300 bg-white text-stone-700 hover:border-stone-400 hover:text-stone-900"
       }`}
       aria-label={saved ? `${candidate.name} is in your outreach list` : `Save ${candidate.name} to your outreach list`}
     >

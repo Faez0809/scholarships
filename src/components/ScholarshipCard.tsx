@@ -177,7 +177,7 @@ export const ScholarshipCard: React.FC<{ scholarship: Scholarship }> = ({ schola
           <button
             type="button"
             onClick={() => openSupervisorFinder(s.university, (s.fieldSpecifics || "").split(",")[0]?.trim() || "")}
-            className="relative z-10 text-xs font-medium text-indigo-700 hover:text-indigo-900 hover:underline"
+            className="relative z-10 -my-1.5 -mr-1 rounded px-1 py-1.5 text-xs font-medium text-indigo-700 hover:text-indigo-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
           >
             Find supervisors
           </button>

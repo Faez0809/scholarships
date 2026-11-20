@@ -36,7 +36,7 @@ export const ScholarshipApp: React.FC = () => {
             <span className="font-medium text-zinc-700">ScholarTrack</span> · Data from official program pages and
             OpenAlex. Always confirm details before applying.
           </p>
-          <button type="button" onClick={() => refreshFromCloud()} className="hover:text-zinc-800">
+          <button type="button" onClick={() => refreshFromCloud()} className="-my-1 rounded px-1 py-1.5 hover:text-zinc-800">
             {syncStatus === "syncing"
               ? "Updating…"
               : syncStatus === "offline"

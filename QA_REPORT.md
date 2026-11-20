@@ -19,7 +19,7 @@ Severity: **High** = wrong information or blocks some users. **Medium** = confus
 | 6 | Medium | Function | Sort "Name A–Z" sorts by university, so "Singapore International Graduate Award" appears first (its host is "A*STAR"). | Fixed |
 | 7 | Medium | Function | Sort "Most left over" uses the program average, so ranges like "+$550 to +$1,050" sort below "+$1,250" inconsistently with what the card shows. | Not a bug: re-checked, the sort already uses the best option shown on the card |
 | 8 | Medium | Contrast | Filter-chip counts and "(expected)" use light grey text at 2.6:1 (needs 4.5:1). | Fixed |
-| 9 | Medium | Touch targets | "Find supervisors" on cards (16px tall) and the footer refresh link are below the 24px minimum. | Open |
+| 9 | Medium | Touch targets | "Find supervisors" on cards (16px tall) and the footer refresh link are below the 24px minimum. | Fixed |
 | 10 | Medium | Keyboard | Card focus is only an underline on the title; hard to see which card is focused. | Open |
 | 11 | Medium | Visual density | Detail panel: every benefit sits in its own bordered box, monospaced labels ("Frugal (-$300)"), marketing headings ("Full Scholarship Facilities & Perks", "University Overview & Academic Prestige"). Feels busy. | Open |
 | 12 | Medium | Admin | The add/edit form still uses the old style (indigo blocks, "Flag Emoji" field, jargon) and cannot edit the new deadline and stipend notes. | Open |

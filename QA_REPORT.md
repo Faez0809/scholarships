@@ -26,4 +26,6 @@ Severity: **High** = wrong information or blocks some users. **Medium** = confus
 | 13 | Low | Wayfinding | "Admin" sits next to "Sign in" for every visitor and competes with it, especially on phones. | Fixed |
 | 14 | Low | Phone | The footer (data sources, refresh) is hidden on phones. | Fixed |
 
+| 15 | Medium | Detail panel | Found on re-test: small tap targets in the detail panel (info buttons and next-step links are 16px tall) and a few low-contrast labels ("(OK)", "(Low)", "Every month"). | Open |
+
 Fixes are made one per commit, in the order above, and ticked off here.

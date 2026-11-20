@@ -16,6 +16,10 @@ ScholarTrack is a clean, modern web application designed to discover, filter, an
 - **Live Supabase Cloud Database Sync**: Fully connected with Supabase PostgreSQL cloud storage. Changes made by administrators sync across clients in real-time, backed by automatic initial seed data and seamless offline fallback.
 - **100% Mobile Responsive**: Optimized for phone browsers with collapsible filter drawer, edge-to-edge touch swiping on regions and filter pills, compact card grids, and responsive slide-over panels.
 - **Admin Management & Instant URL Auto-Import**: Protected admin panel to create, edit, and delete scholarships. Includes an automated URL parser that extracts criteria directly from official scholarship websites.
+- **25-Program Catalog with Checked Deadlines**: Government and national schemes (Stipendium Hungaricum, Türkiye Bursları, Fulbright, GKS, Commonwealth, Swedish Institute, Swiss Government Excellence, Australia Awards, VLIR-UOS, Taiwan, SINGA and more). Deadlines that are not announced yet are marked as expected, and local-currency stipends are shown in the detail panel.
+- **Sync Programs (Admin)**: Adds newly bundled programs to an existing database and refreshes dated deadline facts, without deleting custom entries.
+- **Find Supervisors**: Search a university and topic using the free OpenAlex research database to see active researchers, their h-index, recent papers and profile links. Prefills from supervisor-funded programs.
+- **My Outreach**: Track professors through Drafting, Email Sent, Follow-up Due, Replied / Interview and Declined, with notes, follow-up reminders and email drafts built from your profile. Stored in the browser.
 
 ---
 
@@ -57,6 +61,7 @@ Set your Supabase credentials, parser key, and admin passcode in `.env.local`:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+# Server-only; used by the API routes for writes. Never expose it in client code.
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 GEMINI_API_KEY=your_gemini_api_key
 ADMIN_PIN=choose_a_private_passcode

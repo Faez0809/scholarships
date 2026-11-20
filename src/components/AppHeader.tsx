@@ -60,7 +60,8 @@ export const AppHeader: React.FC = () => {
                     }`}
                   >
                     <Icon className="h-4 w-4" />
-                    {label}
+                    <span className="whitespace-nowrap lg:hidden">{NAV_ITEMS.find((n) => n.id === id)?.short}</span>
+                    <span className="hidden whitespace-nowrap lg:inline">{label}</span>
                     {id === "outreach" && due > 0 && (
                       <span className="rounded-full bg-amber-100 px-1.5 text-[11px] font-semibold text-amber-800">
                         {due}

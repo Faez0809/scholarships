@@ -58,7 +58,7 @@ function friendly(message: string | undefined): string {
 
 export function AccountProvider({ children }: { children: ReactNode }) {
   const supabase = typeof window !== "undefined" ? getBrowserSupabase() : null;
-  const { profile, setProfile, documentChecklist, replaceDocumentChecklist } = useScholarship();
+  const { profile, setProfile, resetProfile, documentChecklist, replaceDocumentChecklist, setSelectedScholarship, setActivePill, setSearchQuery } = useScholarship();
   const { contacts, sender, replaceAll, isLoaded: outreachLoaded } = useOutreach();
   const { savedIds, guideState, replaceGuide } = useGuide();
 
@@ -190,7 +190,31 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     },
     signOut: async () => {
       if (!supabase) return;
+      // Stop syncing first so the reset below is never written to the account.
+      readyForSync.current = false;
       await supabase.auth.signOut();
+      // Return this browser to a fresh, default state; the account keeps its own copy.
+      for (const key of [
+        "scholar_track_v2_profile",
+        "scholar_track_v2_docs",
+        "scholar_track_v2_saved_scholarships",
+        "scholar_track_v2_guide",
+        "scholar_track_v2_outreach_contacts",
+        "scholar_track_v2_outreach_sender",
+      ]) {
+        try {
+          window.localStorage.removeItem(key);
+        } catch {
+          // Storage may be unavailable; state is still reset below.
+        }
+      }
+      resetProfile();
+      replaceDocumentChecklist({});
+      replaceAll([], { fullName: "", currentRole: "", researchInterest: "", highlights: "" });
+      replaceGuide([], {});
+      setSelectedScholarship(null);
+      setActivePill("all");
+      setSearchQuery("");
       setStatus("guest");
     },
   };

@@ -4,7 +4,7 @@
  * "no"    = citizens cannot apply to this program
  * "check" = it depends on the cycle or could not be confirmed; check the official list
  *
- * Checked against public program information on 2026-11-20. Programs not listed here
+ * Checked against public program information on 2026-11-20; country lists re-checked 2026-11-24. Programs not listed here
  * (for example ones an admin adds) show "check".
  */
 
@@ -36,15 +36,15 @@ const RULES: Record<string, { status: Partial<Record<NationalityCode, Nationalit
   "kaist-global-fellowship-2026": { status: ALL_YES },
   "eiffel-excellence-2026": { status: ALL_YES },
   "stipendium-hungaricum-2027": {
-    status: { BD: "yes", PK: "yes", IN: "check", NP: "check", LK: "check" },
-    note: "Only nationals of current partner countries can apply; the list changes each year.",
+    status: { BD: "yes", PK: "yes", LK: "yes", IN: "check", NP: "check" },
+    note: "Only nationals of current partner countries can apply; Sri Lanka joined in 2022. The list can change each year.",
   },
   "turkiye-burslari-2027": { status: ALL_YES },
   "fulbright-foreign-student-2028": { status: ALL_YES, note: "Apply through the Fulbright office or U.S. Embassy in your country." },
   "gks-graduate-korea-2027": { status: ALL_YES },
   "commonwealth-uk-2028": {
-    status: { BD: "yes", PK: "yes", IN: "check", LK: "check", NP: "no" },
-    note: "Only for Commonwealth countries on the current eligible list. Nepal is not a Commonwealth member.",
+    status: { BD: "yes", PK: "yes", IN: "yes", LK: "yes", NP: "no" },
+    note: "Only for Commonwealth countries on the current eligible list (which includes India and Sri Lanka). Nepal is not a Commonwealth member.",
   },
   "swedish-institute-sisgp-2027": {
     status: { BD: "yes", IN: "check", PK: "check", NP: "check", LK: "check" },
@@ -59,8 +59,8 @@ const RULES: Record<string, { status: Partial<Record<NationalityCode, Nationalit
     note: "Mainly for Canadian citizens and permanent residents.",
   },
   "australia-awards-2028": {
-    status: { BD: "yes", PK: "yes", NP: "yes", IN: "check", LK: "check" },
-    note: "Only citizens of participating countries can apply.",
+    status: { BD: "yes", PK: "yes", NP: "yes", LK: "yes", IN: "check" },
+    note: "Only citizens of participating countries can apply; India's status varies by intake.",
   },
   "nl-scholarship-2027": { status: ALL_YES, note: "Open to students from outside the EEA." },
   "vlir-uos-icp-2027": {

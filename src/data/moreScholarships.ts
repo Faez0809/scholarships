@@ -9,8 +9,8 @@ import { Scholarship } from "../types/scholarship";
 const VERIFIED_ON = "2026-11-20";
 const now = () => new Date().toISOString();
 
-type Base = Omit<Scholarship, "createdAt" | "updatedAt" | "lastVerified" | "dataVersion">;
-const make = (b: Base): Scholarship => ({ ...b, lastVerified: VERIFIED_ON, dataVersion: 1, createdAt: now(), updatedAt: now() });
+type Base = Omit<Scholarship, "createdAt" | "updatedAt" | "lastVerified" | "dataVersion"> & { lastVerified?: string; dataVersion?: number };
+const make = (b: Base): Scholarship => ({ lastVerified: VERIFIED_ON, dataVersion: 1, ...b, createdAt: now(), updatedAt: now() });
 
 export const MORE_SCHOLARSHIPS: Scholarship[] = [
   make({
@@ -82,6 +82,8 @@ export const MORE_SCHOLARSHIPS: Scholarship[] = [
   }),
   make({
     id: "clarendon-oxford-2027",
+    dataVersion: 3,
+    lastVerified: "2026-11-24",
     name: "Clarendon Scholarships (University of Oxford)",
     university: "University of Oxford",
     city: "Oxford",
@@ -97,8 +99,8 @@ export const MORE_SCHOLARSHIPS: Scholarship[] = [
     minIELTS: 7.0,
     medium: "English Only",
     deadline: "2027-01-06",
-    deadlineIsEstimate: false,
-    deadlineNote: "There is no separate application: apply to your Oxford course by its December 2026 or January 2027 funding deadline (for example 6 Jan 2027 for Advanced Computer Science).",
+    deadlineIsEstimate: true,
+    deadlineNote: "No separate application: apply to your Oxford course by its own December 2026 or January 2027 funding deadline. The date shown (6 Jan 2027, e.g. Advanced Computer Science) is one example; many courses close earlier.",
     monthlyStipendUSD: 2400,
     estimatedLivingCostUSD: 1600,
     stipendIsEstimate: true,

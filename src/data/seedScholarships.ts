@@ -116,6 +116,7 @@ const BUILT_IN: Scholarship[] = [
   // 2. Erasmus Mundus Joint Masters (Gov / Multi-Uni - Europe)
   {
     id: "erasmus-mundus-emjm-2026",
+    stipendNote: "€1,400 a month for the whole programme, plus participation costs (tuition) and travel and insurance contributions. USD figure is approximate.",
     name: "Erasmus Mundus Joint Masters (EMJM Full Scholarship)",
     university: "European Commission Multi-University Consortium",
     city: "Multiple European Capitals",
@@ -176,8 +177,8 @@ const BUILT_IN: Scholarship[] = [
     deadlineIsEstimate: true,
     deadlineNote:
       "Each Erasmus Mundus programme sets its own deadline, usually between December 2026 and February 2027.",
-    lastVerified: "2026-11-20",
-    dataVersion: 2,
+    lastVerified: "2026-11-24",
+    dataVersion: 3,
     monthlyStipendUSD: 1550,
     estimatedLivingCostUSD: 950,
     tuitionCovered: true,
@@ -313,6 +314,8 @@ const BUILT_IN: Scholarship[] = [
   // 4. University of Waterloo (Supervisor / RA-TA - Americas / Canada)
   {
     id: "waterloo-cs-eng-ra-ta-2026",
+    stipendNote: "The Cheriton School of Computer Science lists a funding plan amount of CAD 46,737 a year for international PhD students. Other departments differ. USD figure is approximate.",
+    stipendIsEstimate: true,
     name: "Graduate Research Assistantship (RA / TA Guaranteed Funding)",
     university: "University of Waterloo",
     city: "Waterloo, Ontario",
@@ -334,9 +337,9 @@ const BUILT_IN: Scholarship[] = [
     deadlineIsEstimate: true,
     deadlineNote:
       "Cheriton School of Computer Science deadline for Fall 2027 entry; other departments differ. Confirm on the program page.",
-    lastVerified: "2026-11-20",
-    dataVersion: 2,
-    monthlyStipendUSD: 2100,
+    lastVerified: "2026-11-24",
+    dataVersion: 3,
+    monthlyStipendUSD: 2800,
     estimatedLivingCostUSD: 1400,
     tuitionCovered: true,
     healthInsuranceCovered: true,
@@ -371,6 +374,7 @@ const BUILT_IN: Scholarship[] = [
   // 5. Georgia Tech / US R1 (Supervisor / RA-TA - Americas / USA)
   {
     id: "georgia-tech-gra-gta-2026",
+    stipendNote: "Georgia Tech's minimum doctoral assistantship stipend is $2,291 a month for 2026-27; schools may pay more. Tuition is waived for assistants.",
     name: "Departmental Graduate Research Assistantship (GRA / GTA)",
     university: "Georgia Institute of Technology (College of Computing)",
     city: "Atlanta, Georgia",
@@ -392,9 +396,9 @@ const BUILT_IN: Scholarship[] = [
     deadlineIsEstimate: false,
     deadlineNote:
       "College of Computing PhD deadline for Fall 2027 entry.",
-    lastVerified: "2026-11-20",
-    dataVersion: 2,
-    monthlyStipendUSD: 2850,
+    lastVerified: "2026-11-24",
+    dataVersion: 3,
+    monthlyStipendUSD: 2290,
     estimatedLivingCostUSD: 1600,
     tuitionCovered: true,
     healthInsuranceCovered: true,
@@ -427,6 +431,7 @@ const BUILT_IN: Scholarship[] = [
   // 6. University of Melbourne (Supervisor / RA-TA / RTP - Oceania / Australia)
   {
     id: "melbourne-rtp-scholarship-2026",
+    stipendNote: "AUD 41,100 a year at the 2027 full-time rate, paid fortnightly, for up to 3.5 years. USD figure is approximate.",
     name: "Graduate Research Scholarship & RTP Stipend",
     university: "The University of Melbourne",
     city: "Melbourne, Victoria",
@@ -448,9 +453,9 @@ const BUILT_IN: Scholarship[] = [
     deadlineIsEstimate: false,
     deadlineNote:
       "Round 2 for 2027 commencement. Round 1 closed 31 Oct 2026; Round 3 closes 15 May 2027.",
-    lastVerified: "2026-11-20",
-    dataVersion: 2,
-    monthlyStipendUSD: 2050,
+    lastVerified: "2026-11-24",
+    dataVersion: 3,
+    monthlyStipendUSD: 2240,
     estimatedLivingCostUSD: 1450,
     tuitionCovered: true,
     healthInsuranceCovered: true,
@@ -484,6 +489,7 @@ const BUILT_IN: Scholarship[] = [
   // 7. KAUST Fellowship (University Direct - Middle East)
   {
     id: "kaust-fellowship-2026",
+    stipendNote: "KAUST pays USD 20,000 a year to MS students and USD 25,000 to 30,000 to PhD students, depending on qualifications and progress. Free housing, tuition and medical cover come on top.",
     name: "KAUST Fellowship (Fully Funded MS & PhD)",
     university: "King Abdullah University of Science and Technology",
     city: "Thuwal",
@@ -503,9 +509,9 @@ const BUILT_IN: Scholarship[] = [
     deadlineIsEstimate: false,
     deadlineNote:
       "Fall 2027 MS and PhD admission. Applying for admission also considers you for the fellowship.",
-    lastVerified: "2026-11-20",
-    dataVersion: 3,
-    monthlyStipendUSD: 2500,
+    lastVerified: "2026-11-24",
+    dataVersion: 4,
+    monthlyStipendUSD: 1670,
     estimatedLivingCostUSD: 750,
     tuitionCovered: true,
     healthInsuranceCovered: true,
@@ -539,6 +545,7 @@ const BUILT_IN: Scholarship[] = [
   // 8. Gates Cambridge Scholarship (University Direct - Europe)
   {
     id: "gates-cambridge-2026",
+    stipendNote: "Maintenance allowance of £23,152 for 12 months at the 2026-27 rate (pro rata for shorter courses), plus Cambridge fees. USD figure is approximate.",
     name: "Gates Cambridge Scholarship",
     university: "University of Cambridge",
     city: "Cambridge",
@@ -555,11 +562,10 @@ const BUILT_IN: Scholarship[] = [
     medium: "English Only",
     deadline: "2026-12-08",
     deadlineIsEstimate: false,
-    deadlineNote:
-      "International round. Some courses use 6 Jan 2027; check your course's funding deadline.",
-    lastVerified: "2026-11-20",
-    dataVersion: 2,
-    monthlyStipendUSD: 2400,
+    deadlineNote: "8 Dec 2026 for most international applicants; some courses use 6 Jan 2027. US citizens living in the US had an earlier round (14 Oct 2026). Check your course's funding deadline.",
+    lastVerified: "2026-11-24",
+    dataVersion: 3,
+    monthlyStipendUSD: 2545,
     estimatedLivingCostUSD: 1650,
     tuitionCovered: true,
     healthInsuranceCovered: true,
@@ -610,10 +616,9 @@ const BUILT_IN: Scholarship[] = [
     medium: "English Only",
     deadline: "2026-11-30",
     deadlineIsEstimate: false,
-    deadlineNote:
-      "ESOP is only open in the November window for Autumn 2027 entry.",
-    lastVerified: "2026-11-20",
-    dataVersion: 2,
+    deadlineNote: "Apply through eApply with your Master's application in the 1–30 November 2026 window, including the thesis pre-proposal.",
+    lastVerified: "2026-11-24",
+    dataVersion: 3,
     monthlyStipendUSD: 2690,
     estimatedLivingCostUSD: 1900,
     stipendIsEstimate: true,

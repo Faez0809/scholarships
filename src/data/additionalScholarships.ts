@@ -1076,6 +1076,7 @@ export const ADDITIONAL_SCHOLARSHIPS: Scholarship[] = [
   // 25. Singapore International Graduate Award (Singapore)
   {
     id: "singa-singapore-2027",
+    dataVersion: 3,
     name: "Singapore International Graduate Award (SINGA)",
     university: "A*STAR, NUS, NTU, SUTD & SMU",
     city: "Singapore",
@@ -1133,10 +1134,9 @@ export const ADDITIONAL_SCHOLARSHIPS: Scholarship[] = [
     minIELTS: 6.5,
     medium: "English Only",
     deadline: "2026-12-01",
-    deadlineIsEstimate: false,
-    deadlineNote:
-      "1 December for the August intake. A second round closes 1 June 2027 for the January 2028 intake (A*STAR and NTU only).",
-    lastVerified: VERIFIED_ON,
+    deadlineIsEstimate: true,
+    deadlineNote: "1 December is the usual date for the August intake (last year 1 Dec 2025); A*STAR had not posted the 2027 date when checked. A second round closes around 1 June for January entry.",
+    lastVerified: "2026-11-24",
     monthlyStipendUSD: 2080,
     estimatedLivingCostUSD: 1500,
     stipendIsEstimate: false,

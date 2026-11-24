@@ -1,3 +1,4 @@
+import { DEFAULT_SITE_URL } from "@/lib/siteUrl";
 import type { Metadata, Viewport } from "next";
 import { Inter, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
@@ -16,7 +17,7 @@ const serif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://scholartrack-olive.vercel.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL),
   title: "ScholarTrack — Discover Fully Funded Master's & PhD Scholarships",
   description:
     "Discover, filter, and manage fully funded Master's and PhD scholarships worldwide. Match against your CGPA, IELTS, target degree, and calculate net monthly living savings.",

@@ -7,6 +7,7 @@ import { useScholarship } from "./ScholarshipContext";
 import { OutreachContact, SenderDetails, useOutreach } from "./OutreachContext";
 import { GuideState, useGuide } from "./GuideContext";
 import { UserProfile } from "../types/scholarship";
+import { siteUrl } from "../lib/siteUrl";
 
 /**
  * Optional accounts. Guests keep everything in this browser (localStorage).
@@ -176,7 +177,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       const clean = email.trim().toLowerCase();
       if (!clean) return "Enter the email you signed up with.";
       const { error } = await supabase.auth.resetPasswordForEmail(clean, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: `${siteUrl()}/reset-password`,
       });
       return error ? friendly(error.message) : null;
     },

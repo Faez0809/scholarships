@@ -10,6 +10,7 @@ import { ScholarshipCard } from "./ScholarshipCard";
 import { GetStarted } from "./GetStarted";
 import { SaveProgressPrompt } from "./AuthDialog";
 import { FiltersSheet, QuickStart, activeFilterCount } from "./BrowseParts";
+import { pickFeatured } from "../data/featured";
 import { PageHeader, btn } from "./ui";
 
 type Quick = PillFilter | "saved";
@@ -54,6 +55,20 @@ export const BrowseView: React.FC = () => {
   const closed = results.filter((s) => calculateDaysRemaining(s.deadline).isExpired);
   const showClosed = closedChoice ?? searchQuery.trim() !== "";
 
+  // A few well-known programs on the plain home view, rotating each day.
+  const [day] = useState(() => Math.floor(Date.now() / 86_400_000));
+  const featured = useMemo(
+    () =>
+      pickFeatured(
+        scholarships,
+        day,
+        3,
+        profile.isSet ? (s) => checkEligibility(s, profile).isEligible : undefined,
+        (s) => !calculateDaysRemaining(s.deadline).isExpired
+      ),
+    [scholarships, day, profile]
+  );
+
   const quick: { id: Quick; label: string; count: number | null }[] = [
     { id: "all", label: "All", count: null },
     { id: "eligible", label: "I qualify", count: profile.isSet ? counts.eligible : null },
@@ -74,6 +89,9 @@ export const BrowseView: React.FC = () => {
   const filterCount = activeFilterCount(profile);
   const anythingNarrowing =
     showSaved || activePill !== "all" || searchQuery.trim() !== "" || filterCount > 0 || profile.onlyEligible;
+  const showFeatured = !anythingNarrowing && featured.length > 0;
+  const featuredIds = new Set(showFeatured ? featured.map((f) => f.id) : []);
+  const listOpen = openNow.filter((x) => !featuredIds.has(x.id));
 
   const clearAll = () => {
     setShowSaved(false);
@@ -238,8 +256,26 @@ export const BrowseView: React.FC = () => {
           </div>
         ) : (
           <>
+            {showFeatured && (
+              <section aria-labelledby="featured-title" className="mb-8">
+                <div className="mb-3 flex items-baseline justify-between gap-3">
+                  <h2 id="featured-title" className="font-serif text-lg font-semibold text-stone-900">
+                    {profile.isSet ? "Featured for you today" : "Featured today"}
+                  </h2>
+                  <span className="text-xs text-stone-500">A new set each day</span>
+                </div>
+                <ul className="-mx-4 flex snap-x snap-mandatory scroll-pl-4 gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 xl:grid-cols-3 [&::-webkit-scrollbar]:hidden">
+                  {featured.map((f) => (
+                    <li key={f.id} className="w-[86%] shrink-0 snap-start sm:w-auto">
+                      <ScholarshipCard scholarship={f} />
+                    </li>
+                  ))}
+                </ul>
+                <h2 className="mt-8 font-serif text-lg font-semibold text-stone-900">All scholarships</h2>
+              </section>
+            )}
             <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3">
-              {openNow.map((s) => (
+              {listOpen.map((s) => (
                 <li key={s.id} className="min-w-0">
                   <ScholarshipCard scholarship={s} />
                 </li>

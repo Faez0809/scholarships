@@ -103,7 +103,7 @@ export const FieldPicker: React.FC<{
           spellCheck={false}
           enterKeyHint="done"
           value={editing ? query : chosen}
-          placeholder="Any field. Type e.g. CSE, EEE, BBA, robotics"
+          placeholder="Any field, or type CSE, EEE, BBA…"
           onFocus={() => {
             setQuery("");
             setActive(0);

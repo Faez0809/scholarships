@@ -6,6 +6,7 @@ import { PartnerUniversity } from "../types/scholarship";
 import { useGuide } from "../context/GuideContext";
 import { FUNDING_HELP, FUNDING_LABELS, InfoTip, JARGON, SUPERVISOR_LABELS, coverageItems, fundingLevel, useDialog } from "./ui";
 import { cgpaLabel, ieltsLabel, lastCheckedLabel } from "../utils/listing";
+import { SELECTION, SELECTION_CHECKED } from "../data/selection";
 import { ReportErrorLink } from "./ReportError";
 import { nationalityLabel, nationalityNote, nationalityStatus } from "../data/nationality";
 import { AGE_LIMITS, englishTestExpired } from "../data/rules";
@@ -200,6 +201,7 @@ export const ScholarshipDrawer: React.FC = () => {
             <p className="mt-0.5 pl-[22px] text-xs text-stone-500">
               {s.city}, {s.country} · {s.region}
             </p>
+            <p className="mt-3 text-sm leading-relaxed text-stone-700">{s.overview}</p>
             <div className="mt-2 text-xs text-stone-500">
               {lastCheckedLabel(s)} ·{" "}
               <a href={s.officialWebsiteUrl} target="_blank" rel="noopener noreferrer" className="text-blue-800 hover:underline">
@@ -213,27 +215,67 @@ export const ScholarshipDrawer: React.FC = () => {
               </p>
             )}
 
+          </div>
+
+          {/* Essentials at a glance */}
+          <section aria-label="Key facts">
+            <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-stone-200 bg-stone-200 text-sm">
+              <div className="bg-white px-3 py-2.5">
+                <dt className="text-xs text-stone-500">Deadline</dt>
+                <dd className="mt-0.5 font-medium text-stone-900">
+                  {s.deadlineUnknown
+                    ? "Not announced yet"
+                    : isExpired
+                    ? "Closed this round"
+                    : `${formattedDate}${s.deadlineIsEstimate ? " (expected)" : ""}`}
+                </dd>
+              </div>
+              <div className="bg-white px-3 py-2.5">
+                <dt className="text-xs text-stone-500">Funding</dt>
+                <dd className={`mt-0.5 font-medium ${fundingLevel(s) === "Fully funded" ? "text-emerald-800" : "text-amber-800"}`}>{fundingLevel(s)}</dd>
+              </div>
+              <div className="bg-white px-3 py-2.5">
+                <dt className="text-xs text-stone-500">Stipend</dt>
+                <dd className="mt-0.5 font-medium tabular-nums text-stone-900">
+                  {s.stipendAmountUnknown
+                    ? "Not published"
+                    : s.monthlyStipendUSD > 0
+                    ? `${s.stipendIsEstimate ? "About " : ""}$${s.monthlyStipendUSD.toLocaleString()} a month`
+                    : "None"}
+                </dd>
+              </div>
+              <div className="bg-white px-3 py-2.5">
+                <dt className="text-xs text-stone-500">For you</dt>
+                <dd className="mt-0.5 font-medium">
+                  {!matched ? (
+                    <button type="button" onClick={() => setIsProfileOpen(true)} className="text-blue-800 hover:underline">
+                      Add profile to check
+                    </button>
+                  ) : eligibility.isEligible ? (
+                    <span className="text-emerald-800">You qualify</span>
+                  ) : (
+                    <span className="text-amber-800">Not yet</span>
+                  )}
+                </dd>
+              </div>
+            </dl>
             {(s.deadlineNote || s.stipendNote) && (
-              <dl className="mt-3 space-y-2 rounded-xl border border-stone-200 bg-white p-3 text-xs">
+              <div className="mt-3 space-y-1.5 text-xs leading-relaxed text-stone-600">
                 {s.deadlineNote && (
-                  <div>
-                    <dt className="font-semibold text-stone-800">
-                      Deadline{s.deadlineIsEstimate ? " (expected, not yet announced)" : ""}
-                    </dt>
-                    <dd className="mt-0.5 text-stone-600">{s.deadlineNote}</dd>
-                  </div>
+                  <p>
+                    <span className="font-medium text-stone-800">Deadline{s.deadlineIsEstimate ? " (expected)" : ""}: </span>
+                    {s.deadlineNote}
+                  </p>
                 )}
                 {s.stipendNote && (
-                  <div>
-                    <dt className="font-semibold text-stone-800">
-                      Stipend{s.stipendIsEstimate ? " (USD figure is approximate)" : ""}
-                    </dt>
-                    <dd className="mt-0.5 text-stone-600">{s.stipendNote}</dd>
-                  </div>
+                  <p>
+                    <span className="font-medium text-stone-800">Stipend: </span>
+                    {s.stipendNote}
+                  </p>
                 )}
-              </dl>
+              </div>
             )}
-          </div>
+          </section>
 
           {/* What to do next */}
           <section aria-labelledby="next-steps-title" className="rounded-xl border border-stone-200">
@@ -316,6 +358,189 @@ export const ScholarshipDrawer: React.FC = () => {
             </ol>
           </section>
 
+          {/* What the funding covers */}
+          <div>
+            <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-900">
+              <Award className="h-4 w-4 text-stone-500" />
+              What the funding covers
+              <span className={`text-xs font-medium ${fundingLevel(s) === "Fully funded" ? "text-emerald-800" : "text-amber-800"}`}>
+                {fundingLevel(s)}
+              </span>
+            </h3>
+            <ul className="mb-4 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm sm:grid-cols-3">
+              {coverageItems(s).map((c) => (
+                <li key={c.label} className={`flex items-center gap-1.5 ${c.covered ? "text-stone-800" : "text-stone-500"}`}>
+                  {c.covered ? <Check className="h-4 w-4 text-emerald-700" /> : <X className="h-4 w-4 text-stone-400" />}
+                  {c.label}
+                  <span className="sr-only">{c.covered ? " covered" : " not covered"}</span>
+                </li>
+              ))}
+            </ul>
+            {profile.nationality && profile.nationality !== "OTHER" && (
+              <p className="mb-4 text-sm text-stone-700">
+                <span className="font-medium">{nationalityLabel(profile.nationality)} passport: </span>
+                {nationalityStatus(s.id, profile.nationality) === "yes"
+                  ? "eligible to apply."
+                  : nationalityStatus(s.id, profile.nationality) === "no"
+                  ? "not eligible for this program."
+                  : "check the official country list."}
+                {nationalityNote(s.id) && <span className="text-stone-500"> {nationalityNote(s.id)}</span>}
+              </p>
+            )}
+            {(AGE_LIMITS[s.id] || (!s.deadlineUnknown && englishTestExpired(profile.englishTestDate, s.deadline))) && (
+              <ul className="mb-4 space-y-1 text-sm text-stone-700">
+                {AGE_LIMITS[s.id] && (
+                  <li>
+                    <span className="font-medium">Age limit: </span>
+                    {AGE_LIMITS[s.id].note}
+                  </li>
+                )}
+                {(!s.deadlineUnknown && englishTestExpired(profile.englishTestDate, s.deadline)) && (
+                  <li className="text-amber-800">
+                    Your IELTS will be more than two years old by the deadline. Most programs need a recent result.
+                  </li>
+                )}
+              </ul>
+            )}
+            <p className="mb-1.5 text-xs font-medium text-stone-500">From the official page</p>
+            <ul className="list-disc space-y-1 pl-5 text-sm text-stone-700 marker:text-stone-300">
+              {s.facilities.map((facility, idx) => (
+                <li key={idx}>{facility}</li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Requirements */}
+          <section id="drawer-eligibility" aria-labelledby="eligibility-title" className="scroll-mt-4">
+            <h3 id="eligibility-title" className="flex items-center gap-2 text-sm font-semibold text-stone-900">
+              {matched && eligibility.isEligible && <CheckCircle2 className="h-4 w-4 text-emerald-700" />}
+              {matched && !eligibility.isEligible && <AlertTriangle className="h-4 w-4 text-amber-700" />}
+              {matched && eligibility.isEligible ? "You meet the requirements" : "Requirements"}
+            </h3>
+            <dl className="mt-2 divide-y divide-stone-100 rounded-xl border border-stone-200 text-sm">
+              {[
+                { label: "Minimum CGPA", value: cgpaLabel(s), ok: matched && s.minCGPA > 0 ? eligibility.cgpaPass : null },
+                { label: "Minimum IELTS", value: ieltsLabel(s), ok: matched && s.minIELTS > 0 ? eligibility.ieltsPass : null },
+                { label: "Degree", value: s.degrees.join(" & "), ok: matched ? eligibility.degreePass : null },
+                { label: "Teaching language", value: s.medium === "Any" ? "English or local" : s.medium, ok: null },
+              ].map((row) => (
+                <div key={row.label} className="flex items-center justify-between gap-3 px-3 py-2">
+                  <dt className="text-stone-600">{row.label}</dt>
+                  <dd className="flex items-center gap-1.5 font-medium tabular-nums text-stone-900">
+                    {row.value}
+                    {row.ok === null ? null : row.ok ? (
+                      <Check className="h-4 w-4 text-emerald-700" aria-label="met" />
+                    ) : (
+                      <X className="h-4 w-4 text-amber-700" aria-label="not met" />
+                    )}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            {s.requirementsNote && (
+              <p className="mt-2 text-sm leading-relaxed text-stone-600">
+                {s.requirementsNote}{" "}
+                <span className="text-stone-500">
+                  {s.requirementsChecked ? `Checked ${formatVerifiedDate(s.requirementsChecked)}. ` : ""}
+                  <a href={s.officialWebsiteUrl} target="_blank" rel="noopener noreferrer" className="text-blue-800 hover:underline">
+                    Official page
+                  </a>
+                </span>
+              </p>
+            )}
+            {matched && !eligibility.isEligible && eligibility.reasons.length > 0 && (
+              <ul className="mt-2 list-disc space-y-0.5 pl-5 text-sm text-amber-900">
+                {eligibility.reasons.map((r, i) => (
+                  <li key={i}>{r}</li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          {/* What strengthens your application (official selection criteria only) */}
+          {SELECTION[s.id] && (
+            <section aria-labelledby="strengthen-title">
+              <h3 id="strengthen-title" className="text-sm font-semibold text-stone-900">
+                What strengthens your application
+              </h3>
+              <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-stone-700 marker:text-stone-300">
+                {SELECTION[s.id].points.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
+              <p className="mt-2 text-xs text-stone-500">
+                From{" "}
+                <a href={SELECTION[s.id].sourceUrl} target="_blank" rel="noopener noreferrer" className="text-blue-800 hover:underline">
+                  {SELECTION[s.id].sourceLabel}
+                </a>
+                , checked {formatVerifiedDate(SELECTION_CHECKED)}.
+              </p>
+            </section>
+          )}
+
+          {/* Money each month */}
+          <section aria-labelledby="money-title">
+            <h3 id="money-title" className="flex items-center gap-1.5 text-sm font-semibold text-stone-900">
+              Money each month
+              <InfoTip text={JARGON.leftEachMonth} />
+            </h3>
+
+            {selectedPartnerUni && (
+              <p className="mt-1 text-xs text-stone-500">
+                For {selectedPartnerUni.name} ({selectedPartnerUni.city})
+              </p>
+            )}
+
+            {s.stipendAmountUnknown && !selectedPartnerUni ? (
+              <p className="mt-2 rounded-xl border border-stone-200 px-3 py-2.5 text-sm text-stone-700">
+                The program pays a monthly stipend but does not publish the amount. Typical living costs there are about {`\$${s.estimatedLivingCostUSD.toLocaleString()}`} a month. Check the official page for the current rate.
+              </p>
+            ) : (
+              <>
+              <dl className="mt-2 divide-y divide-stone-100 rounded-xl border border-stone-200 text-sm">
+                <div className="flex items-center justify-between px-3 py-2">
+                  <dt className="text-stone-600">Stipend</dt>
+                  <dd className="font-medium tabular-nums text-stone-900">${activeStipend.toLocaleString()}</dd>
+                </div>
+                <div className="flex items-center justify-between px-3 py-2">
+                  <dt className="text-stone-600">Typical living cost</dt>
+                  <dd className="font-medium tabular-nums text-stone-900">−${effectiveLivingCost.toLocaleString()}</dd>
+                </div>
+                <div className="flex items-center justify-between px-3 py-2">
+                  <dt className="font-medium text-stone-900">Left each month</dt>
+                  <dd className={`font-semibold tabular-nums ${adjustedNetSavings >= 0 ? "text-emerald-800" : "text-amber-800"}`}>
+                    {formatSignedUSD(adjustedNetSavings)}
+                  </dd>
+                </div>
+              </dl>
+              {/* Personal spending adjuster */}
+              <div className="mt-3 px-1">
+                <div className="flex items-center justify-between text-xs text-stone-600">
+                  <span>Adjust for your own spending</span>
+                  <span className="font-semibold tabular-nums text-stone-900">
+                    {personalExpenseAdjustment >= 0 ? `+$${personalExpenseAdjustment}` : `-$${Math.abs(personalExpenseAdjustment)}`}/mo
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  aria-label="Adjust your monthly living expenses"
+                  min="-300"
+                  max="500"
+                  step="50"
+                  value={personalExpenseAdjustment}
+                  onChange={(e) => setPersonalExpenseAdjustment(parseInt(e.target.value, 10))}
+                  className="mt-2.5 h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-stone-200 accent-blue-700"
+                />
+                <div className="mt-1 flex justify-between text-[11px] text-stone-500">
+                  <span>Spend less</span>
+                  <span>Typical</span>
+                  <span>Spend more</span>
+                </div>
+              </div>
+              </>
+            )}
+          </section>
+
           {/* Interactive Multi-University & City Savings Selector (If Partner Unis Exist) */}
           {s.partnerUniversities && s.partnerUniversities.length > 0 && (
             <div className="rounded-xl border border-stone-200 bg-stone-50 p-4 shadow-2xs">
@@ -390,168 +615,6 @@ export const ScholarshipDrawer: React.FC = () => {
             </div>
           )}
 
-          {/* Requirements */}
-          <section id="drawer-eligibility" aria-labelledby="eligibility-title" className="scroll-mt-4">
-            <h3 id="eligibility-title" className="flex items-center gap-2 text-sm font-semibold text-stone-900">
-              {matched && eligibility.isEligible && <CheckCircle2 className="h-4 w-4 text-emerald-700" />}
-              {matched && !eligibility.isEligible && <AlertTriangle className="h-4 w-4 text-amber-700" />}
-              {matched && eligibility.isEligible ? "You meet the requirements" : "Requirements"}
-            </h3>
-            <dl className="mt-2 divide-y divide-stone-100 rounded-xl border border-stone-200 text-sm">
-              {[
-                { label: "Minimum CGPA", value: cgpaLabel(s), ok: matched && s.minCGPA > 0 ? eligibility.cgpaPass : null },
-                { label: "Minimum IELTS", value: ieltsLabel(s), ok: matched && s.minIELTS > 0 ? eligibility.ieltsPass : null },
-                { label: "Degree", value: s.degrees.join(" & "), ok: matched ? eligibility.degreePass : null },
-                { label: "Teaching language", value: s.medium === "Any" ? "English or local" : s.medium, ok: null },
-              ].map((row) => (
-                <div key={row.label} className="flex items-center justify-between gap-3 px-3 py-2">
-                  <dt className="text-stone-600">{row.label}</dt>
-                  <dd className="flex items-center gap-1.5 font-medium tabular-nums text-stone-900">
-                    {row.value}
-                    {row.ok === null ? null : row.ok ? (
-                      <Check className="h-4 w-4 text-emerald-700" aria-label="met" />
-                    ) : (
-                      <X className="h-4 w-4 text-amber-700" aria-label="not met" />
-                    )}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            {s.requirementsNote && (
-              <p className="mt-2 text-sm leading-relaxed text-stone-600">
-                {s.requirementsNote}{" "}
-                <span className="text-stone-500">
-                  {s.requirementsChecked ? `Checked ${formatVerifiedDate(s.requirementsChecked)}. ` : ""}
-                  <a href={s.officialWebsiteUrl} target="_blank" rel="noopener noreferrer" className="text-blue-800 hover:underline">
-                    Official page
-                  </a>
-                </span>
-              </p>
-            )}
-            {matched && !eligibility.isEligible && eligibility.reasons.length > 0 && (
-              <ul className="mt-2 list-disc space-y-0.5 pl-5 text-sm text-amber-900">
-                {eligibility.reasons.map((r, i) => (
-                  <li key={i}>{r}</li>
-                ))}
-              </ul>
-            )}
-          </section>
-
-          {/* Money each month */}
-          <section aria-labelledby="money-title">
-            <h3 id="money-title" className="flex items-center gap-1.5 text-sm font-semibold text-stone-900">
-              Money each month
-              <InfoTip text={JARGON.leftEachMonth} />
-            </h3>
-
-            {selectedPartnerUni && (
-              <p className="mt-1 text-xs text-stone-500">
-                For {selectedPartnerUni.name} ({selectedPartnerUni.city})
-              </p>
-            )}
-
-            {s.stipendAmountUnknown && !selectedPartnerUni ? (
-              <p className="mt-2 rounded-xl border border-stone-200 px-3 py-2.5 text-sm text-stone-700">
-                The program pays a monthly stipend but does not publish the amount. Typical living costs there are about {`\$${s.estimatedLivingCostUSD.toLocaleString()}`} a month. Check the official page for the current rate.
-              </p>
-            ) : (
-              <>
-              <dl className="mt-2 divide-y divide-stone-100 rounded-xl border border-stone-200 text-sm">
-                <div className="flex items-center justify-between px-3 py-2">
-                  <dt className="text-stone-600">Stipend</dt>
-                  <dd className="font-medium tabular-nums text-stone-900">${activeStipend.toLocaleString()}</dd>
-                </div>
-                <div className="flex items-center justify-between px-3 py-2">
-                  <dt className="text-stone-600">Typical living cost</dt>
-                  <dd className="font-medium tabular-nums text-stone-900">−${effectiveLivingCost.toLocaleString()}</dd>
-                </div>
-                <div className="flex items-center justify-between px-3 py-2">
-                  <dt className="font-medium text-stone-900">Left each month</dt>
-                  <dd className={`font-semibold tabular-nums ${adjustedNetSavings >= 0 ? "text-emerald-800" : "text-amber-800"}`}>
-                    {formatSignedUSD(adjustedNetSavings)}
-                  </dd>
-                </div>
-              </dl>
-              {/* Personal spending adjuster */}
-              <div className="mt-3 px-1">
-                <div className="flex items-center justify-between text-xs text-stone-600">
-                  <span>Adjust for your own spending</span>
-                  <span className="font-semibold tabular-nums text-stone-900">
-                    {personalExpenseAdjustment >= 0 ? `+$${personalExpenseAdjustment}` : `-$${Math.abs(personalExpenseAdjustment)}`}/mo
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  aria-label="Adjust your monthly living expenses"
-                  min="-300"
-                  max="500"
-                  step="50"
-                  value={personalExpenseAdjustment}
-                  onChange={(e) => setPersonalExpenseAdjustment(parseInt(e.target.value, 10))}
-                  className="mt-2.5 h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-stone-200 accent-blue-700"
-                />
-                <div className="mt-1 flex justify-between text-[11px] text-stone-500">
-                  <span>Spend less</span>
-                  <span>Typical</span>
-                  <span>Spend more</span>
-                </div>
-              </div>
-              </>
-            )}
-          </section>
-
-          {/* What the funding covers */}
-          <div>
-            <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-900">
-              <Award className="h-4 w-4 text-stone-500" />
-              What the funding covers
-              <span className={`text-xs font-medium ${fundingLevel(s) === "Fully funded" ? "text-emerald-800" : "text-amber-800"}`}>
-                {fundingLevel(s)}
-              </span>
-            </h3>
-            <ul className="mb-4 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm sm:grid-cols-3">
-              {coverageItems(s).map((c) => (
-                <li key={c.label} className={`flex items-center gap-1.5 ${c.covered ? "text-stone-800" : "text-stone-500"}`}>
-                  {c.covered ? <Check className="h-4 w-4 text-emerald-700" /> : <X className="h-4 w-4 text-stone-400" />}
-                  {c.label}
-                  <span className="sr-only">{c.covered ? " covered" : " not covered"}</span>
-                </li>
-              ))}
-            </ul>
-            {profile.nationality && profile.nationality !== "OTHER" && (
-              <p className="mb-4 text-sm text-stone-700">
-                <span className="font-medium">{nationalityLabel(profile.nationality)} passport: </span>
-                {nationalityStatus(s.id, profile.nationality) === "yes"
-                  ? "eligible to apply."
-                  : nationalityStatus(s.id, profile.nationality) === "no"
-                  ? "not eligible for this program."
-                  : "check the official country list."}
-                {nationalityNote(s.id) && <span className="text-stone-500"> {nationalityNote(s.id)}</span>}
-              </p>
-            )}
-            {(AGE_LIMITS[s.id] || (!s.deadlineUnknown && englishTestExpired(profile.englishTestDate, s.deadline))) && (
-              <ul className="mb-4 space-y-1 text-sm text-stone-700">
-                {AGE_LIMITS[s.id] && (
-                  <li>
-                    <span className="font-medium">Age limit: </span>
-                    {AGE_LIMITS[s.id].note}
-                  </li>
-                )}
-                {(!s.deadlineUnknown && englishTestExpired(profile.englishTestDate, s.deadline)) && (
-                  <li className="text-amber-800">
-                    Your IELTS will be more than two years old by the deadline. Most programs need a recent result.
-                  </li>
-                )}
-              </ul>
-            )}
-            <p className="mb-1.5 text-xs font-medium text-stone-500">From the official page</p>
-            <ul className="list-disc space-y-1 pl-5 text-sm text-stone-700 marker:text-stone-300">
-              {s.facilities.map((facility, idx) => (
-                <li key={idx}>{facility}</li>
-              ))}
-            </ul>
-          </div>
-
           {/* Complete Documents */}
           <div id="drawer-documents" className="scroll-mt-4">
             <div className="flex items-center justify-between mb-3">
@@ -600,14 +663,6 @@ export const ScholarshipDrawer: React.FC = () => {
               <UniversityGallery name={selectedPartnerUni?.name || s.university} compact />
             </section>
           )}
-
-          {/* University Overview & Campus Research */}
-          <div className="rounded-xl border border-stone-200 bg-white p-4">
-            <h3 className="text-sm font-semibold text-stone-900 mb-2">
-              About this program
-            </h3>
-            <p className="text-xs leading-relaxed text-stone-600">{s.overview}</p>
-          </div>
 
           {/* City Life & Expat Experience */}
           <div className="rounded-xl border border-stone-200 bg-white p-4">

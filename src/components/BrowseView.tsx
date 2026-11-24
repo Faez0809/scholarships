@@ -32,7 +32,8 @@ export const BrowseView: React.FC = () => {
   const { savedIds, setIsProfileOpen, completedCount, isGuideVisible } = useGuide();
   const [showSaved, setShowSaved] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [showClosed, setShowClosed] = useState(false);
+  // null = automatic: closed programs are shown when searching, so a country search lists everything.
+  const [closedChoice, setClosedChoice] = useState<boolean | null>(null);
 
   const counts = useMemo(() => {
     let eligible = 0,
@@ -51,6 +52,7 @@ export const BrowseView: React.FC = () => {
 
   const openNow = results.filter((s) => !calculateDaysRemaining(s.deadline).isExpired);
   const closed = results.filter((s) => calculateDaysRemaining(s.deadline).isExpired);
+  const showClosed = closedChoice ?? searchQuery.trim() !== "";
 
   const quick: { id: Quick; label: string; count: number | null }[] = [
     { id: "all", label: "All", count: null },
@@ -248,7 +250,7 @@ export const BrowseView: React.FC = () => {
               <div className="mt-8">
                 <button
                   type="button"
-                  onClick={() => setShowClosed((v) => !v)}
+                  onClick={() => setClosedChoice(!showClosed)}
                   aria-expanded={showClosed}
                   className="inline-flex items-center gap-1 text-sm font-medium text-stone-700 hover:text-stone-900"
                 >

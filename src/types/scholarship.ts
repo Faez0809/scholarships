@@ -67,6 +67,8 @@ export interface Scholarship {
   medium: MediumOfInstruction;
   deadline: string; // YYYY-MM-DD
   monthlyStipendUSD: number;
+  /** True when the program pays a stipend but publishes no amount; monthlyStipendUSD is then 0. */
+  stipendAmountUnknown?: boolean;
   estimatedLivingCostUSD: number;
   tuitionCovered: boolean;
   healthInsuranceCovered: boolean;
@@ -78,6 +80,8 @@ export interface Scholarship {
   cityLifeOverview: string;
   officialWebsiteUrl: string;
   /** True when the date is an expected date for the next cycle, not an announced one. */
+  /** True when no date is published yet; deadline is then a far-future placeholder used only for sorting. */
+  deadlineUnknown?: boolean;
   deadlineIsEstimate?: boolean;
   /** Short context for the deadline, e.g. "Varies by country" or "Previous round closed 15 Oct 2026". */
   deadlineNote?: string;

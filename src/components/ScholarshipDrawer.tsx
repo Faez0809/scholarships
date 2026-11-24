@@ -300,7 +300,13 @@ export const ScholarshipDrawer: React.FC = () => {
                 n={s.supervisorRequired !== "Not Required (Central Admission)" ? 4 : 3}
                 done={false}
                 title="Apply on the official website"
-                detail={isExpired ? "This round has closed. Check the site for the next one." : `Deadline ${formattedDate}${s.deadlineIsEstimate ? " (expected)" : ""}.`}
+                detail={
+                  s.deadlineUnknown
+                    ? "Dates are not announced yet. Check the official page."
+                    : isExpired
+                    ? "This round has closed. Check the site for the next one."
+                    : `Deadline ${formattedDate}${s.deadlineIsEstimate ? " (expected)" : ""}.`
+                }
                 action={
                   <a href={s.officialWebsiteUrl} target="_blank" rel="noopener noreferrer" className="-my-1.5 -mr-1 inline-flex items-center gap-1 rounded px-1 py-1.5 text-xs font-medium text-blue-800 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
                     Open site <ExternalLink className="h-3 w-3" />
@@ -444,46 +450,54 @@ export const ScholarshipDrawer: React.FC = () => {
               </p>
             )}
 
-            <dl className="mt-2 divide-y divide-stone-100 rounded-xl border border-stone-200 text-sm">
-              <div className="flex items-center justify-between px-3 py-2">
-                <dt className="text-stone-600">Stipend</dt>
-                <dd className="font-medium tabular-nums text-stone-900">${activeStipend.toLocaleString()}</dd>
+            {s.stipendAmountUnknown && !selectedPartnerUni ? (
+              <p className="mt-2 rounded-xl border border-stone-200 px-3 py-2.5 text-sm text-stone-700">
+                The program pays a monthly stipend but does not publish the amount. Typical living costs there are about {`\$${s.estimatedLivingCostUSD.toLocaleString()}`} a month. Check the official page for the current rate.
+              </p>
+            ) : (
+              <>
+              <dl className="mt-2 divide-y divide-stone-100 rounded-xl border border-stone-200 text-sm">
+                <div className="flex items-center justify-between px-3 py-2">
+                  <dt className="text-stone-600">Stipend</dt>
+                  <dd className="font-medium tabular-nums text-stone-900">${activeStipend.toLocaleString()}</dd>
+                </div>
+                <div className="flex items-center justify-between px-3 py-2">
+                  <dt className="text-stone-600">Typical living cost</dt>
+                  <dd className="font-medium tabular-nums text-stone-900">−${effectiveLivingCost.toLocaleString()}</dd>
+                </div>
+                <div className="flex items-center justify-between px-3 py-2">
+                  <dt className="font-medium text-stone-900">Left each month</dt>
+                  <dd className={`font-semibold tabular-nums ${adjustedNetSavings >= 0 ? "text-emerald-800" : "text-amber-800"}`}>
+                    {formatSignedUSD(adjustedNetSavings)}
+                  </dd>
+                </div>
+              </dl>
+              {/* Personal spending adjuster */}
+              <div className="mt-3 px-1">
+                <div className="flex items-center justify-between text-xs text-stone-600">
+                  <span>Adjust for your own spending</span>
+                  <span className="font-semibold tabular-nums text-stone-900">
+                    {personalExpenseAdjustment >= 0 ? `+$${personalExpenseAdjustment}` : `-$${Math.abs(personalExpenseAdjustment)}`}/mo
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  aria-label="Adjust your monthly living expenses"
+                  min="-300"
+                  max="500"
+                  step="50"
+                  value={personalExpenseAdjustment}
+                  onChange={(e) => setPersonalExpenseAdjustment(parseInt(e.target.value, 10))}
+                  className="mt-2.5 h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-stone-200 accent-blue-700"
+                />
+                <div className="mt-1 flex justify-between text-[11px] text-stone-500">
+                  <span>Spend less</span>
+                  <span>Typical</span>
+                  <span>Spend more</span>
+                </div>
               </div>
-              <div className="flex items-center justify-between px-3 py-2">
-                <dt className="text-stone-600">Typical living cost</dt>
-                <dd className="font-medium tabular-nums text-stone-900">−${effectiveLivingCost.toLocaleString()}</dd>
-              </div>
-              <div className="flex items-center justify-between px-3 py-2">
-                <dt className="font-medium text-stone-900">Left each month</dt>
-                <dd className={`font-semibold tabular-nums ${adjustedNetSavings >= 0 ? "text-emerald-800" : "text-amber-800"}`}>
-                  {formatSignedUSD(adjustedNetSavings)}
-                </dd>
-              </div>
-            </dl>
-            {/* Personal spending adjuster */}
-            <div className="mt-3 px-1">
-              <div className="flex items-center justify-between text-xs text-stone-600">
-                <span>Adjust for your own spending</span>
-                <span className="font-semibold tabular-nums text-stone-900">
-                  {personalExpenseAdjustment >= 0 ? `+$${personalExpenseAdjustment}` : `-$${Math.abs(personalExpenseAdjustment)}`}/mo
-                </span>
-              </div>
-              <input
-                type="range"
-                aria-label="Adjust your monthly living expenses"
-                min="-300"
-                max="500"
-                step="50"
-                value={personalExpenseAdjustment}
-                onChange={(e) => setPersonalExpenseAdjustment(parseInt(e.target.value, 10))}
-                className="mt-2.5 h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-stone-200 accent-blue-700"
-              />
-              <div className="mt-1 flex justify-between text-[11px] text-stone-500">
-                <span>Spend less</span>
-                <span>Typical</span>
-                <span>Spend more</span>
-              </div>
-            </div>
+              </>
+            )}
           </section>
 
           {/* What the funding covers */}
@@ -515,7 +529,7 @@ export const ScholarshipDrawer: React.FC = () => {
                 {nationalityNote(s.id) && <span className="text-stone-500"> {nationalityNote(s.id)}</span>}
               </p>
             )}
-            {(AGE_LIMITS[s.id] || englishTestExpired(profile.englishTestDate, s.deadline)) && (
+            {(AGE_LIMITS[s.id] || (!s.deadlineUnknown && englishTestExpired(profile.englishTestDate, s.deadline))) && (
               <ul className="mb-4 space-y-1 text-sm text-stone-700">
                 {AGE_LIMITS[s.id] && (
                   <li>
@@ -523,7 +537,7 @@ export const ScholarshipDrawer: React.FC = () => {
                     {AGE_LIMITS[s.id].note}
                   </li>
                 )}
-                {englishTestExpired(profile.englishTestDate, s.deadline) && (
+                {(!s.deadlineUnknown && englishTestExpired(profile.englishTestDate, s.deadline)) && (
                   <li className="text-amber-800">
                     Your IELTS will be more than two years old by the deadline. Most programs need a recent result.
                   </li>

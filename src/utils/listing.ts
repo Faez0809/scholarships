@@ -6,6 +6,9 @@ import { calculateDaysRemaining, formatVerifiedDate } from "./scholarshipUtils";
 export type ListingStatus = "open" | "soon" | "closed";
 
 export function listingStatus(s: Scholarship): { status: ListingStatus; text: string; className: string } {
+  if (s.deadlineUnknown) {
+    return { status: "open", text: "Open · dates not announced yet", className: "text-stone-600" };
+  }
   const { days, isExpired, isClosingSoon, formattedDate } = calculateDaysRemaining(s.deadline);
   const expected = s.deadlineIsEstimate ? " (expected)" : "";
   if (isExpired) {
@@ -24,13 +27,14 @@ export function listingStatus(s: Scholarship): { status: ListingStatus; text: st
 export function coverageItems(s: {
   tuitionCovered: boolean;
   monthlyStipendUSD: number;
+  stipendAmountUnknown?: boolean;
   relocationAirfareCovered: boolean;
   healthInsuranceCovered: boolean;
   housingProvided: boolean;
 }): { label: string; covered: boolean }[] {
   return [
     { label: "Tuition", covered: s.tuitionCovered },
-    { label: "Monthly stipend", covered: s.monthlyStipendUSD > 0 },
+    { label: "Monthly stipend", covered: s.monthlyStipendUSD > 0 || Boolean(s.stipendAmountUnknown) },
     { label: "Flights", covered: s.relocationAirfareCovered },
     { label: "Health insurance", covered: s.healthInsuranceCovered },
     { label: "Housing", covered: s.housingProvided },
@@ -38,8 +42,8 @@ export function coverageItems(s: {
 }
 
 /** Honest label: "Fully funded" only when tuition and a living stipend are both covered. */
-export function fundingLevel(s: { tuitionCovered: boolean; monthlyStipendUSD: number }): "Fully funded" | "Partial funding" {
-  return s.tuitionCovered && s.monthlyStipendUSD > 0 ? "Fully funded" : "Partial funding";
+export function fundingLevel(s: { tuitionCovered: boolean; monthlyStipendUSD: number; stipendAmountUnknown?: boolean }): "Fully funded" | "Partial funding" {
+  return s.tuitionCovered && (s.monthlyStipendUSD > 0 || Boolean(s.stipendAmountUnknown)) ? "Fully funded" : "Partial funding";
 }
 
 /** Minimum CGPA as shown to students; 0 means the program publishes no fixed number. */

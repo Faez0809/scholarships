@@ -58,7 +58,12 @@ export function getSavingsRange(scholarship: Scholarship): {
   minSavings: number;
   maxSavings: number;
   isMultiUni: boolean;
+  /** No published stipend amount: savings are unknown and sort last. */
+  unknown?: boolean;
 } {
+  if (scholarship.stipendAmountUnknown && !scholarship.partnerUniversities?.length) {
+    return { minSavings: -Infinity, maxSavings: -Infinity, isMultiUni: false, unknown: true };
+  }
   if (
     scholarship.partnerUniversities &&
     scholarship.partnerUniversities.length > 0

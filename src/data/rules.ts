@@ -17,6 +17,7 @@ export const AGE_LIMITS: Record<string, AgeRule> = {
   "gks-graduate-korea-2027": { masters: 40, phd: 40, note: "Under 40 for graduate programs." },
   "swiss-government-excellence-2028": { phd: 35, note: "Applicants must be under 35 (born after 31 December 1991 for the 2027–28 call)." },
   "mext-japan-todai-2026": { masters: 35, phd: 35, note: "Under 35 on 1 April of the start year." },
+  "brunei-government-2027": { masters: 35, note: "Master's applicants must be 35 or under on 1 July of the start year." },
 };
 
 /** IELTS and most English tests are accepted for two years from the test date. */

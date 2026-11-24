@@ -2,6 +2,7 @@ import { Scholarship } from "../types/scholarship";
 import { ADDITIONAL_SCHOLARSHIPS } from "./additionalScholarships";
 import { MORE_SCHOLARSHIPS } from "./moreScholarships";
 import { withRequirements } from "./requirements";
+import { REGIONAL_SCHOLARSHIPS } from "./regionalScholarships";
 
 const BUILT_IN: Scholarship[] = [
   // 1. CSC Chinese Government Scholarship (Gov / Multi-Uni - Asia)
@@ -820,6 +821,7 @@ const BUILT_IN: Scholarship[] = [
 
   ...ADDITIONAL_SCHOLARSHIPS,
   ...MORE_SCHOLARSHIPS,
+  ...REGIONAL_SCHOLARSHIPS,
 ];
 
 export const SEED_SCHOLARSHIPS: Scholarship[] = BUILT_IN.map(withRequirements);

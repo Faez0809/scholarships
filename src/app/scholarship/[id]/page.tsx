@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const s = await getScholarshipById(id);
   if (!s) return { title: "Scholarship not found · ScholarTrack" };
   const status = listingStatus(s).text;
-  const description = `${s.university}, ${s.country}. ${s.degrees.join(" & ")}. ${fundingLevel(s)}, stipend about $${s.monthlyStipendUSD.toLocaleString("en-US")}/month. ${status}.`;
+  const description = `${s.university}, ${s.country}. ${s.degrees.join(" & ")}. ${fundingLevel(s)}, ${s.stipendAmountUnknown ? "stipend amount not published" : `stipend about $${s.monthlyStipendUSD.toLocaleString("en-US")}/month`}. ${status}.`;
   return {
     title: `${s.name} · ScholarTrack`,
     description,
@@ -36,7 +36,7 @@ export default async function ScholarshipPage({ params }: Props) {
   if (!s) notFound();
 
   const status = listingStatus(s);
-  const { minSavings, maxSavings, isMultiUni } = getSavingsRange(s);
+  const { minSavings, maxSavings, isMultiUni, unknown: stipendUnknown } = getSavingsRange(s);
   const money =
     isMultiUni && minSavings !== maxSavings
       ? `${formatSignedUSD(minSavings)} to ${formatSignedUSD(maxSavings)}`
@@ -67,11 +67,13 @@ export default async function ScholarshipPage({ params }: Props) {
           </div>
           <div>
             <dt className="text-xs text-stone-500">Stipend</dt>
-            <dd className="mt-0.5 text-sm font-medium tabular-nums text-stone-900">${s.monthlyStipendUSD.toLocaleString("en-US")}/mo</dd>
+            <dd className="mt-0.5 text-sm font-medium tabular-nums text-stone-900">
+              {s.stipendAmountUnknown ? "Not published" : `$${s.monthlyStipendUSD.toLocaleString("en-US")}/mo`}
+            </dd>
           </div>
           <div>
             <dt className="text-xs text-stone-500">Left after living costs</dt>
-            <dd className="mt-0.5 text-sm font-medium tabular-nums text-stone-900">{money}/mo</dd>
+            <dd className="mt-0.5 text-sm font-medium tabular-nums text-stone-900">{stipendUnknown ? "Unknown" : `${money}/mo`}</dd>
           </div>
         </dl>
 

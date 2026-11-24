@@ -19,7 +19,7 @@ export const ScholarshipCard: React.FC<{ scholarship: Scholarship }> = ({ schola
   const { isSavedScholarship, toggleSavedScholarship } = useGuide();
 
   const eligibility = checkEligibility(s, profile);
-  const { minSavings, maxSavings, isMultiUni } = getSavingsRange(s);
+  const { minSavings, maxSavings, isMultiUni, unknown: stipendUnknown } = getSavingsRange(s);
   const status = listingStatus(s);
   const saved = isSavedScholarship(s.id);
   const level = fundingLevel(s);
@@ -87,10 +87,14 @@ export const ScholarshipCard: React.FC<{ scholarship: Scholarship }> = ({ schola
       {/* 3. Status and money left */}
       <p className="mt-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-sm">
         <span className={status.className}>{status.text}</span>
-        <span className="tabular-nums text-stone-900">
-          <span className={`font-semibold ${maxSavings >= 0 ? "" : "text-amber-800"}`}>{money}</span>
-          <span className="text-stone-500">/mo left</span>
-        </span>
+        {stipendUnknown ? (
+          <span className="text-stone-500">Stipend amount not published</span>
+        ) : (
+          <span className="tabular-nums text-stone-900">
+            <span className={`font-semibold ${maxSavings >= 0 ? "" : "text-amber-800"}`}>{money}</span>
+            <span className="text-stone-500">/mo left</span>
+          </span>
+        )}
       </p>
 
       {/* 4. What's covered, and whether you qualify */}

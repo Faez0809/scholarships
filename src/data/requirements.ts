@@ -133,6 +133,15 @@ export const REQUIREMENTS: Record<string, Requirement> = {
   "yenching-pku-2027": { minCGPA: 0, minIELTS: 0, note: "No fixed GPA; English proficiency is required. Check the official page." },
   "tigp-academia-sinica-2027": { minCGPA: 0, minIELTS: 0, note: NOT_PUBLISHED },
   "daad-doctoral-germany-2028": { minCGPA: 0, minIELTS: 0, note: "Above-average degree expected; your German supervisor confirms the language needed." },
+  "study-in-saudi-gov-2027": { minCGPA: 0, minIELTS: 0, note: "Each Saudi university sets its own grade and language requirements; many graduate programs teach in Arabic." },
+  "kau-scholarship-2027": { minCGPA: 0, minIELTS: 0, note: "KAU sets requirements per program; you need a KAU admission letter before the scholarship application." },
+  "ksu-scholarship-2027": { minCGPA: 0, minIELTS: 0, note: "Academically eligible students are nominated for KSU's Master's and doctoral programs; each program sets its own grades and language." },
+  "kfupm-graduate-2027": { minCGPA: 0, minIELTS: 0, note: "Each KFUPM department sets its own grade, English and GRE requirements." },
+  "iu-madinah-2027": { minCGPA: 0, minIELTS: 0, note: "A relevant degree with good grades; teaching is in Arabic. Check the current announcement on iu.edu.sa." },
+  "alfaisal-phd-ga-2027": { minCGPA: 0, minIELTS: 0, note: "Assistantships are competitive and the stipend depends on experience and academic standing." },
+  "khalifa-university-2027": { minCGPA: 0, minIELTS: 0, note: "Requirements and scholarship tier depend on your program and academic record; check the program page." },
+  "brunei-government-2027": { minCGPA: 0, minIELTS: 0, note: "Master's applicants must be 35 or under on 1 July of the start year. Check your country's call for grade and English rules." },
+  "malaysia-mis-2027": { minCGPA: 0, minIELTS: 0, note: "Only citizens of listed countries can apply; the official guidelines set the grade and English rules." },
 };
 
 /** Applies the audited minimums to a built-in program. */

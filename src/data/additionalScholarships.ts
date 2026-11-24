@@ -216,6 +216,8 @@ export const ADDITIONAL_SCHOLARSHIPS: Scholarship[] = [
   // 15. Fulbright Foreign Student Program (USA)
   {
     id: "fulbright-foreign-student-2028",
+    dataVersion: 3,
+    stipendAmountUnknown: true,
     name: "Fulbright Foreign Student Program",
     university: "U.S. Department of State with U.S. Universities",
     city: "Universities Across the United States",
@@ -234,8 +236,8 @@ export const ADDITIONAL_SCHOLARSHIPS: Scholarship[] = [
     deadlineIsEstimate: true,
     deadlineNote:
       "Set by each country's Fulbright Commission or U.S. Embassy, usually between February and October. The 2027/28 rounds closed during 2026; this is a typical date for the 2028/29 round.",
-    lastVerified: VERIFIED_ON,
-    monthlyStipendUSD: 2000,
+    lastVerified: "2026-11-24",
+    monthlyStipendUSD: 0,
     estimatedLivingCostUSD: 1700,
     stipendIsEstimate: true,
     stipendNote:

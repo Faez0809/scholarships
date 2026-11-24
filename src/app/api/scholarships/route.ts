@@ -178,6 +178,7 @@ export async function POST(req: NextRequest) {
           ...(correctedMoney
             ? {
                 monthlyStipendUSD: item.monthlyStipendUSD,
+                stipendAmountUnknown: item.stipendAmountUnknown,
                 estimatedLivingCostUSD: item.estimatedLivingCostUSD,
                 tuitionCovered: item.tuitionCovered,
                 facilities: item.facilities,
@@ -193,6 +194,7 @@ export async function POST(req: NextRequest) {
           requirementsNote: item.requirementsNote,
           requirementsChecked: item.requirementsChecked,
           deadline: item.deadline,
+          deadlineUnknown: item.deadlineUnknown,
           deadlineIsEstimate: item.deadlineIsEstimate,
           deadlineNote: item.deadlineNote,
           stipendIsEstimate: item.stipendIsEstimate,

@@ -167,8 +167,8 @@ export const AuthDialog: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-labelledby="auth-title">
-      <div className="absolute inset-0 bg-black/40" onClick={() => setIsAuthOpen(false)} />
-      <div ref={dialogRef} className="relative w-full max-w-sm rounded-t-2xl bg-white p-5 shadow-xl sm:rounded-2xl">
+      <div className="st-backdrop absolute inset-0 bg-black/40" onClick={() => setIsAuthOpen(false)} />
+      <div ref={dialogRef} className="st-dialog relative w-full max-w-sm rounded-t-2xl bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-xl sm:rounded-2xl sm:pb-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-100 text-stone-600">
@@ -218,8 +218,16 @@ export const AuthDialog: React.FC = () => {
               </p>
             )}
             {error && (
-              <p role="alert" className="text-sm text-red-700">
+              <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">
                 {error}
+                {mode === "signin" && /incorrect/i.test(error) && (
+                  <>
+                    {" "}
+                    <button type="button" onClick={() => switchMode("forgot")} className="font-medium underline underline-offset-2">
+                      Reset your password
+                    </button>
+                  </>
+                )}
               </p>
             )}
             <button type="submit" disabled={busy} className={`${btn.primary} w-full`}>

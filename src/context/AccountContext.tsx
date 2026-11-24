@@ -33,7 +33,7 @@ interface AccountContextType {
   /** Sends a reset link to the email; the link opens /reset-password. */
   requestPasswordReset: (email: string) => Promise<string | null>;
   /** Sets a new password for the signed-in (or recovering) user. */
-  updatePassword: (password: string) => Promise<string | null>;
+  updatePassword: (password: string) => Promise<{ error: string | null; unchanged?: boolean }>;
   /** Public URL of the profile picture, if one is set. */
   avatarUrl: string | null;
   /** Uploads an already-cropped square image as the profile picture. */
@@ -59,14 +59,14 @@ const AccountContext = createContext<AccountContextType | undefined>(undefined);
 
 function friendly(message: string | undefined): string {
   const m = (message || "").toLowerCase();
-  if (m.includes("invalid login")) return "That email and password don't match. Try again, or create an account.";
+  if (m.includes("invalid login")) return "Incorrect email or password.";
   if (m.includes("email not confirmed")) return "Please confirm your email first. Check your inbox for the link.";
   if (m.includes("already registered")) return "An account with this email already exists. Sign in instead.";
-  if (m.includes("password")) return "Use a password with at least 6 characters.";
+  if (m.includes("at least") && m.includes("password")) return "Use a password with at least 6 characters.";
   if (m.includes("rate limit") && m.includes("email")) return "Too many reset emails were sent recently. Please try again in an hour.";
   if (m.includes("rate limit")) return "Too many attempts. Please wait a minute and try again.";
   if (m.includes("provider is not enabled")) return "Google sign-in isn't switched on yet. Use email instead.";
-  return message || "Something went wrong. Please try again.";
+  return message || "Something went wrong. Please try again in a moment.";
 }
 
 export function AccountProvider({ children }: { children: ReactNode }) {
@@ -182,12 +182,15 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       return error ? friendly(error.message) : null;
     },
     updatePassword: async (password) => {
-      if (!supabase) return "Not available right now.";
-      if (password.length < 6) return "Use at least 6 characters.";
+      if (!supabase) return { error: "Not available right now." };
+      if (password.length < 6) return { error: "Use at least 6 characters." };
       const { error } = await supabase.auth.updateUser({ password });
-      if (!error) return null;
-      if (/different from the old/i.test(error.message)) return "That is your current password. Choose a different one.";
-      return friendly(error.message);
+      if (!error) return { error: null };
+      // Entering the current password keeps it: that is a success, not an error.
+      if (/different from the old|same as the old|same_password/i.test(`${error.message} ${(error as { code?: string }).code || ""}`)) {
+        return { error: null, unchanged: true };
+      }
+      return { error: friendly(error.message) };
     },
     uploadAvatar: async (image) => {
       if (!supabase || !userId) return "Sign in to add a picture.";

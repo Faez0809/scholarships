@@ -65,14 +65,14 @@ export const ErrorReportsDialog: React.FC<{ open: boolean; onClose: () => void }
   const nameOf = (id: string) => scholarships.find((s) => s.id === id)?.name || id;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-stone-900/40 sm:items-center" onClick={onClose}>
+    <div className="st-backdrop fixed inset-0 z-50 flex items-end justify-center bg-stone-900/40 sm:items-center" onClick={onClose}>
       <div
         ref={ref}
         role="dialog"
         aria-modal="true"
         aria-labelledby="reports-title"
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[85vh] w-full max-w-lg flex-col rounded-t-2xl bg-white sm:rounded-2xl"
+        className="st-dialog flex max-h-[85vh] w-full max-w-lg flex-col rounded-t-2xl bg-white sm:rounded-2xl"
       >
         <div className="flex items-center justify-between border-b border-stone-100 px-4 py-3">
           <h2 id="reports-title" className="font-serif text-lg font-semibold text-stone-900">

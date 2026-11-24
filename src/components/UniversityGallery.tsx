@@ -194,7 +194,7 @@ const Lightbox: React.FC<{
   const loading = loadedUrl !== p.largeUrl;
 
   return (
-    <div ref={ref} className="fixed inset-0 z-[60] flex flex-col bg-stone-950 text-white" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <div ref={ref} className="st-fade fixed inset-0 z-[60] flex flex-col bg-stone-950 text-white" role="dialog" aria-modal="true" aria-label="Photo viewer">
       <div className="flex items-center justify-between px-3 py-2 text-sm text-white/70">
         <span className="tabular-nums">{many ? `${index + 1} / ${photos.length}` : ""}</span>
         <button type="button" onClick={onClose} className="rounded-md p-2 text-white hover:bg-white/10" aria-label="Close photo viewer">

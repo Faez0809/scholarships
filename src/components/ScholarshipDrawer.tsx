@@ -125,12 +125,12 @@ export const ScholarshipDrawer: React.FC = () => {
     <div className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true" aria-label={s.name}>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
+        className="st-backdrop fixed inset-0 bg-black/40"
         onClick={() => setSelectedScholarship(null)}
       />
 
       {/* Drawer Container */}
-      <div ref={panelRef} tabIndex={-1} className="relative z-10 flex h-full w-full max-w-2xl flex-col bg-white outline-none shadow-2xl transition-transform animate-in slide-in-from-right duration-250 ease-out">
+      <div ref={panelRef} tabIndex={-1} className="st-panel relative z-10 flex h-full w-full max-w-2xl flex-col bg-white outline-none shadow-2xl">
         {/* Drawer Header */}
         <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3.5 sm:px-6 sm:py-4">
           <p className={`text-sm ${listingStatus(s).className}`}>{listingStatus(s).text}</p>

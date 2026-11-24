@@ -15,7 +15,7 @@ export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState<false | "changed" | "unchanged">(false);
 
   useEffect(() => {
     const supabase = getBrowserSupabase();
@@ -59,10 +59,15 @@ export default function ResetPasswordPage() {
     const { error: err } = await supabase.auth.updateUser({ password });
     setBusy(false);
     if (err) {
-      setError(/different from the old/i.test(err.message) ? "That is your current password. Choose a different one." : "Couldn't save the new password. Please try the link again.");
+      // Typing the current password keeps it; treat that as done.
+      if (/different from the old|same as the old|same_password/i.test(`${err.message} ${(err as { code?: string }).code || ""}`)) {
+        setDone("unchanged");
+        return;
+      }
+      setError("Couldn't save the new password. Please open the link from your email again.");
       return;
     }
-    setDone(true);
+    setDone("changed");
   };
 
   return (
@@ -121,7 +126,11 @@ export default function ResetPasswordPage() {
 
         {done && (
           <div className="mt-4 text-sm text-stone-700">
-            <p>Your password has been changed and you are signed in.</p>
+            <p>
+              {done === "unchanged"
+                ? "Your password is unchanged. You're signed in."
+                : "Your password has been changed and you're signed in."}
+            </p>
             <Link href="/" className="mt-4 inline-block rounded-lg bg-stone-900 px-4 py-2.5 font-medium text-white hover:bg-stone-800">
               Continue to ScholarTrack
             </Link>

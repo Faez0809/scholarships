@@ -87,10 +87,10 @@ export const FiltersSheet: React.FC<{ open: boolean; onClose: () => void; result
 
   return (
     <div className="fixed inset-0 z-40" role="dialog" aria-modal="true" aria-labelledby="filters-title">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="st-backdrop absolute inset-0 bg-black/40" onClick={onClose} />
       <div
         ref={ref}
-        className="absolute inset-x-0 bottom-0 flex max-h-[90vh] flex-col rounded-t-2xl bg-white shadow-xl sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-[380px] sm:rounded-none"
+        className="st-panel absolute inset-x-0 bottom-0 flex max-h-[90vh] flex-col rounded-t-2xl bg-white shadow-xl sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-[380px] sm:rounded-none"
       >
         <div className="flex items-center justify-between border-b border-stone-100 px-5 py-4">
           <h2 id="filters-title" className="font-serif text-xl font-semibold text-stone-900">

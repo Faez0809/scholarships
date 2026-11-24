@@ -43,10 +43,10 @@ export const ProfilePanel: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-40" role="dialog" aria-modal="true" aria-labelledby="profile-title">
-      <div className="absolute inset-0 bg-black/40" onClick={close} />
+      <div className="st-backdrop absolute inset-0 bg-black/40" onClick={close} />
       <div
         ref={ref}
-        className="absolute inset-x-0 bottom-0 flex max-h-[90vh] flex-col rounded-t-2xl bg-white shadow-xl sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-[420px] sm:rounded-none"
+        className="st-panel absolute inset-x-0 bottom-0 flex max-h-[90vh] flex-col rounded-t-2xl bg-white shadow-xl sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-[420px] sm:rounded-none"
       >
         <div className="flex items-start justify-between gap-2 border-b border-stone-100 px-5 py-4">
           <div className="flex min-w-0 items-center gap-3">

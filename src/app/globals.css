@@ -73,3 +73,35 @@
 .fade-in {
   animation-name: fadeIn;
 }
+
+/* Calm motion for dialogs and sheets. Sheets rise from the bottom on phones;
+   centred dialogs fade and settle; side panels slide in from the right. */
+@keyframes stBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes stSheetUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes stSettle {
+  from { transform: translateY(8px) scale(0.98); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+@keyframes stFromRight {
+  from { transform: translateX(32px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.st-backdrop { animation: stBackdrop 180ms ease-out both; }
+.st-dialog { animation: stSheetUp 240ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.st-panel { animation: stSheetUp 240ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@media (min-width: 640px) {
+  .st-dialog { animation-name: stSettle; }
+  .st-panel { animation-name: stFromRight; }
+}
+.st-fade { animation: stBackdrop 200ms ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .st-backdrop, .st-dialog, .st-panel, .st-fade, .animate-in { animation: none !important; }
+  html { scroll-behavior: auto; }
+}

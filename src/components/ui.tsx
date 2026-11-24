@@ -123,7 +123,7 @@ export const PageHeader: React.FC<{
 /* ------------------------------------------------------------------ */
 
 const base =
-  "inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed";
+  "inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 active:translate-y-px disabled:opacity-60 disabled:cursor-not-allowed disabled:active:translate-y-0";
 
 export const btn = {
   primary: `${base} bg-stone-900 px-3.5 py-2 text-white hover:bg-stone-800`,

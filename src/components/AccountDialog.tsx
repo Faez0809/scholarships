@@ -24,7 +24,7 @@ export const AccountDialog: React.FC = () => {
   const [picked, setPicked] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [newPassword, setNewPassword] = useState("");
-  const [pwState, setPwState] = useState<"idle" | "saving" | "saved">("idle");
+  const [pwState, setPwState] = useState<"idle" | "saving" | "saved" | "unchanged">("idle");
   const [pwError, setPwError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -63,8 +63,8 @@ export const AccountDialog: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-labelledby="account-title">
-      <div className="absolute inset-0 bg-black/40" onClick={() => !picked && close()} />
-      <div ref={ref} className="relative max-h-[92vh] w-full max-w-sm overflow-y-auto rounded-t-2xl bg-white p-5 shadow-xl sm:rounded-2xl">
+      <div className="st-backdrop absolute inset-0 bg-black/40" onClick={() => !picked && close()} />
+      <div ref={ref} className="st-dialog relative max-h-[92vh] w-full max-w-sm overflow-y-auto rounded-t-2xl bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-xl sm:rounded-2xl sm:pb-5">
         <div className="flex items-center justify-between">
           <h2 id="account-title" className="font-serif text-lg font-semibold text-stone-900">
             Your account
@@ -138,12 +138,12 @@ export const AccountDialog: React.FC = () => {
                 e.preventDefault();
                 setPwError(null);
                 setPwState("saving");
-                const err = await updatePassword(newPassword);
+                const { error: err, unchanged } = await updatePassword(newPassword);
                 if (err) {
                   setPwError(err);
                   setPwState("idle");
                 } else {
-                  setPwState("saved");
+                  setPwState(unchanged ? "unchanged" : "saved");
                   setNewPassword("");
                 }
               }}
@@ -156,15 +156,15 @@ export const AccountDialog: React.FC = () => {
                   value={newPassword}
                   onChange={(e) => {
                     setNewPassword(e.target.value);
-                    if (pwState === "saved") setPwState("idle");
+                    if (pwState === "saved" || pwState === "unchanged") setPwState("idle");
                   }}
                   placeholder="New password (at least 6 characters)"
                 />
               </label>
               {pwError && <p className="mt-2 text-sm text-red-700">{pwError}</p>}
-              {pwState === "saved" && (
+              {(pwState === "saved" || pwState === "unchanged") && (
                 <p className="mt-2 text-sm text-emerald-800" role="status">
-                  Password updated.
+                  {pwState === "saved" ? "Password updated." : "That's already your password, so nothing changed."}
                 </p>
               )}
               <button type="submit" disabled={!newPassword || pwState === "saving"} className={`${btn.secondary} mt-3 w-full`}>

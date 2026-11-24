@@ -29,6 +29,17 @@ interface AccountContextType {
   signUp: (email: string, password: string) => Promise<string | null>;
   signInWithGoogle: () => Promise<string | null>;
   signOut: () => Promise<void>;
+  /** Sends a reset link to the email; the link opens /reset-password. */
+  requestPasswordReset: (email: string) => Promise<string | null>;
+  /** Sets a new password for the signed-in (or recovering) user. */
+  updatePassword: (password: string) => Promise<string | null>;
+  /** Public URL of the profile picture, if one is set. */
+  avatarUrl: string | null;
+  /** Uploads an already-cropped square image as the profile picture. */
+  uploadAvatar: (image: Blob) => Promise<string | null>;
+  removeAvatar: () => Promise<string | null>;
+  isAccountOpen: boolean;
+  setIsAccountOpen: (open: boolean) => void;
   isAuthOpen: boolean;
   setIsAuthOpen: (open: boolean) => void;
 }
@@ -51,6 +62,7 @@ function friendly(message: string | undefined): string {
   if (m.includes("email not confirmed")) return "Please confirm your email first. Check your inbox for the link.";
   if (m.includes("already registered")) return "An account with this email already exists. Sign in instead.";
   if (m.includes("password")) return "Use a password with at least 6 characters.";
+  if (m.includes("rate limit") && m.includes("email")) return "Too many reset emails were sent recently. Please try again in an hour.";
   if (m.includes("rate limit")) return "Too many attempts. Please wait a minute and try again.";
   if (m.includes("provider is not enabled")) return "Google sign-in isn't switched on yet. Use email instead.";
   return message || "Something went wrong. Please try again.";
@@ -65,6 +77,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [status, setStatus] = useState<CloudStatus>("guest");
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const readyForSync = useRef(false);
   const lastSaved = useRef<string>("");
 
@@ -155,6 +168,52 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const value: AccountContextType = {
     session,
     email: session?.user?.email ?? null,
+    avatarUrl: (session?.user?.user_metadata?.avatar_url as string | undefined) || null,
+    isAccountOpen,
+    setIsAccountOpen,
+    requestPasswordReset: async (email) => {
+      if (!supabase) return "Password reset is not available right now.";
+      const clean = email.trim().toLowerCase();
+      if (!clean) return "Enter the email you signed up with.";
+      const { error } = await supabase.auth.resetPasswordForEmail(clean, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      return error ? friendly(error.message) : null;
+    },
+    updatePassword: async (password) => {
+      if (!supabase) return "Not available right now.";
+      if (password.length < 6) return "Use at least 6 characters.";
+      const { error } = await supabase.auth.updateUser({ password });
+      if (!error) return null;
+      if (/different from the old/i.test(error.message)) return "That is your current password. Choose a different one.";
+      return friendly(error.message);
+    },
+    uploadAvatar: async (image) => {
+      if (!supabase || !userId) return "Sign in to add a picture.";
+      const path = `${userId}/avatar.webp`;
+      const { error } = await supabase.storage
+        .from("avatars")
+        .upload(path, image, { upsert: true, contentType: image.type || "image/webp", cacheControl: "3600" });
+      if (error) {
+        return /bucket not found/i.test(error.message)
+          ? "Profile pictures aren't set up yet. Please try again later."
+          : "Couldn't upload the picture. Please try again.";
+      }
+      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+      const url = `${data.publicUrl}?v=${Date.now()}`;
+      const { data: updated, error: metaErr } = await supabase.auth.updateUser({ data: { avatar_url: url } });
+      if (metaErr) return "Saved the picture but couldn't link it to your account. Please try again.";
+      if (updated?.user) setSession((s) => (s ? { ...s, user: updated.user } : s));
+      return null;
+    },
+    removeAvatar: async () => {
+      if (!supabase || !userId) return null;
+      await supabase.storage.from("avatars").remove([`${userId}/avatar.webp`]);
+      const { data: updated, error } = await supabase.auth.updateUser({ data: { avatar_url: null } });
+      if (error) return "Couldn't remove the picture. Please try again.";
+      if (updated?.user) setSession((s) => (s ? { ...s, user: updated.user } : s));
+      return null;
+    },
     status: userId ? status : "guest",
     isAuthAvailable: !!supabase,
     isAuthOpen,

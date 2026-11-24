@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { X, Loader2, LogOut, Cloud, CloudOff, UserRound } from "lucide-react";
+import { X, Loader2, LogOut, Cloud, CloudOff, UserRound, Settings } from "lucide-react";
 import { useAccount } from "../context/AccountContext";
 import { btn, useDialog } from "./ui";
+import { PasswordInput } from "./PasswordInput";
+import { Avatar } from "./Avatar";
 
-type Mode = "signin" | "signup";
+type Mode = "signin" | "signup" | "forgot";
 
 const GOOGLE_ENABLED = process.env.NEXT_PUBLIC_ENABLE_GOOGLE_SIGNIN === "true";
 
@@ -14,7 +16,7 @@ const inputClass =
 
 /** Header button: "Sign in" for guests, account menu when signed in. */
 export const AccountButton: React.FC = () => {
-  const { session, email, status, setIsAuthOpen, signOut } = useAccount();
+  const { session, email, status, setIsAuthOpen, signOut, avatarUrl, setIsAccountOpen } = useAccount();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -56,13 +58,15 @@ export const AccountButton: React.FC = () => {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label="Account"
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-700 text-xs font-semibold uppercase text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+        className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
       >
-        {(email || "?").slice(0, 1)}
+        <Avatar url={avatarUrl} email={email} size={32} />
       </button>
       {open && (
         <div role="menu" className="absolute right-0 z-40 mt-1.5 w-64 rounded-lg border border-stone-200 bg-white p-1 shadow-lg">
-          <div className="px-2.5 py-2">
+          <div className="flex items-center gap-3 px-2.5 py-2.5">
+            <Avatar url={avatarUrl} email={email} size={40} />
+            <div className="min-w-0">
             <p className="truncate text-sm font-medium text-stone-900">{email}</p>
             <p className="mt-1 flex items-start gap-1.5 text-xs text-stone-500">
               {status === "unavailable" || status === "error" ? (
@@ -72,8 +76,20 @@ export const AccountButton: React.FC = () => {
               )}
               {statusText}
             </p>
+            </div>
           </div>
           <div className="my-1 border-t border-stone-100" />
+          <button
+            role="menuitem"
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              setIsAccountOpen(true);
+            }}
+            className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm text-stone-700 hover:bg-stone-100"
+          >
+            <Settings className="h-4 w-4 text-stone-500" /> Account settings
+          </button>
           <button
             role="menuitem"
             type="button"
@@ -93,7 +109,8 @@ export const AccountButton: React.FC = () => {
 
 /** Sign-in / create account dialog. */
 export const AuthDialog: React.FC = () => {
-  const { isAuthOpen, setIsAuthOpen, session, signInWithPassword, signUp, signInWithGoogle } = useAccount();
+  const { isAuthOpen, setIsAuthOpen, session, signInWithPassword, signUp, signInWithGoogle, requestPasswordReset } = useAccount();
+  const [resetSent, setResetSent] = useState(false);
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -122,11 +139,20 @@ export const AuthDialog: React.FC = () => {
   const switchMode = (m: Mode) => {
     setMode(m);
     setError(null);
+    setResetSent(false);
   };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    if (mode === "forgot") {
+      setBusy(true);
+      const err = await requestPasswordReset(email);
+      setBusy(false);
+      if (err) setError(err);
+      else setResetSent(true);
+      return;
+    }
     if (!email.trim() || !password) {
       setError("Please enter your email and a password.");
       return;
@@ -137,7 +163,7 @@ export const AuthDialog: React.FC = () => {
     setBusy(false);
   };
 
-  const title = mode === "signup" ? "Create your account" : "Sign in";
+  const title = mode === "signup" ? "Create your account" : mode === "forgot" ? "Reset your password" : "Sign in";
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-labelledby="auth-title">
@@ -152,7 +178,9 @@ export const AuthDialog: React.FC = () => {
               <h2 id="auth-title" className="text-base font-semibold text-stone-900">
                 {title}
               </h2>
-              <p className="text-xs text-stone-500">Keep your profile, shortlist and outreach on every device.</p>
+              <p className="text-xs text-stone-500">
+                {mode === "forgot" ? "We'll email you a link to choose a new password." : "Keep your profile, shortlist and outreach on every device."}
+              </p>
             </div>
           </div>
           <button type="button" onClick={() => setIsAuthOpen(false)} className="rounded-md p-1 text-stone-500 hover:bg-stone-100" aria-label="Close">
@@ -165,17 +193,30 @@ export const AuthDialog: React.FC = () => {
               <span className="mb-1 block text-xs font-medium text-stone-700">Email</span>
               <input ref={emailRef} type="email" autoComplete="email" className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
             </label>
+            {mode !== "forgot" && (
               <label className="block">
-                <span className="mb-1 block text-xs font-medium text-stone-700">Password</span>
-                <input
-                  type="password"
+                <span className="mb-1 flex items-baseline justify-between text-xs font-medium text-stone-700">
+                  Password
+                  {mode === "signin" && (
+                    <button type="button" onClick={() => switchMode("forgot")} className="font-normal text-blue-800 hover:underline">
+                      Forgot password?
+                    </button>
+                  )}
+                </span>
+                <PasswordInput
                   autoComplete={mode === "signup" ? "new-password" : "current-password"}
-                  className={inputClass}
+                  inputClassName={inputClass}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder={mode === "signup" ? "Choose a password" : "Your password"}
+                  placeholder={mode === "signup" ? "At least 6 characters" : "Your password"}
                 />
               </label>
+            )}
+            {mode === "forgot" && resetSent && (
+              <p role="status" className="rounded-lg bg-stone-50 px-3 py-2 text-sm text-stone-700">
+                If an account exists for {email.trim()}, a reset link is on its way. It can take a few minutes; check your spam folder too.
+              </p>
+            )}
             {error && (
               <p role="alert" className="text-sm text-red-700">
                 {error}
@@ -183,11 +224,11 @@ export const AuthDialog: React.FC = () => {
             )}
             <button type="submit" disabled={busy} className={`${btn.primary} w-full`}>
               {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-              {mode === "signup" ? "Create account" : "Sign in"}
+              {mode === "signup" ? "Create account" : mode === "forgot" ? (resetSent ? "Send again" : "Send reset link") : "Sign in"}
             </button>
           </form>
 
-            {GOOGLE_ENABLED && (
+            {GOOGLE_ENABLED && mode !== "forgot" && (
               <>
                 <div className="my-4 flex items-center gap-3 text-xs text-stone-400">
                   <span className="h-px flex-1 bg-stone-200" /> or <span className="h-px flex-1 bg-stone-200" />
@@ -205,7 +246,14 @@ export const AuthDialog: React.FC = () => {
               </>
             )}
             <div className="mt-4 space-y-1.5 text-center text-xs text-stone-600">
-              {mode === "signup" ? (
+              {mode === "forgot" ? (
+                <p>
+                  Remembered it?{" "}
+                  <button type="button" onClick={() => switchMode("signin")} className="font-medium text-blue-800 hover:underline">
+                    Back to sign in
+                  </button>
+                </p>
+              ) : mode === "signup" ? (
                 <p>
                   Already have an account?{" "}
                   <button type="button" onClick={() => switchMode("signin")} className="font-medium text-blue-800 hover:underline">

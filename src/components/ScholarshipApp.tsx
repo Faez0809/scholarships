@@ -11,6 +11,7 @@ import { ScholarshipDrawer } from "./ScholarshipDrawer";
 import { AdminModal } from "./AdminModal";
 import { PasscodeModal } from "./PasscodeModal";
 import { AuthDialog } from "./AuthDialog";
+import { AccountDialog } from "./AccountDialog";
 import { ProfilePanel } from "./ProfilePanel";
 
 export const ScholarshipApp: React.FC = () => {
@@ -64,6 +65,7 @@ export const ScholarshipApp: React.FC = () => {
       <AdminModal />
       <PasscodeModal />
       <AuthDialog />
+      <AccountDialog />
     </div>
   );
 };

@@ -8,6 +8,8 @@ import { MediumOfInstruction, UserProfile } from "../types/scholarship";
 import { NATIONALITIES } from "../data/nationality";
 import { InfoTip, JARGON, useDialog } from "./ui";
 import { FieldPicker } from "./FieldPicker";
+import { Avatar } from "./Avatar";
+import { useAccount } from "../context/AccountContext";
 
 export const selectClass =
   "w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700";
@@ -19,6 +21,7 @@ export const selectClass =
 export const ProfilePanel: React.FC = () => {
   const { isProfileOpen, setIsProfileOpen, markStep } = useGuide();
   const { stats, setActivePill, activeView, updateProfileField } = useScholarship();
+  const { session, email, avatarUrl, setIsAccountOpen } = useAccount();
   const ref = useRef<HTMLDivElement>(null);
   useDialog(isProfileOpen, ref);
 
@@ -46,11 +49,23 @@ export const ProfilePanel: React.FC = () => {
         className="absolute inset-x-0 bottom-0 flex max-h-[90vh] flex-col rounded-t-2xl bg-white shadow-xl sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-[420px] sm:rounded-none"
       >
         <div className="flex items-start justify-between gap-2 border-b border-stone-100 px-5 py-4">
-          <div>
-            <h2 id="profile-title" className="font-serif text-xl font-semibold text-stone-900">
-              Your profile
-            </h2>
-            <p className="mt-0.5 text-sm text-stone-500">Used to check what you qualify for. Saved automatically.</p>
+          <div className="flex min-w-0 items-center gap-3">
+            {session && (
+              <button
+                type="button"
+                onClick={() => setIsAccountOpen(true)}
+                className="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2"
+                aria-label="Account settings and profile picture"
+              >
+                <Avatar url={avatarUrl} email={email} size={44} />
+              </button>
+            )}
+            <div className="min-w-0">
+              <h2 id="profile-title" className="font-serif text-xl font-semibold text-stone-900">
+                Your profile
+              </h2>
+              <p className="mt-0.5 text-sm text-stone-500">Used to check what you qualify for. Saved automatically.</p>
+            </div>
           </div>
           <button type="button" onClick={close} className="rounded-md p-1.5 text-stone-500 hover:bg-stone-100" aria-label="Close profile">
             <X className="h-5 w-5" />

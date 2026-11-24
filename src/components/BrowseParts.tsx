@@ -18,26 +18,43 @@ export type { ListingStatus } from "../utils/listing";
 export const QuickStart: React.FC = () => {
   const { profile } = useScholarship();
   const { dismissQuickStart, isQuickStartDismissed, setIsProfileOpen } = useGuide();
-  if (profile.isSet || isQuickStartDismissed) return null;
+  if (profile.isSet) return null;
+
+  // After "Later", keep a single quiet line so the way back is always visible.
+  if (isQuickStartDismissed) {
+    return (
+      <p className="mb-4 text-sm text-stone-600">
+        These results are not matched to you yet.{" "}
+        <button type="button" onClick={() => setIsProfileOpen(true)} className="font-medium text-blue-800 hover:underline">
+          Add your profile
+        </button>
+      </p>
+    );
+  }
 
   return (
     <section
-      aria-label="Check what you qualify for"
-      className="mb-5 flex flex-col gap-3 rounded-xl border border-stone-200 bg-white px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between"
+      aria-labelledby="quickstart-title"
+      className="mb-5 rounded-xl border border-stone-200 bg-white px-4 py-4 sm:flex sm:items-center sm:justify-between sm:gap-6"
     >
-      <p className="text-sm text-stone-700">
-        <span className="font-medium text-stone-900">See what you qualify for.</span> Answer three quick questions.
-      </p>
-      <div className="flex shrink-0 items-center gap-3">
-        <button type="button" onClick={dismissQuickStart} className="text-sm text-stone-500 hover:text-stone-900">
-          Not now
-        </button>
+      <div>
+        <h2 id="quickstart-title" className="font-serif text-base font-semibold text-stone-900">
+          Match scholarships to you
+        </h2>
+        <p className="mt-1 text-sm leading-relaxed text-stone-600">
+          Add your degree, field, CGPA, IELTS and passport. We&apos;ll mark the programs you qualify for and explain the rest.
+        </p>
+      </div>
+      <div className="mt-3 flex shrink-0 items-center gap-4 sm:mt-0">
         <button
           type="button"
           onClick={() => setIsProfileOpen(true)}
-          className="rounded-lg bg-stone-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-stone-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2"
+          className="rounded-lg bg-stone-900 px-4 py-2 text-sm font-medium text-white hover:bg-stone-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2"
         >
-          Answer 3 questions
+          Add my profile
+        </button>
+        <button type="button" onClick={dismissQuickStart} className="text-sm text-stone-500 hover:text-stone-900">
+          Later
         </button>
       </div>
     </section>

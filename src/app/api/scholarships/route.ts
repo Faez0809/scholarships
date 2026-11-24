@@ -167,7 +167,9 @@ export async function POST(req: NextRequest) {
         const newerFacts = !stored.lastVerified || stored.lastVerified < item.lastVerified;
         const correctedMoney = (item.dataVersion || 1) > (stored.dataVersion || 1);
         const retagged = stored.field !== item.field || JSON.stringify(stored.extraFields || []) !== JSON.stringify(item.extraFields || []);
-        return newerFacts || correctedMoney || retagged;
+        const newMinimums =
+          stored.minCGPA !== item.minCGPA || stored.minIELTS !== item.minIELTS || stored.requirementsNote !== item.requirementsNote;
+        return newerFacts || correctedMoney || retagged || newMinimums;
       }).map((item) => {
         const stored = existing.get(item.id)!;
         const correctedMoney = (item.dataVersion || 1) > (stored.dataVersion || 1);
@@ -186,6 +188,10 @@ export async function POST(req: NextRequest) {
             : {}),
           field: item.field,
           extraFields: item.extraFields,
+          minCGPA: item.minCGPA,
+          minIELTS: item.minIELTS,
+          requirementsNote: item.requirementsNote,
+          requirementsChecked: item.requirementsChecked,
           deadline: item.deadline,
           deadlineIsEstimate: item.deadlineIsEstimate,
           deadlineNote: item.deadlineNote,

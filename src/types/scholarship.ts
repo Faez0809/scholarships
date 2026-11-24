@@ -56,8 +56,14 @@ export interface Scholarship {
   /** Other fields the program also funds, e.g. an engineering school that also takes physics. */
   extraFields?: FieldCategory[];
   fieldSpecifics: string;
+  /** 0 when the program publishes no fixed minimum. */
   minCGPA: number;
+  /** 0 when the program publishes no fixed minimum. */
   minIELTS: number;
+  /** Official wording of the grade and English requirements. */
+  requirementsNote?: string;
+  /** Date the minimums were checked against official pages. */
+  requirementsChecked?: string;
   medium: MediumOfInstruction;
   deadline: string; // YYYY-MM-DD
   monthlyStipendUSD: number;

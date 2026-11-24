@@ -3,6 +3,7 @@
  * Each case is what a student might type and the field it should land in.
  */
 import { matchField, bestFieldCategory } from "../src/utils/fieldMatch.ts";
+import { expandPlaceQuery } from "../src/utils/searchAliases.ts";
 
 type Cat = "Computer Science & AI" | "Engineering" | "Natural Sciences" | "Life Sciences" | "Business & Social Sciences";
 const CS: Cat = "Computer Science & AI";
@@ -136,6 +137,32 @@ for (const text of NO_MATCH) {
     console.log(`FAIL  "${text}" should not match, got ${got}`);
   }
 }
-const total = CASES.length + NO_MATCH.length;
+// Place short forms used in the search box
+const PLACES: [string, string][] = [
+  ["KSA", "saudi arabia"],
+  ["ksa", "saudi arabia"],
+  ["UK", "united kingdom"],
+  ["U.K.", "united kingdom"],
+  ["USA", "united states"],
+  ["US", "united states"],
+  ["UAE", "united arab emirates"],
+  ["Turkey", "turkiye"],
+  ["Türkiye", "turkiye"],
+  ["HK", "hong kong"],
+  ["Holland", "netherlands"],
+  ["Korea", "south korea"],
+  ["Swiss", "switzerland"],
+  ["Japan", "japan"],
+  ["IT", "it"],
+];
+for (const [text, want] of PLACES) {
+  const got = expandPlaceQuery(text);
+  if (got !== want) {
+    failures++;
+    console.log(`FAIL  place "${text}" -> "${got}", expected "${want}"`);
+  }
+}
+
+const total = CASES.length + NO_MATCH.length + PLACES.length;
 console.log(`${total - failures}/${total} passed`);
 if (failures) process.exit(1);

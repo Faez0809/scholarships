@@ -166,8 +166,8 @@ Instructions:
 11. degrees: Array containing "Master's", "PhD", or both ["Master's", "PhD"].
 12. field: Must be exactly one of: "Computer Science & AI", "Engineering", "Life Sciences", "Natural Sciences", "Business & Social Sciences", "All Fields".
 13. fieldSpecifics: String listing target subjects/majors mentioned (e.g. "Artificial Intelligence, Data Science, Electrical Engineering").
-14. minCGPA: Minimum undergraduate CGPA on a 4.0 scale (number). If not explicitly stated, estimate a realistic minimum (e.g. 3.20 or 3.50 for prestigious awards).
-15. minIELTS: Minimum IELTS score (number, e.g. 6.5, 7.0, 7.5). If not mentioned, estimate 6.5.
+14. minCGPA: Minimum undergraduate CGPA on a 4.0 scale (number), only if the page states it. If it is not stated, use 0. Never estimate.
+15. minIELTS: Minimum IELTS score (number, e.g. 6.5, 7.0), only if the page states it. If it is not stated, use 0. Never estimate.
 16. medium: "English Only" if courses are in English (almost always English for international scholarships), otherwise "Any".
 17. deadline: Date in YYYY-MM-DD format. If date is not found or has passed, estimate the next upcoming cycle deadline (in late 2026 or early 2027).
 18. monthlyStipendUSD: Convert any stated living allowance/stipend into equivalent Monthly USD (number). (e.g., £2,000/mo -> 2500, €1,500/mo -> 1650, 150,000 JPY -> 1000). If only tuition is covered and no living stipend is provided, set to 0.
@@ -275,8 +275,8 @@ Return ONLY valid JSON matching these fields. No markdown backticks, no explanat
         : ["Master's", "PhD"],
       field: validFields.includes(parsed.field) ? parsed.field : "All Fields",
       fieldSpecifics: parsed.fieldSpecifics || "General Graduate Programs",
-      minCGPA: typeof parsed.minCGPA === "number" ? parsed.minCGPA : 3.2,
-      minIELTS: typeof parsed.minIELTS === "number" ? parsed.minIELTS : 6.5,
+      minCGPA: typeof parsed.minCGPA === "number" ? parsed.minCGPA : 0,
+      minIELTS: typeof parsed.minIELTS === "number" ? parsed.minIELTS : 0,
       medium: parsed.medium === "Any" ? "Any" : "English Only",
       deadline: parsed.deadline || new Date(Date.now() + 45 * 86400000).toISOString().split("T")[0],
       monthlyStipendUSD: typeof parsed.monthlyStipendUSD === "number" ? parsed.monthlyStipendUSD : 1500,

@@ -1,8 +1,9 @@
 import { Scholarship } from "../types/scholarship";
 import { ADDITIONAL_SCHOLARSHIPS } from "./additionalScholarships";
 import { MORE_SCHOLARSHIPS } from "./moreScholarships";
+import { withRequirements } from "./requirements";
 
-export const SEED_SCHOLARSHIPS: Scholarship[] = [
+const BUILT_IN: Scholarship[] = [
   // 1. CSC Chinese Government Scholarship (Gov / Multi-Uni - Asia)
   {
     id: "csc-china-high-level-2026",
@@ -503,7 +504,7 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     deadlineNote:
       "Fall 2027 MS and PhD admission. Applying for admission also considers you for the fellowship.",
     lastVerified: "2026-11-20",
-    dataVersion: 2,
+    dataVersion: 3,
     monthlyStipendUSD: 2500,
     estimatedLivingCostUSD: 750,
     tuitionCovered: true,
@@ -511,12 +512,12 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
     relocationAirfareCovered: true,
     housingProvided: true,
     facilities: [
-      "100% Full Tuition Waiver",
-      "Free Furnished On-Campus Luxury Housing",
-      "Annual Round-trip Flights Home",
-      "Comprehensive Premium Medical & Dental Insurance",
-      "$1,000 Relocation Settling Allowance",
-      "Access to Shaheen III Supercomputer & Advanced Core Labs"
+      "Full tuition",
+      "Monthly living stipend",
+      "Free on-campus housing",
+      "Medical and dental cover",
+      "Relocation support",
+      "Access to KAUST research labs and the Shaheen supercomputer"
     ],
     requiredDocuments: [
       "Statement of Purpose (750 words on research objectives)",
@@ -815,3 +816,5 @@ export const SEED_SCHOLARSHIPS: Scholarship[] = [
   ...ADDITIONAL_SCHOLARSHIPS,
   ...MORE_SCHOLARSHIPS,
 ];
+
+export const SEED_SCHOLARSHIPS: Scholarship[] = BUILT_IN.map(withRequirements);

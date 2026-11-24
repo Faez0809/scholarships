@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getScholarshipById } from "@/lib/getScholarship";
-import { coverageItems, fundingLevel, listingStatus } from "@/utils/listing";
+import { cgpaLabel, coverageItems, fundingLevel, ieltsLabel, listingStatus } from "@/utils/listing";
 import { formatSignedUSD, formatVerifiedDate, getSavingsRange } from "@/utils/scholarshipUtils";
 
 export const dynamic = "force-dynamic";
@@ -85,8 +85,9 @@ export default async function ScholarshipPage({ params }: Props) {
 
         <h2 className="mt-6 text-sm font-semibold text-stone-900">Requirements</h2>
         <p className="mt-1 text-sm text-stone-700">
-          Minimum CGPA {s.minCGPA.toFixed(2)} · IELTS {s.minIELTS > 0 ? s.minIELTS.toFixed(1) : "not required"} · {s.medium === "English Only" ? "Taught in English" : "Various languages"}
+          Minimum CGPA: {cgpaLabel(s).toLowerCase()} · IELTS: {ieltsLabel(s).toLowerCase()} · {s.medium === "English Only" ? "Taught in English" : "Various languages"}
         </p>
+        {s.requirementsNote && <p className="mt-1 text-sm text-stone-600">{s.requirementsNote}</p>}
 
         <h2 className="mt-6 text-sm font-semibold text-stone-900">About this program</h2>
         <p className="mt-1 text-sm leading-relaxed text-stone-700">{s.overview}</p>

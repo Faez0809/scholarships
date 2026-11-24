@@ -41,3 +41,13 @@ export function coverageItems(s: {
 export function fundingLevel(s: { tuitionCovered: boolean; monthlyStipendUSD: number }): "Fully funded" | "Partial funding" {
   return s.tuitionCovered && s.monthlyStipendUSD > 0 ? "Fully funded" : "Partial funding";
 }
+
+/** Minimum CGPA as shown to students; 0 means the program publishes no fixed number. */
+export function cgpaLabel(s: Scholarship): string {
+  return s.minCGPA > 0 ? s.minCGPA.toFixed(2) : "No fixed minimum";
+}
+
+/** Minimum IELTS as shown to students; 0 means the scholarship sets no number of its own. */
+export function ieltsLabel(s: Scholarship): string {
+  return s.minIELTS > 0 ? s.minIELTS.toFixed(1) : "Set by the university";
+}

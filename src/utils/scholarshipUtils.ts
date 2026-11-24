@@ -8,6 +8,7 @@ import {
 import { nationalityLabel, nationalityStatus } from "../data/nationality";
 import { ageAtDeadline, ageLimitFor } from "../data/rules";
 import { bestFieldCategory } from "./fieldMatch";
+import { expandPlaceQuery, foldText } from "./searchAliases";
 
 /** True when the program funds students of this field (its main field, an extra one, or all fields). */
 export function inField(s: Scholarship, category: string): boolean {
@@ -242,22 +243,22 @@ export function filterScholarships(
   // 6. Search query. Names and places first; if nothing matches by name or place and the
   // text reads as a subject ("EEE", "thermodynamics"), show programs open to that field.
   if (searchQuery.trim()) {
-    const q = searchQuery.toLowerCase().trim();
+    const q = expandPlaceQuery(searchQuery);
+    // Very short queries match the start of a word ("it" should not match "university").
+    const has = (text: string | undefined) =>
+      Boolean(text && (q.length <= 3 ? ` ${foldText(text)}`.includes(` ${q}`) : foldText(text).includes(q)));
     const byNameOrPlace = (s: Scholarship) =>
-      s.name.toLowerCase().includes(q) ||
-      s.university.toLowerCase().includes(q) ||
-      s.city.toLowerCase().includes(q) ||
-      s.country.toLowerCase().includes(q) ||
-      s.region.toLowerCase().includes(q) ||
-      s.fundingType.toLowerCase().includes(q) ||
-      Boolean(
-        s.partnerUniversities?.some(
-          (p) => p.name.toLowerCase().includes(q) || p.city.toLowerCase().includes(q) || p.country.toLowerCase().includes(q)
-        )
-      );
-    const bySubjectText = (s: Scholarship) =>
-      s.field.toLowerCase().includes(q) || Boolean(s.fieldSpecifics && s.fieldSpecifics.toLowerCase().includes(q));
-    const fieldCat = list.some(byNameOrPlace) ? null : bestFieldCategory(searchQuery);
+      has(s.name) ||
+      has(s.university) ||
+      has(s.city) ||
+      has(s.country) ||
+      has(s.region) ||
+      has(s.fundingType) ||
+      Boolean(s.partnerUniversities?.some((p) => has(p.name) || has(p.city) || has(p.country)));
+    const bySubjectText = (s: Scholarship) => has(s.field) || has(s.fieldSpecifics);
+    // An exact department short form or name ("EEE", "IT", "Physics") always counts as a subject;
+    // looser subject matches only apply when no program name or place matches.
+    const fieldCat = bestFieldCategory(searchQuery, 90) ?? (list.some(byNameOrPlace) ? null : bestFieldCategory(searchQuery));
     list = list.filter(
       (s) =>
         byNameOrPlace(s) ||

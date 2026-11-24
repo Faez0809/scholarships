@@ -5,6 +5,7 @@ import { useScholarship } from "../context/ScholarshipContext";
 import { PartnerUniversity } from "../types/scholarship";
 import { useGuide } from "../context/GuideContext";
 import { FUNDING_HELP, FUNDING_LABELS, InfoTip, JARGON, SUPERVISOR_LABELS, coverageItems, fundingLevel, useDialog } from "./ui";
+import { cgpaLabel, ieltsLabel } from "../utils/listing";
 import { nationalityLabel, nationalityNote, nationalityStatus } from "../data/nationality";
 import { AGE_LIMITS, englishTestExpired } from "../data/rules";
 import { UniversityGallery } from "./UniversityGallery";
@@ -47,7 +48,8 @@ export const ScholarshipDrawer: React.FC = () => {
     toggleDocumentCheck,
     openSupervisorFinder,
   } = useScholarship();
-  const { isSavedScholarship, toggleSavedScholarship } = useGuide();
+  const { isSavedScholarship, toggleSavedScholarship, setIsProfileOpen } = useGuide();
+  const matched = profile.isSet === true;
 
   // Local state for personal budget adjustment in interactive calculator
   const [personalExpenseAdjustment, setPersonalExpenseAdjustment] = useState<number>(0);
@@ -239,17 +241,27 @@ export const ScholarshipDrawer: React.FC = () => {
             <ol className="divide-y divide-stone-100 text-sm">
               <NextStep
                 n={1}
-                done={eligibility.isEligible}
-                title={eligibility.isEligible ? "You meet the requirements" : "Check the requirements"}
+                done={matched && eligibility.isEligible}
+                title={!matched ? "Check if you qualify" : eligibility.isEligible ? "You meet the requirements" : "Check the requirements"}
                 detail={
-                  eligibility.isEligible
-                    ? `Minimum CGPA ${s.minCGPA.toFixed(2)}, IELTS ${s.minIELTS > 0 ? s.minIELTS.toFixed(1) : "not required"}.`
+                  !matched
+                    ? "Add your profile to compare your grades and passport with this program."
+                    : eligibility.isEligible
+                    ? s.minCGPA > 0 || s.minIELTS > 0
+                      ? `Minimum CGPA ${cgpaLabel(s).toLowerCase()}, IELTS ${ieltsLabel(s).toLowerCase()}.`
+                      : "No fixed grade cut-off. Read the official requirements below."
                     : eligibility.reasons[0] || "Some requirements are not met yet."
                 }
                 action={
-                  <a href="#drawer-eligibility" className="-my-1.5 -mr-1 inline-block rounded px-1 py-1.5 text-xs font-medium text-blue-800 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
-                    See details
-                  </a>
+                  matched ? (
+                    <a href="#drawer-eligibility" className="-my-1.5 -mr-1 inline-block rounded px-1 py-1.5 text-xs font-medium text-blue-800 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
+                      See details
+                    </a>
+                  ) : (
+                    <button type="button" onClick={() => setIsProfileOpen(true)} className="-my-1.5 -mr-1 inline-block rounded px-1 py-1.5 text-xs font-medium text-blue-800 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
+                      Add profile
+                    </button>
+                  )
                 }
               />
               <NextStep
@@ -373,25 +385,22 @@ export const ScholarshipDrawer: React.FC = () => {
           {/* Requirements */}
           <section id="drawer-eligibility" aria-labelledby="eligibility-title" className="scroll-mt-4">
             <h3 id="eligibility-title" className="flex items-center gap-2 text-sm font-semibold text-stone-900">
-              {eligibility.isEligible ? (
-                <CheckCircle2 className="h-4 w-4 text-emerald-700" />
-              ) : (
-                <AlertTriangle className="h-4 w-4 text-amber-700" />
-              )}
-              {eligibility.isEligible ? "You meet the requirements" : "Requirements"}
+              {matched && eligibility.isEligible && <CheckCircle2 className="h-4 w-4 text-emerald-700" />}
+              {matched && !eligibility.isEligible && <AlertTriangle className="h-4 w-4 text-amber-700" />}
+              {matched && eligibility.isEligible ? "You meet the requirements" : "Requirements"}
             </h3>
             <dl className="mt-2 divide-y divide-stone-100 rounded-xl border border-stone-200 text-sm">
               {[
-                { label: "Minimum CGPA", value: s.minCGPA.toFixed(2), ok: eligibility.cgpaPass },
-                { label: "Minimum IELTS", value: s.minIELTS > 0 ? s.minIELTS.toFixed(1) : "Not required", ok: eligibility.ieltsPass },
-                { label: "Degree", value: s.degrees.join(" & "), ok: eligibility.degreePass },
-                { label: "Teaching language", value: s.medium === "Any" ? "English or local" : s.medium, ok: true },
+                { label: "Minimum CGPA", value: cgpaLabel(s), ok: matched && s.minCGPA > 0 ? eligibility.cgpaPass : null },
+                { label: "Minimum IELTS", value: ieltsLabel(s), ok: matched && s.minIELTS > 0 ? eligibility.ieltsPass : null },
+                { label: "Degree", value: s.degrees.join(" & "), ok: matched ? eligibility.degreePass : null },
+                { label: "Teaching language", value: s.medium === "Any" ? "English or local" : s.medium, ok: null },
               ].map((row) => (
                 <div key={row.label} className="flex items-center justify-between gap-3 px-3 py-2">
                   <dt className="text-stone-600">{row.label}</dt>
                   <dd className="flex items-center gap-1.5 font-medium tabular-nums text-stone-900">
                     {row.value}
-                    {row.ok ? (
+                    {row.ok === null ? null : row.ok ? (
                       <Check className="h-4 w-4 text-emerald-700" aria-label="met" />
                     ) : (
                       <X className="h-4 w-4 text-amber-700" aria-label="not met" />
@@ -400,7 +409,18 @@ export const ScholarshipDrawer: React.FC = () => {
                 </div>
               ))}
             </dl>
-            {!eligibility.isEligible && eligibility.reasons.length > 0 && (
+            {s.requirementsNote && (
+              <p className="mt-2 text-sm leading-relaxed text-stone-600">
+                {s.requirementsNote}{" "}
+                <span className="text-stone-500">
+                  {s.requirementsChecked ? `Checked ${formatVerifiedDate(s.requirementsChecked)}. ` : ""}
+                  <a href={s.officialWebsiteUrl} target="_blank" rel="noopener noreferrer" className="text-blue-800 hover:underline">
+                    Official page
+                  </a>
+                </span>
+              </p>
+            )}
+            {matched && !eligibility.isEligible && eligibility.reasons.length > 0 && (
               <ul className="mt-2 list-disc space-y-0.5 pl-5 text-sm text-amber-900">
                 {eligibility.reasons.map((r, i) => (
                   <li key={i}>{r}</li>

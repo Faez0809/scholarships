@@ -27,7 +27,7 @@ export const NAV_ITEMS: { id: AppView; label: string; short: string; Icon: React
 ];
 
 export const AppHeader: React.FC = () => {
-  const { activeView, setActiveView } = useScholarship();
+  const { activeView, setActiveView, profile } = useScholarship();
   const { setIsProfileOpen } = useGuide();
   const { contacts } = useOutreach();
   const due = contacts.filter(isFollowUpOverdue).length;
@@ -84,6 +84,7 @@ export const AppHeader: React.FC = () => {
             className="hidden items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-stone-600 hover:bg-stone-100 hover:text-stone-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 md:inline-flex"
           >
             <UserRound className="h-4 w-4" /> Profile
+            {!profile.isSet && <span className="h-1.5 w-1.5 rounded-full bg-amber-500" aria-label="not filled in yet" />}
           </button>
           <AccountButton />
         </div>
@@ -94,7 +95,7 @@ export const AppHeader: React.FC = () => {
 
 /* Bottom tab bar for phones */
 export const MobileTabBar: React.FC = () => {
-  const { activeView, setActiveView } = useScholarship();
+  const { activeView, setActiveView, profile } = useScholarship();
   const { setIsProfileOpen, isProfileOpen } = useGuide();
   const { contacts } = useOutreach();
   const due = contacts.filter(isFollowUpOverdue).length;
@@ -137,12 +138,15 @@ export const MobileTabBar: React.FC = () => {
               setIsProfileOpen(true);
             }}
             aria-pressed={isProfileOpen}
-            className={`flex w-full flex-col items-center gap-0.5 pb-2 pt-2.5 text-[11px] font-medium ${
+            className={`relative flex w-full flex-col items-center gap-0.5 pb-2 pt-2.5 text-[11px] font-medium ${
               isProfileOpen ? "text-blue-800" : "text-stone-500"
             }`}
           >
             <UserRound className="h-5 w-5" />
             Profile
+            {!profile.isSet && (
+              <span className="absolute right-[calc(50%-18px)] top-1.5 h-2 w-2 rounded-full bg-amber-500" aria-label="not filled in yet" />
+            )}
           </button>
         </li>
       </ul>

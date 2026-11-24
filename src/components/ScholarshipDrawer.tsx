@@ -5,7 +5,8 @@ import { useScholarship } from "../context/ScholarshipContext";
 import { PartnerUniversity } from "../types/scholarship";
 import { useGuide } from "../context/GuideContext";
 import { FUNDING_HELP, FUNDING_LABELS, InfoTip, JARGON, SUPERVISOR_LABELS, coverageItems, fundingLevel, useDialog } from "./ui";
-import { cgpaLabel, ieltsLabel } from "../utils/listing";
+import { cgpaLabel, ieltsLabel, lastCheckedLabel } from "../utils/listing";
+import { ReportErrorLink } from "./ReportError";
 import { nationalityLabel, nationalityNote, nationalityStatus } from "../data/nationality";
 import { AGE_LIMITS, englishTestExpired } from "../data/rules";
 import { UniversityGallery } from "./UniversityGallery";
@@ -199,12 +200,13 @@ export const ScholarshipDrawer: React.FC = () => {
             <p className="mt-0.5 pl-[22px] text-xs text-stone-500">
               {s.city}, {s.country} · {s.region}
             </p>
-            <p className="mt-2 text-xs text-stone-500">
-              {s.lastVerified ? `Checked on ${formatVerifiedDate(s.lastVerified)}` : "Not yet checked"} ·{" "}
+            <div className="mt-2 text-xs text-stone-500">
+              {lastCheckedLabel(s)} ·{" "}
               <a href={s.officialWebsiteUrl} target="_blank" rel="noopener noreferrer" className="text-blue-800 hover:underline">
                 Official page
-              </a>
-            </p>
+              </a>{" "}
+              · <ReportErrorLink key={s.id} scholarshipId={s.id} />
+            </div>
             {s.fieldSpecifics && (
               <p className="mt-1 text-xs text-stone-500">
                 Specializations: <span className="text-stone-700">{s.fieldSpecifics}</span>

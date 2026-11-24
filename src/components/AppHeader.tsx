@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   GraduationCap,
   Users,
@@ -13,11 +13,13 @@ import {
   LogOut,
   ChevronDown,
   UserRound,
+  Flag,
 } from "lucide-react";
 import { AppView, useScholarship } from "../context/ScholarshipContext";
 import { useGuide } from "../context/GuideContext";
 import { isFollowUpOverdue, useOutreach } from "../context/OutreachContext";
 import { AccountButton } from "./AuthDialog";
+import { ErrorReportsDialog } from "./ErrorReportsDialog";
 
 export const NAV_ITEMS: { id: AppView; label: string; short: string; Icon: React.ElementType }[] = [
   { id: "scholarships", label: "Scholarships", short: "Browse", Icon: GraduationCap },
@@ -165,6 +167,8 @@ const AdminMenu: React.FC = () => {
     syncNewPrograms,
   } = useScholarship();
   const [open, setOpen] = useState(false);
+  const [reportsOpen, setReportsOpen] = useState(false);
+  const closeReports = useCallback(() => setReportsOpen(false), []);
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -196,6 +200,7 @@ const AdminMenu: React.FC = () => {
 
   return (
     <div ref={ref} className="relative">
+      <ErrorReportsDialog open={reportsOpen} onClose={closeReports} />
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -220,6 +225,17 @@ const AdminMenu: React.FC = () => {
             }}
           >
             <Plus className="h-4 w-4 text-stone-500" /> Add a scholarship
+          </button>
+          <button
+            role="menuitem"
+            type="button"
+            className={item}
+            onClick={() => {
+              setOpen(false);
+              setReportsOpen(true);
+            }}
+          >
+            <Flag className="h-4 w-4 text-stone-500" /> Error reports
           </button>
           <button
             role="menuitem"

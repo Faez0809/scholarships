@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getScholarshipById } from "@/lib/getScholarship";
-import { cgpaLabel, coverageItems, fundingLevel, ieltsLabel, listingStatus } from "@/utils/listing";
-import { formatSignedUSD, formatVerifiedDate, getSavingsRange } from "@/utils/scholarshipUtils";
+import { cgpaLabel, coverageItems, fundingLevel, ieltsLabel, lastCheckedLabel, listingStatus } from "@/utils/listing";
+import { ReportErrorLink } from "@/components/ReportError";
+import { formatSignedUSD, getSavingsRange } from "@/utils/scholarshipUtils";
 
 export const dynamic = "force-dynamic";
 
@@ -93,9 +94,10 @@ export default async function ScholarshipPage({ params }: Props) {
         <p className="mt-1 text-sm leading-relaxed text-stone-700">{s.overview}</p>
         {s.deadlineNote && <p className="mt-3 text-sm text-stone-600">{s.deadlineNote}</p>}
 
-        <p className="mt-6 text-xs text-stone-500">
-          {s.lastVerified ? `Checked on ${formatVerifiedDate(s.lastVerified)}.` : ""} Always confirm details on the official page before applying.
-        </p>
+        <div className="mt-6 text-xs text-stone-500">
+          {lastCheckedLabel(s)}. Always confirm details on the official page before applying.{" "}
+          <ReportErrorLink scholarshipId={s.id} />
+        </div>
 
         <div className="mt-6 flex flex-col gap-2 sm:flex-row">
           <a

@@ -1,5 +1,5 @@
 import { Scholarship } from "../types/scholarship";
-import { calculateDaysRemaining } from "./scholarshipUtils";
+import { calculateDaysRemaining, formatVerifiedDate } from "./scholarshipUtils";
 
 /** Shared, server-safe helpers for describing a listing. */
 
@@ -50,4 +50,14 @@ export function cgpaLabel(s: Scholarship): string {
 /** Minimum IELTS as shown to students; 0 means the scholarship sets no number of its own. */
 export function ieltsLabel(s: Scholarship): string {
   return s.minIELTS > 0 ? s.minIELTS.toFixed(1) : "Set by the university";
+}
+
+/**
+ * "Last checked 20 Nov 2026" for a listing: the date its facts were last checked against
+ * the official page, falling back to the date its requirements were checked. Never today's
+ * date unless someone actually checked today.
+ */
+export function lastCheckedLabel(s: Scholarship): string {
+  const date = s.lastVerified || s.requirementsChecked;
+  return date ? `Last checked ${formatVerifiedDate(date)}` : "Not yet checked";
 }

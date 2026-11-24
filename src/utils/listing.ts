@@ -65,3 +65,11 @@ export function lastCheckedLabel(s: Scholarship): string {
   const date = s.lastVerified || s.requirementsChecked;
   return date ? `Last checked ${formatVerifiedDate(date)}` : "Not yet checked";
 }
+
+/** The stipend as offered, for cards: the program's own currency and period where we have it. */
+export function stipendLabel(s: Scholarship): string {
+  if (s.stipendAmountUnknown) return "Stipend amount not published";
+  if (s.stipendDisplay) return s.stipendDisplay;
+  if (s.monthlyStipendUSD > 0) return `${s.stipendIsEstimate ? "About " : ""}$${s.monthlyStipendUSD.toLocaleString("en-US")} a month`;
+  return "No stipend";
+}

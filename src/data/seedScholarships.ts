@@ -2,6 +2,7 @@ import { Scholarship } from "../types/scholarship";
 import { ADDITIONAL_SCHOLARSHIPS } from "./additionalScholarships";
 import { MORE_SCHOLARSHIPS } from "./moreScholarships";
 import { withRequirements } from "./requirements";
+import { withStipendDisplay } from "./stipendDisplay";
 import { REGIONAL_SCHOLARSHIPS } from "./regionalScholarships";
 
 const BUILT_IN: Scholarship[] = [
@@ -824,4 +825,4 @@ const BUILT_IN: Scholarship[] = [
   ...REGIONAL_SCHOLARSHIPS,
 ];
 
-export const SEED_SCHOLARSHIPS: Scholarship[] = BUILT_IN.map(withRequirements);
+export const SEED_SCHOLARSHIPS: Scholarship[] = BUILT_IN.map((s) => withStipendDisplay(withRequirements(s)));

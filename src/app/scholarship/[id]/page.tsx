@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getScholarshipById } from "@/lib/getScholarship";
-import { cgpaLabel, coverageItems, fundingLevel, ieltsLabel, lastCheckedLabel, listingStatus } from "@/utils/listing";
+import { cgpaLabel, coverageItems, fundingLevel, ieltsLabel, lastCheckedLabel, listingStatus, stipendLabel } from "@/utils/listing";
 import { ReportErrorLink } from "@/components/ReportError";
 import { formatSignedUSD, getSavingsRange } from "@/utils/scholarshipUtils";
 
@@ -68,7 +68,7 @@ export default async function ScholarshipPage({ params }: Props) {
           <div>
             <dt className="text-xs text-stone-500">Stipend</dt>
             <dd className="mt-0.5 text-sm font-medium tabular-nums text-stone-900">
-              {s.stipendAmountUnknown ? "Not published" : `$${s.monthlyStipendUSD.toLocaleString("en-US")}/mo`}
+              {stipendLabel(s)}
             </dd>
           </div>
           <div>

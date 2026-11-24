@@ -5,7 +5,8 @@ import { useScholarship } from "../context/ScholarshipContext";
 import { PartnerUniversity } from "../types/scholarship";
 import { useGuide } from "../context/GuideContext";
 import { FUNDING_HELP, FUNDING_LABELS, InfoTip, JARGON, SUPERVISOR_LABELS, coverageItems, fundingLevel, useDialog } from "./ui";
-import { cgpaLabel, ieltsLabel, lastCheckedLabel } from "../utils/listing";
+import { cgpaLabel, ieltsLabel, lastCheckedLabel, stipendLabel } from "../utils/listing";
+import { TakaEstimate } from "./TakaEstimate";
 import { SELECTION, SELECTION_CHECKED } from "../data/selection";
 import { ReportErrorLink } from "./ReportError";
 import { nationalityLabel, nationalityNote, nationalityStatus } from "../data/nationality";
@@ -237,11 +238,7 @@ export const ScholarshipDrawer: React.FC = () => {
               <div className="bg-white px-3 py-2.5">
                 <dt className="text-xs text-stone-500">Stipend</dt>
                 <dd className="mt-0.5 font-medium tabular-nums text-stone-900">
-                  {s.stipendAmountUnknown
-                    ? "Not published"
-                    : s.monthlyStipendUSD > 0
-                    ? `${s.stipendIsEstimate ? "About " : ""}$${s.monthlyStipendUSD.toLocaleString()} a month`
-                    : "None"}
+                  {s.stipendAmountUnknown ? "Not published" : stipendLabel(s)}
                 </dd>
               </div>
               <div className="bg-white px-3 py-2.5">
@@ -259,6 +256,7 @@ export const ScholarshipDrawer: React.FC = () => {
                 </dd>
               </div>
             </dl>
+            {!s.stipendAmountUnknown && !/one-time/i.test(s.stipendDisplay || "") && <TakaEstimate monthlyUSD={s.monthlyStipendUSD} />}
             {(s.deadlineNote || s.stipendNote) && (
               <div className="mt-3 space-y-1.5 text-xs leading-relaxed text-stone-600">
                 {s.deadlineNote && (

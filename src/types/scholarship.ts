@@ -69,6 +69,8 @@ export interface Scholarship {
   monthlyStipendUSD: number;
   /** True when the program pays a stipend but publishes no amount; monthlyStipendUSD is then 0. */
   stipendAmountUnknown?: boolean;
+  /** The stipend as the program states it, e.g. "CHF 2,450 a month". */
+  stipendDisplay?: string;
   estimatedLivingCostUSD: number;
   tuitionCovered: boolean;
   healthInsuranceCovered: boolean;

@@ -4,14 +4,15 @@ import React from "react";
 import { Scholarship } from "../types/scholarship";
 import { useScholarship } from "../context/ScholarshipContext";
 import { useGuide } from "../context/GuideContext";
-import { checkEligibility, formatSignedUSD, getSavingsRange } from "../utils/scholarshipUtils";
+import { checkEligibility } from "../utils/scholarshipUtils";
+import { stipendLabel } from "../utils/listing";
 import { nationalityStatus } from "../data/nationality";
 import { Bookmark, BookmarkCheck, Check, Minus, Pencil, Trash2 } from "lucide-react";
 import { coverageItems, fundingLevel } from "./ui";
 import { listingStatus } from "./BrowseParts";
 
 /**
- * Four lines: name; country and level; status and money left; what's covered and fit.
+ * Four lines: name; country and level; status and the stipend offered; what's covered and fit.
  */
 export const ScholarshipCard: React.FC<{ scholarship: Scholarship }> = ({ scholarship: s }) => {
   const { profile, isAdmin, setSelectedScholarship, setEditingScholarship, setIsAddModalOpen, deleteScholarship } =
@@ -19,16 +20,10 @@ export const ScholarshipCard: React.FC<{ scholarship: Scholarship }> = ({ schola
   const { isSavedScholarship, toggleSavedScholarship } = useGuide();
 
   const eligibility = checkEligibility(s, profile);
-  const { minSavings, maxSavings, isMultiUni, unknown: stipendUnknown } = getSavingsRange(s);
   const status = listingStatus(s);
   const saved = isSavedScholarship(s.id);
   const level = fundingLevel(s);
   const natStatus = nationalityStatus(s.id, profile.nationality);
-
-  const money =
-    isMultiUni && minSavings !== maxSavings
-      ? `${formatSignedUSD(minSavings)} to ${formatSignedUSD(maxSavings)}`
-      : formatSignedUSD(maxSavings);
 
   const fit = (() => {
     if (!profile.isSet) return null;
@@ -84,17 +79,12 @@ export const ScholarshipCard: React.FC<{ scholarship: Scholarship }> = ({ schola
         )}
       </p>
 
-      {/* 3. Status and money left */}
+      {/* 3. Status and the stipend offered */}
       <p className="mt-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-sm">
         <span className={status.className}>{status.text}</span>
-        {stipendUnknown ? (
-          <span className="text-stone-500">Stipend amount not published</span>
-        ) : (
-          <span className="tabular-nums text-stone-900">
-            <span className={`font-semibold ${maxSavings >= 0 ? "" : "text-amber-800"}`}>{money}</span>
-            <span className="text-stone-500">/mo left</span>
-          </span>
-        )}
+        <span className={`tabular-nums ${s.stipendAmountUnknown || stipendLabel(s) === "No stipend" ? "text-stone-500" : "font-semibold text-stone-900"}`}>
+          {stipendLabel(s)}
+        </span>
       </p>
 
       {/* 4. What's covered, and whether you qualify */}

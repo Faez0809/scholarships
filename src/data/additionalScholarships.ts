@@ -886,6 +886,7 @@ export const ADDITIONAL_SCHOLARSHIPS: Scholarship[] = [
   // 23. VLIR-UOS Scholarships (Belgium)
   {
     id: "vlir-uos-icp-2027",
+    dataVersion: 3,
     name: "VLIR-UOS Scholarships for Master Programmes (ICP Connect)",
     university: "VLIR-UOS (Flemish Universities Council) with Flemish Universities",
     city: "Ghent, Leuven, Antwerp & Brussels",
@@ -944,9 +945,8 @@ export const ADDITIONAL_SCHOLARSHIPS: Scholarship[] = [
     medium: "English Only",
     deadline: "2027-02-28",
     deadlineIsEstimate: true,
-    deadlineNote:
-      "The 2027/28 call opens in November 2026. Most programmes close between February and March 2027, some earlier. Only for nationals of VLIR-UOS eligible countries.",
-    lastVerified: VERIFIED_ON,
+    deadlineNote: "The 2027/28 ICP Connect call is open. Each programme sets its own deadline, mostly February to March 2027, some earlier. Only for nationals of VLIR-UOS eligible countries.",
+    lastVerified: "2026-11-25",
     monthlyStipendUSD: 1540,
     estimatedLivingCostUSD: 1200,
     stipendIsEstimate: true,

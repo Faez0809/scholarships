@@ -9,6 +9,7 @@ import { cgpaLabel, ieltsLabel, lastCheckedLabel, stipendLabel } from "../utils/
 import { TakaEstimate } from "./TakaEstimate";
 import { SELECTION, SELECTION_CHECKED } from "../data/selection";
 import { ReportErrorLink } from "./ReportError";
+import { AlumniSection } from "./AlumniSection";
 import { nationalityLabel, nationalityNote, nationalityStatus } from "../data/nationality";
 import { AGE_LIMITS, englishTestExpired } from "../data/rules";
 import { UniversityGallery } from "./UniversityGallery";
@@ -612,6 +613,9 @@ export const ScholarshipDrawer: React.FC = () => {
               </p>
             </div>
           )}
+
+          {/* Bangladeshi scholars of this program */}
+          <AlumniSection key={s.id} scholarshipId={s.id} university={selectedPartnerUni?.name || s.university} />
 
           {/* Complete Documents */}
           <div id="drawer-documents" className="scroll-mt-4">

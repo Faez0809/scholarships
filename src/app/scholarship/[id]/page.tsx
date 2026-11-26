@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getScholarshipById } from "@/lib/getScholarship";
 import { cgpaLabel, coverageItems, fundingLevel, ieltsLabel, lastCheckedLabel, listingStatus, stipendLabel } from "@/utils/listing";
 import { ReportErrorLink } from "@/components/ReportError";
+import { AlumniSection } from "@/components/AlumniSection";
 import { formatSignedUSD, getSavingsRange } from "@/utils/scholarshipUtils";
 
 export const dynamic = "force-dynamic";
@@ -95,6 +96,8 @@ export default async function ScholarshipPage({ params }: Props) {
         <h2 className="mt-6 text-sm font-semibold text-stone-900">About this program</h2>
         <p className="mt-1 text-sm leading-relaxed text-stone-700">{s.overview}</p>
         {s.deadlineNote && <p className="mt-3 text-sm text-stone-600">{s.deadlineNote}</p>}
+
+        <AlumniSection scholarshipId={s.id} university={s.university} className="mt-6" />
 
         <div className="mt-6 text-xs text-stone-500">
           {lastCheckedLabel(s)}. Always confirm details on the official page before applying.{" "}

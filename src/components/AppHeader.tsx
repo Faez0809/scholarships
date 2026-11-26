@@ -20,6 +20,7 @@ import { useGuide } from "../context/GuideContext";
 import { isFollowUpOverdue, useOutreach } from "../context/OutreachContext";
 import { AccountButton } from "./AuthDialog";
 import { ErrorReportsDialog } from "./ErrorReportsDialog";
+import { AlumniRequestsDialog } from "./AlumniRequestsDialog";
 
 export const NAV_ITEMS: { id: AppView; label: string; short: string; Icon: React.ElementType }[] = [
   { id: "scholarships", label: "Scholarships", short: "Browse", Icon: GraduationCap },
@@ -169,6 +170,8 @@ const AdminMenu: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [reportsOpen, setReportsOpen] = useState(false);
   const closeReports = useCallback(() => setReportsOpen(false), []);
+  const [alumniOpen, setAlumniOpen] = useState(false);
+  const closeAlumni = useCallback(() => setAlumniOpen(false), []);
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -201,6 +204,7 @@ const AdminMenu: React.FC = () => {
   return (
     <div ref={ref} className="relative">
       <ErrorReportsDialog open={reportsOpen} onClose={closeReports} />
+      <AlumniRequestsDialog open={alumniOpen} onClose={closeAlumni} />
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -236,6 +240,17 @@ const AdminMenu: React.FC = () => {
             }}
           >
             <Flag className="h-4 w-4 text-stone-500" /> Error reports
+          </button>
+          <button
+            role="menuitem"
+            type="button"
+            className={item}
+            onClick={() => {
+              setOpen(false);
+              setAlumniOpen(true);
+            }}
+          >
+            <Users className="h-4 w-4 text-stone-500" /> Alumni requests
           </button>
           <button
             role="menuitem"

@@ -7,6 +7,9 @@ import { LISTED_ALUMNI } from "../data/alumni";
 const inputClass =
   "w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700";
 
+/** How many people show before "Show all"; keeps the panel calm. */
+const PREVIEW = 5;
+
 const linkClass = "text-blue-800 underline-offset-2 hover:underline";
 
 /**
@@ -22,6 +25,7 @@ export const AlumniSection: React.FC<{ scholarshipId: string; university: string
   const program = programKey(scholarshipId);
   const [extra, setExtra] = useState<{ added: Alumnus[]; removed: string[] }>({ added: [], removed: [] });
   const [form, setForm] = useState<"none" | "add" | "remove">("none");
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -54,7 +58,7 @@ export const AlumniSection: React.FC<{ scholarshipId: string; university: string
         <p className="mt-3 text-sm text-stone-600">No verified Bangladeshi scholars listed for this program yet.</p>
       ) : (
         <ul className="mt-3 divide-y divide-stone-100 border-y border-stone-100">
-          {people.map((a) => (
+          {(showAll ? people : people.slice(0, PREVIEW)).map((a) => (
             <li key={a.id} className="py-3">
               <p className="text-sm font-medium text-stone-900">{a.name}</p>
               <p className="mt-0.5 text-xs text-stone-600">
@@ -80,6 +84,11 @@ export const AlumniSection: React.FC<{ scholarshipId: string; university: string
             </li>
           ))}
         </ul>
+      )}
+      {!showAll && people.length > PREVIEW && (
+        <button type="button" onClick={() => setShowAll(true)} className={`mt-2 text-xs font-medium ${linkClass}`}>
+          Show all {people.length}
+        </button>
       )}
 
       <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-stone-500">
